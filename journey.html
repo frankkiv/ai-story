@@ -14,16 +14,14 @@
 <script src="assets/i18n.js"></script>
 <style>
 /* 捲動敘事：一張「資料走過的地圖」固定在舞台裡，捲一段，鏡頭就移到下一個地方 */
-.story { display: grid; gap: 2rem; padding-block: 1rem 4rem; }
-@media (min-width: 900px) { .story { grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 3rem; } }
-.stage-col { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 4.5rem); height: calc(100svh - 6rem); max-height: 48rem; z-index: 3; width: 100%; max-width: 28rem; justify-self: center; }
-@media (max-width: 899px) {
-  .story { display: block; }
-  .stage-col { top: env(safe-area-inset-top, 0px); height: 68svh; min-height: 27rem; max-height: none; max-width: none; background: var(--bg); padding-block: .5rem; margin-inline: -16px; padding-inline: 16px; }
+.story { display: block; padding-block: .5rem 3rem; }
+.stage-col { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 4.25rem); height: calc(100svh - 5.5rem); max-height: 58rem; width: 100%; max-width: 38rem; margin-inline: auto; z-index: 3; }
+@media (max-width: 720px) {
+  .stage-col { top: calc(env(safe-area-inset-top, 0px) + .5rem); height: calc(100svh - 1rem); }
 }
 :root { --st-gold: var(--l-skills); }
 
-.stage { position: relative; height: 100%; border-radius: 22px; overflow: hidden; background: var(--code-bg); color: var(--code-text); display: grid; grid-template-rows: auto auto minmax(0, 1fr) auto; box-shadow: var(--shadow); isolation: isolate; }
+.stage { position: relative; height: 100%; border-radius: 22px; overflow: hidden; background: var(--code-bg); color: var(--code-text); display: grid; grid-template-rows: auto auto minmax(0, 1fr) auto auto; box-shadow: var(--shadow); isolation: isolate; }
 
 /* 標籤：章 + 步，右邊是進度條 */
 .st-top { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: .75rem; padding: .85rem 1rem .4rem; z-index: 4; }
@@ -179,20 +177,34 @@
 /* 大字幕 */
 .st-sub { z-index: 4; padding: .55rem 1rem .9rem; font-size: 1.08rem; font-weight: 700; line-height: 1.45; color: #fff; text-align: center; min-height: 3.9rem; display: flex; align-items: center; justify-content: center; text-wrap: balance; background: var(--code-bg); border-top: 1px solid rgba(255,255,255,.08); }
 .st-sub em { font-style: normal; color: var(--st-gold); }
-@media (max-width: 899px) { .st-sub { font-size: 1rem; min-height: 3.4rem; } }
+@media (max-width: 720px) { .st-sub { font-size: 1rem; min-height: 3.2rem; padding-bottom: .55rem; } }
 
 /* 旁白段落 */
-.steps { display: grid; }
-.step { min-height: 72svh; display: grid; align-content: center; padding-block: 2rem; }
-.step:first-child { min-height: 50svh; }
-.step:last-child { min-height: 70svh; }
-.step .card { gap: .8rem; transition: border-color .3s; }
-.step.on .card { border-color: var(--l-skills); }
-.step .eyebrow { color: var(--l-skills); }
-.chap { padding-block: 2.5rem .5rem; }
-.chap span { font-family: var(--mono); font-size: .82rem; color: var(--muted); letter-spacing: .04em; }
-.chap h2 { font-size: clamp(1.4rem, 3.5vw, 1.9rem); }
-@media (max-width: 899px) { .step { min-height: 58svh; align-content: end; padding-block: 1rem; } .step:first-child { min-height: 28svh; } .chap { padding-block: 2rem 0; } }
+.steps { position: relative; }
+.step { height: 72svh; }
+.step:last-child { height: 85svh; }
+/* 旁白原文留給螢幕閱讀器；畫面上由舞台底部的說明欄顯示 */
+.step .card, .chap { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* 舞台底部的說明欄 */
+.st-narr { z-index: 4; background: var(--code-bg); padding: 0 1rem .75rem; display: grid; gap: .55rem; }
+.st-narr .txt { max-height: 14rem; overflow-y: auto; font-size: .92rem; line-height: 1.7; color: #c9d1dc; display: grid; gap: .5rem; }
+@media (max-height: 760px) { .st-narr .txt { max-height: 10rem; } }
+@media (max-width: 720px) { .st-narr .txt { font-size: .86rem; line-height: 1.6; max-height: 30svh; } .st-nav i { display: none; } .st-nav button { width: 2.5rem; height: 2.5rem; } }
+.st-narr .txt.swap { animation: narrIn .35s both; }
+@keyframes narrIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.st-narr p { margin: 0; }
+.st-narr code { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.16); color: #fff; }
+.st-narr a { color: var(--st-gold); }
+.st-narr .elder { background: rgba(53, 211, 154, .12); font-size: .88rem; padding: .5rem .75rem; border-radius: 10px; }
+.st-narr .elder b { background: rgba(255,255,255,.08); color: #35d39a; }
+.st-nav { display: flex; align-items: center; gap: .5rem; font-family: var(--mono); font-size: .74rem; color: #8b95a5; }
+.st-nav span { margin-right: auto; }
+.st-nav i { font-style: normal; }
+.st-nav b { font-weight: 500; color: #c9d1dc; }
+.st-nav button { width: 2.6rem; height: 2.6rem; border-radius: 50%; border: 1px solid rgba(255,255,255,.25); background: transparent; color: #fff; font-size: 1.1rem; line-height: 1; cursor: pointer; display: grid; place-items: center; }
+.st-nav button:hover:not(:disabled) { border-color: var(--st-gold); color: var(--st-gold); }
+.st-nav button:disabled { opacity: .3; cursor: default; }
 .sample-note { font-size: .9rem; color: var(--muted); display: grid; gap: .5rem; }
 
 @media (prefers-reduced-motion: reduce) {
@@ -228,13 +240,13 @@
 <main class="gutter">
   <div class="frame story">
     <div class="stage-col">
-      <div class="stage" id="stage" aria-hidden="true">
-        <div class="st-top">
+      <div class="stage" id="stage">
+        <div class="st-top" aria-hidden="true">
           <div class="st-tag" id="tag"></div>
           <div class="st-prog"><i id="prog"></i></div>
         </div>
-        <div class="st-term" id="term"><b></b><span></span></div>
-        <div class="st-view" id="view">
+        <div class="st-term" id="term" aria-hidden="true"><b></b><span></span></div>
+        <div class="st-view" id="view" aria-hidden="true">
           <div class="scene" id="scene">
 
             <div class="pipe short hotable" id="pipe0"><span>你按下 Enter</span></div>
@@ -341,14 +353,15 @@
             <div class="packet" id="packet"></div>
           </div>
         </div>
-        <ol class="recap">
+        <ol class="recap" aria-hidden="true">
           <li>在你的電腦上組合<span>讀本地檔案，照固定順序打包成一整包</span></li>
           <li>一路送到遠端<span>上鎖、跨海到機房，再驗證、切 token、比對快取、GPU 生成</span></li>
           <li>答案怎麼回來<span>邊算邊傳；要用工具就再跑一輪；最後存回你的電腦</span></li>
           <li>手機怎麼同步<span>電腦和手機都連到中繼，檔案一直留在電腦</span></li>
           <li class="zero">從頭到尾，模型被改的次數：<b>0</b></li>
         </ol>
-        <p class="st-sub" id="sub"></p>
+        <p class="st-sub" id="sub" aria-hidden="true"></p>
+        <div class="st-narr"><div class="txt" id="narr" aria-hidden="true"></div><div class="st-nav"><span><i>往下捲，或按右邊的箭頭　</i><b id="count"></b></span><button type="button" id="prev" aria-label="上一步">&#8249;</button><button type="button" id="next" aria-label="下一步">&#8250;</button></div></div>
       </div>
     </div>
 
@@ -511,6 +524,14 @@
   var tag = document.getElementById("tag"), sub = document.getElementById("sub"), term = document.getElementById("term");
   var prog = document.getElementById("prog"), packet = document.getElementById("packet");
   var steps = document.querySelectorAll(".step");
+  var narr = document.getElementById("narr"), count = document.getElementById("count");
+  var prevB = document.getElementById("prev"), nextB = document.getElementById("next");
+  function jump(i) {
+    if (i < 0 || i >= steps.length) return;
+    scrollTo({ top: steps[i].getBoundingClientRect().top + scrollY - innerHeight * .5 + 12, behavior: reduce ? "auto" : "smooth" });
+  }
+  prevB.addEventListener("click", function () { jump(cur - 1); });
+  nextB.addEventListener("click", function () { jump(cur + 1); });
   var CH = ["", "第一章 在你的電腦上組合", "第二章 一路送到遠端", "第三章 答案怎麼回來", "第四章 手機怎麼同步"];
   var F = "filled";
 
@@ -571,6 +592,13 @@
     sub.innerHTML = "<span>" + s.sub + "</span>";
     prog.style.width = (Math.min(n, 15) / 15 * 100) + "%";
     steps.forEach(function (el) { el.classList.toggle("on", +el.dataset.step === n); });
+    var card = steps[n].querySelector(".card");
+    narr.innerHTML = "";
+    card.querySelectorAll(":scope > p").forEach(function (q) { narr.appendChild(q.cloneNode(true)); });
+    narr.scrollTop = 0;
+    narr.classList.remove("swap"); void narr.offsetWidth; if (!reduce) narr.classList.add("swap");
+    count.textContent = n > 0 && n < S.length - 1 ? n + " / " + (S.length - 2) : "";
+    prevB.disabled = n === 0; nextB.disabled = n === S.length - 1;
     if (s.term) { term.firstChild.textContent = s.term[0]; term.lastChild.textContent = s.term[1]; term.classList.add("on"); }
     else term.classList.remove("on");
 
@@ -611,7 +639,7 @@
   }
 
   function pick() {
-    var line = innerHeight * (innerWidth < 900 ? .82 : .55), n = 0;
+    var line = innerHeight * .5, n = 0;
     steps.forEach(function (el) { if (el.getBoundingClientRect().top < line) n = +el.dataset.step; });
     go(n);
   }
@@ -623,8 +651,7 @@
   var target = location.hash && document.getElementById(location.hash.slice(1));
   if (target && target.classList.contains("step")) {
     var toHash = function () {
-      var c = target.querySelector(".card");
-      scrollTo(0, c.getBoundingClientRect().top + scrollY - (innerWidth < 900 ? innerHeight * .68 + 8 : innerHeight * .25));
+      scrollTo(0, target.getBoundingClientRect().top + scrollY - innerHeight * .5 + 12);
     };
     addEventListener("load", toHash);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { setTimeout(toHash, 50); });
