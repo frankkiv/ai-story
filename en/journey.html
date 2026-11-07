@@ -159,6 +159,39 @@
 @media (prefers-reduced-motion: reduce) { .beam::after { animation: none; background-position: 0 50%; } .cover { transition: none !important; } }
 
 
+
+
+.st-cap { z-index: 4; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: .5rem; padding: .5rem .7rem .2rem; background: var(--code-bg); border-top: 1px solid rgba(255,255,255,.08); }
+.st-sub { margin: 0; font-size: 1.08rem; font-weight: 700; line-height: 1.4; color: #fff; text-align: center; text-wrap: balance; min-height: 2.8em; display: flex; align-items: center; justify-content: center; }
+.st-sub em { font-style: normal; color: var(--st-gold); }
+.st-cap button { width: 2.5rem; height: 2.5rem; border-radius: 50%; border: 1px solid rgba(255,255,255,.22); background: transparent; color: #fff; font-size: 1.2rem; line-height: 1; cursor: pointer; display: grid; place-items: center; transition: border-color .2s, color .2s, opacity .2s; }
+.st-cap button:hover:not(:disabled) { border-color: var(--st-gold); color: var(--st-gold); }
+.st-cap button:disabled { opacity: .25; cursor: default; }
+@media (max-width: 720px) { .st-sub { font-size: .98rem; } .st-cap { padding-inline: .5rem; gap: .35rem; } }
+
+
+.st-narr { z-index: 4; background: var(--code-bg); padding: .15rem 1.1rem .8rem; display: grid; justify-items: center; gap: .35rem; }
+.st-narr .txt { max-width: 34rem; font-size: .86rem; line-height: 1.6; color: #a7b0bd; text-align: center; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }
+.st-narr .txt.swap, .sheet-txt.swap { animation: narrIn .35s both; }
+@keyframes narrIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.st-narr code, .sheet code { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.16); color: #fff; }
+.more { font: inherit; font-size: .78rem; font-weight: 600; color: var(--st-gold); background: transparent; border: 0; padding: .35rem .6rem; min-height: 40px; cursor: pointer; border-radius: 8px; }
+.more:hover { background: rgba(255,255,255,.06); }
+.more[hidden] { display: none; }
+
+
+.sheet { position: absolute; left: 0; right: 0; bottom: 0; z-index: 8; max-height: 72%; display: grid; grid-template-rows: auto minmax(0, 1fr); background: #141922; border-top: 1px solid rgba(255,255,255,.14); border-radius: 18px 18px 0 0; box-shadow: 0 -12px 32px rgba(0,0,0,.45); transform: translateY(102%); transition: transform .35s cubic-bezier(.2,.7,.2,1); visibility: hidden; }
+.sheet.open { transform: none; visibility: visible; }
+.sheet-head { display: flex; align-items: center; gap: .75rem; padding: .7rem .7rem .3rem 1.1rem; }
+.sheet-head b { font-size: .98rem; color: #fff; margin-right: auto; line-height: 1.4; }
+.sheet-head button { width: 2.5rem; height: 2.5rem; border-radius: 50%; border: 1px solid rgba(255,255,255,.22); background: transparent; color: #fff; font-size: 1.1rem; cursor: pointer; flex: none; }
+.sheet-txt { overflow-y: auto; padding: .2rem 1.1rem 1.1rem; display: grid; gap: .6rem; font-size: .92rem; line-height: 1.75; color: #c9d1dc; align-content: start; }
+.sheet-txt p { margin: 0; }
+.sheet-txt a { color: var(--st-gold); }
+.sheet-txt .elder { background: rgba(53, 211, 154, .12); font-size: .9rem; padding: .55rem .8rem; border-radius: 10px; }
+.sheet-txt .elder b { background: rgba(255,255,255,.08); color: #35d39a; }
+.st-count { font-family: var(--mono); font-size: .72rem; color: #8b95a5; text-align: right; margin-bottom: .2rem; min-height: 1em; }
+
 .packet { position: absolute; z-index: 6; left: 0; top: 0; width: 3rem; border-radius: 7px; padding: .2rem; display: grid; gap: 2px; background: #fff; box-shadow: 0 6px 18px rgba(0,0,0,.5), 0 0 0 2px var(--st-gold); transition: transform .7s cubic-bezier(.2,.7,.2,1), opacity .3s; opacity: 0; pointer-events: none; }
 .packet.on { opacity: 1; }
 .packet i { display: block; height: 4px; border-radius: 2px; background: var(--c); }
@@ -175,39 +208,19 @@
 .stage.end .recap { opacity: 1; }
 
 
-.st-sub { z-index: 4; padding: .55rem 1rem .9rem; font-size: 1.08rem; font-weight: 700; line-height: 1.45; color: #fff; text-align: center; min-height: 3.9rem; display: flex; align-items: center; justify-content: center; text-wrap: balance; background: var(--code-bg); border-top: 1px solid rgba(255,255,255,.08); }
-.st-sub em { font-style: normal; color: var(--st-gold); }
-@media (max-width: 720px) { .st-sub { font-size: 1rem; min-height: 3.2rem; padding-bottom: .55rem; } }
 
 
 .steps { position: relative; }
 .step { height: 72svh; }
 .step:last-child { height: 85svh; }
-/* 旁白原文留給螢幕閱讀器；畫面上由舞台底部的說明欄顯示 */
+
 .step .card, .chap { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
-/* 舞台底部的說明欄 */
-.st-narr { z-index: 4; background: var(--code-bg); padding: 0 1rem .75rem; display: grid; gap: .55rem; }
-.st-narr .txt { max-height: 14rem; overflow-y: auto; font-size: .92rem; line-height: 1.7; color: #c9d1dc; display: grid; gap: .5rem; }
-@media (max-height: 760px) { .st-narr .txt { max-height: 10rem; } }
-@media (max-width: 720px) { .st-narr .txt { font-size: .86rem; line-height: 1.6; max-height: 30svh; } .st-nav i { display: none; } .st-nav button { width: 2.5rem; height: 2.5rem; } }
-.st-narr .txt.swap { animation: narrIn .35s both; }
-@keyframes narrIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
-.st-narr p { margin: 0; }
-.st-narr code { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.16); color: #fff; }
-.st-narr a { color: var(--st-gold); }
-.st-narr .elder { background: rgba(53, 211, 154, .12); font-size: .88rem; padding: .5rem .75rem; border-radius: 10px; }
-.st-narr .elder b { background: rgba(255,255,255,.08); color: #35d39a; }
-.st-nav { display: flex; align-items: center; gap: .5rem; font-family: var(--mono); font-size: .74rem; color: #8b95a5; }
-.st-nav span { margin-right: auto; }
-.st-nav i { font-style: normal; }
-.st-nav b { font-weight: 500; color: #c9d1dc; }
-.st-nav button { width: 2.6rem; height: 2.6rem; border-radius: 50%; border: 1px solid rgba(255,255,255,.25); background: transparent; color: #fff; font-size: 1.1rem; line-height: 1; cursor: pointer; display: grid; place-items: center; }
-.st-nav button:hover:not(:disabled) { border-color: var(--st-gold); color: var(--st-gold); }
-.st-nav button:disabled { opacity: .3; cursor: default; }
+
 .sample-note { font-size: .9rem; color: var(--muted); display: grid; gap: .5rem; }
 
 @media (prefers-reduced-motion: reduce) {
+  .sheet, .st-cap button,
   .scene, .packet, .hotable, .bar, .st-term, .recap, .perm, .st-prog i { transition: none !important; }
 }
 </style>
@@ -243,7 +256,7 @@
       <div class="stage" id="stage">
         <div class="st-top" aria-hidden="true">
           <div class="st-tag" id="tag"></div>
-          <div class="st-prog"><i id="prog"></i></div>
+          <div><div class="st-count" id="count"></div><div class="st-prog"><i id="prog"></i></div></div>
         </div>
         <div class="st-term" id="term" aria-hidden="true"><b></b><span></span></div>
         <div class="st-view" id="view" aria-hidden="true">
@@ -360,8 +373,9 @@
           <li>How your phone stays in sync<span>Computer and phone both connect to a relay; your files stay on your computer</span></li>
           <li class="zero">Times the model was changed, start to finish: <b>0</b></li>
         </ol>
-        <p class="st-sub" id="sub" aria-hidden="true"></p>
-        <div class="st-narr"><div class="txt" id="narr" aria-hidden="true"></div><div class="st-nav"><span><i>Scroll, or use the arrows&#8195;</i><b id="count"></b></span><button type="button" id="prev" aria-label="Previous step">&#8249;</button><button type="button" id="next" aria-label="Next step">&#8250;</button></div></div>
+        <div class="st-cap"><button type="button" id="prev" aria-label="Previous step">&#8249;</button><p class="st-sub" id="sub" aria-hidden="true"></p><button type="button" id="next" aria-label="Next step">&#8250;</button></div>
+        <div class="st-narr"><div class="txt" id="narr" aria-hidden="true"></div><button type="button" class="more" id="more" aria-hidden="true" tabindex="-1">Full explanation ↑</button></div>
+        <div class="sheet" id="sheet" aria-hidden="true"><div class="sheet-head"><b id="sheetTitle"></b><button type="button" id="close" aria-label="Close" tabindex="-1">&#215;</button></div><div class="sheet-txt" id="sheetTxt"></div></div>
       </div>
     </div>
 
@@ -530,6 +544,13 @@
     if (i < 0 || i >= steps.length) return;
     scrollTo({ top: steps[i].getBoundingClientRect().top + scrollY - innerHeight * .5 + 12, behavior: reduce ? "auto" : "smooth" });
   }
+  var more = document.getElementById("more"), sheet = document.getElementById("sheet");
+  var sheetTxt = document.getElementById("sheetTxt"), sheetTitle = document.getElementById("sheetTitle"), closeB = document.getElementById("close");
+  function openSheet() { sheet.classList.add("open"); sheet.setAttribute("aria-hidden", "false"); closeB.tabIndex = 0; sheetTxt.scrollTop = 0; closeB.focus({ preventScroll: true }); }
+  function closeSheet() { if (!sheet.classList.contains("open")) return; sheet.classList.remove("open"); sheet.setAttribute("aria-hidden", "true"); closeB.tabIndex = -1; }
+  more.addEventListener("click", openSheet);
+  closeB.addEventListener("click", function () { closeSheet(); more.focus({ preventScroll: true }); });
+  addEventListener("keydown", function (e) { if (e.key === "Escape") closeSheet(); });
   prevB.addEventListener("click", function () { jump(cur - 1); });
   nextB.addEventListener("click", function () { jump(cur + 1); });
   var CH = ["", "Chapter 1 · Assembled on your computer", "Chapter 2 · All the way to the server", "Chapter 3 · How the answer comes back", "Chapter 4 · How your phone stays in sync"];
@@ -593,10 +614,14 @@
     prog.style.width = (Math.min(n, 15) / 15 * 100) + "%";
     steps.forEach(function (el) { el.classList.toggle("on", +el.dataset.step === n); });
     var card = steps[n].querySelector(".card");
-    narr.innerHTML = "";
-    card.querySelectorAll(":scope > p").forEach(function (q) { narr.appendChild(q.cloneNode(true)); });
-    narr.scrollTop = 0;
+    var ps = card.querySelectorAll(":scope > p");
+    narr.innerHTML = ps.length ? ps[0].innerHTML : "";
     narr.classList.remove("swap"); void narr.offsetWidth; if (!reduce) narr.classList.add("swap");
+    sheetTitle.textContent = card.querySelector("h3").textContent;
+    sheetTxt.innerHTML = "";
+    ps.forEach(function (q) { sheetTxt.appendChild(q.cloneNode(true)); });
+    closeSheet();
+    requestAnimationFrame(function () { more.hidden = ps.length < 2 && narr.scrollHeight <= narr.clientHeight + 1; });
     count.textContent = n > 0 && n < S.length - 1 ? n + " / " + (S.length - 2) : "";
     prevB.disabled = n === 0; nextB.disabled = n === S.length - 1;
     if (s.term) { term.firstChild.textContent = s.term[0]; term.lastChild.textContent = s.term[1]; term.classList.add("on"); }
