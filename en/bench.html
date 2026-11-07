@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Model benchmarks · AI Grew Hands</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+<link rel="alternate" hreflang="zh-Hant" href="../bench.html">
+<link rel="alternate" hreflang="en" href="bench.html">
+<script src="../assets/i18n.js"></script>
+<style>
+.mx-box { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); padding: 1.1rem; display: grid; gap: .8rem; }
+.mx-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.mx { min-width: 640px; }
+.mx th { vertical-align: bottom; }
+.mx th[data-k] { cursor: pointer; user-select: none; }
+.mx th[data-k]::after { content: " ↕"; opacity: .4; }
+.mx th[aria-sort]::after { content: " ↓"; opacity: 1; }
+.mx th small { display: block; font-size: .82rem; color: var(--muted); font-weight: 400; font-family: var(--mono); }
+.mx td:first-child, .mx th:first-child { position: sticky; left: 0; background: var(--surface); z-index: 1; text-align: left; font-family: var(--sans); }
+.mx td:first-child { border-left: 3px solid var(--c, var(--line)); min-width: 9rem; max-width: 12rem; white-space: normal; }
+@media (max-width: 560px) { .mx td:first-child { max-width: 9.5rem; } .mx td:first-child > span { display: none; } .mx .open { display: block; margin: .15rem 0 0; width: max-content; } }
+.mx td:first-child b { display: block; }
+.mx td:first-child span { font-size: .85rem; color: var(--muted); }
+.mx .num { text-align: right; }
+.mx .bar { display: grid; justify-items: end; gap: .2rem; }
+.mx .bar i { display: block; width: 4.5rem; height: 4px; border-radius: 2px; background: linear-gradient(90deg, var(--c) var(--w), var(--line) var(--w)); }
+.mx .top b { color: var(--accent); }
+.mx .open { display: inline-block; margin-left: .3rem; font-size: .82rem; color: var(--accent); background: var(--accent-soft); border-radius: 5px; padding: 0 .35rem; }
+.mx.vt td:first-child { border-left: 0; }
+.mx-key { margin: 0; display: grid; grid-template-columns: auto minmax(0,1fr); gap: .35rem .9rem; font-size: .92rem; }
+.mx-key dt { font-weight: 700; }
+.mx-key dd { margin: 0; color: var(--muted); }
+.good { display: grid; gap: 1rem; }
+@media (min-width: 760px) { .good { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+@media (min-width: 1100px) { .good { grid-template-columns: repeat(3, minmax(0,1fr)); } }
+.good .card { border-top: 3px solid var(--c); }
+.why { display: grid; gap: 1rem; }
+@media (min-width: 760px) { .why { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+@media (min-width: 1100px) { .why { grid-template-columns: repeat(3, minmax(0,1fr)); } }
+.tipcard { background: var(--accent-soft); border-color: transparent; }
+.chart-box { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); padding: 1.25rem; display: grid; gap: 1rem; }
+.chart-scroll { overflow-x: auto; }
+#chart { display: block; width: 100%; min-width: 640px; height: auto; }
+#chart text { font-family: var(--mono); fill: var(--muted); font-size: 15px; }
+#chart .endlabel { font-family: var(--sans); font-weight: 600; font-size: 16px; }
+#chart .event text { font-family: var(--sans); font-size: 14px; fill: var(--muted); }
+.swipe { display: none; font-size: .9rem; color: var(--muted); margin: -.4rem 0 0; }
+@media (max-width: 720px) { .swipe { display: block; } }
+.mt2 { margin-top: 4rem; }
+.h2s { font-size: clamp(1.5rem, 3.4vw, 2rem); letter-spacing: -.02em; line-height: 1.25; margin: 0; }
+.names { display: grid; gap: 1rem; }
+@media (min-width: 760px) { .names { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+@media (min-width: 1100px) { .names { grid-template-columns: repeat(4, minmax(0,1fr)); } }
+.nm { background: var(--surface); border: 1px solid var(--line); border-top: 3px solid var(--c); border-radius: 16px; padding: 1.1rem 1.2rem; box-shadow: var(--shadow); min-width: 0; }
+.nm .who { font-family: var(--mono); font-size: .85rem; color: var(--muted); }
+.nm dl { margin: .6rem 0 0; display: grid; grid-template-columns: auto minmax(0,1fr); gap: .35rem .8rem; }
+.nm dt { font-weight: 700; white-space: nowrap; }
+.nm dd { margin: 0; color: var(--muted); font-size: .95rem; }
+.roster-box { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); padding: 1.1rem; display: grid; gap: .6rem; }
+.roster-top .tabs { display: flex; flex-wrap: wrap; gap: .4rem; }
+.roster-head, .roster li { display: grid; grid-template-columns: minmax(0,1fr) 6.5rem 7.5rem 7.5rem; gap: .6rem; align-items: center; }
+.roster-head { font-family: var(--mono); font-size: .82rem; color: var(--muted); padding: .3rem .7rem; border-bottom: 1px solid var(--line); }
+.roster-head span:nth-child(n+2) { text-align: right; }
+.roster { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.roster li { padding: .55rem .7rem; border-radius: 10px; border-left: 3px solid var(--c); transition: background .3s; }
+.roster li:nth-child(odd) { background: var(--bg); }
+.roster li.hl { background: var(--accent-soft); }
+.rn { display: grid; min-width: 0; line-height: 1.4; }
+.rn b { font-size: 1rem; }
+.rt { font-size: .85rem; color: var(--muted); }
+.rx { font-size: .85rem; color: var(--muted); font-style: italic; }
+.rd { font-family: var(--mono); font-size: .85rem; color: var(--muted); text-align: right; }
+.rs { display: grid; justify-items: end; gap: .2rem; font-family: var(--mono); font-size: .92rem; }
+.rs i { display: block; height: 4px; width: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--c) var(--w), var(--line) var(--w)); }
+.rs.p i { opacity: .7; }
+.rs .na { color: var(--muted); }
+.rdm { display: none; }
+@media (max-width: 560px) {
+  .roster-head, .roster li { grid-template-columns: minmax(0,1fr) 3.9rem 3.9rem; }
+  .roster-head span:nth-child(2), .rd { display: none; }
+  .rdm { display: inline !important; }
+}
+#chart .grid line { stroke: var(--line); }
+#chart .axis-y text { text-anchor: end; }
+#chart .series path { fill: none; stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+#chart .series circle { stroke: var(--surface); stroke-width: 2; cursor: pointer; }
+#chart .series.dim { opacity: .12; }
+#chart .event line { stroke: var(--muted); stroke-dasharray: 2 4; opacity: .6; }
+.series-toggle { display: flex; flex-wrap: wrap; gap: .4rem; }
+.series-toggle button { display: inline-flex; align-items: center; gap: .45rem; border: 1px solid var(--line); background: var(--bg); color: var(--text); border-radius: 999px; padding: .35rem .8rem; font-size: .88rem; cursor: pointer; min-height: 40px; }
+.series-toggle button[aria-pressed="false"] { opacity: .45; }
+.series-toggle i { width: .7rem; height: .7rem; border-radius: 50%; background: var(--c); }
+.tip { min-height: 3.2rem; font-size: .95rem; background: var(--bg); border-radius: 10px; padding: .6rem .85rem; color: var(--muted); }
+.tip b { color: var(--text); }
+.next { display: grid; gap: 1rem; }
+@media (min-width: 760px) { .next { grid-template-columns: 1fr 1fr; } }
+.next a { text-decoration: none; color: inherit; }
+.next .card:hover { border-color: var(--text); }
+</style>
+</head>
+<body>
+
+<nav class="nav gutter" aria-label="Site">
+  <div class="frame">
+    <a class="brand" href="index.html"><i></i><span>AI Grew Hands</span></a>
+    <ul>
+      <li><a class="l" href="history.html"><span class="lg">Timeline</span><span class="sh">Timeline</span></a></li>
+      <li><a class="l site-on" href="bench.html"><span class="lg">Model benchmarks</span><span class="sh">Bench</span></a></li>
+      <li><a class="l" href="tech.html"><span class="lg">How it works</span><span class="sh">How</span></a></li>
+      <li><a class="l" href="china.html"><span class="lg">Catching up</span><span class="sh">China</span></a></li>
+      <li><a class="l" href="future.html"><span class="lg">Next bottleneck</span><span class="sh">Limits</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero gutter">
+  <div class="frame" style="display:block">
+    <div class="hero-copy measure">
+      <span class="pill">PART 2 · <b>Model benchmarks</b></span>
+      <h1>How to read the scores,<br><em>and who is good at what</em></h1>
+      <p class="sub">Every new model launch comes with a "we're number one again" scorecard. This page first explains why those scores can't be taken at face value, then puts the models side by side in one table, and finally sums up what each model is good for.</p>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="s gutter" id="why">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">01 · A word of caution</span>
+      <h2>Why you can't fully trust these scores</h2>
+      <p class="lead">Scores are useful, but they're "softer" than they look. Once you understand the five reasons below, you'll know how much to discount a "number one" headline.</p>
+    </div>
+    <div class="why">
+      <article class="card"><span class="tag">1 · Grading their own exam</span><h3>Most scores are reported by the vendors</h3><p>On the same exam, the vendor decides how much thinking time to allow, which agent harness to use and how many retries are allowed. For example, a footnote in Anthropic's Opus 4.6 announcement says a prompt tweak takes SWE-bench Verified to 81.42%. When third parties rerun with uniform settings, scores usually come out a few points lower.</p></article>
+      <article class="card"><span class="tag">2 · Leaked past papers</span><h3>The questions may already be memorized</h3><p>Public exams get crawled into web data and then used to train the next generation of models. In February 2026 OpenAI said it would stop reporting SWE-bench Verified because scores increasingly reflect how many of the questions a model saw in training; it audited a set of hard problems and found most had flawed tests or problem statements.</p></article>
+      <article class="card"><span class="tag">3 · Maxed out</span><h3>Past 95%, a point or two means nothing</h3><p>The top Verified score is already 95%, and many remaining problems are themselves flawed. When third party vals.ai reran it, several models sat around 95%, and in September 2026 it stopped running the exam on new models altogether. At this point a 1–2 point gap is often just noise, which is why the industry is moving to harder exams like SWE-bench Pro and Terminal-Bench.</p></article>
+      <article class="card"><span class="tag">4 · Different exams</span><h3>Each lab picks tests that favor it</h3><p>In fall 2026, Anthropic's launch table led with Terminal-Bench and GDPval; OpenAI's GPT-6 led with DeepSWE; Google has its own mix. Different exams are hard to compare directly, and competitor scores in these tables are often copied from the other lab's announcement.</p></article>
+      <article class="card"><span class="tag">5 · Scores aren't experience</span><h3>Testing well doesn't mean working well</h3><p>Price, speed, whether it changes things you didn't ask for, how wordy it is: no exam measures these. Many engineers end up judging by how it feels on their own projects.</p></article>
+      <article class="card tipcard"><span class="tag">So how should you read them?</span><h3>Three habits</h3><p>Look at trends, not single scores; prefer third-party leaderboards that rerun every model with the same settings (such as Scale's SWE-bench Pro, vals.ai, or LMArena's user votes); then try it on your own work for a week.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="bench">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">02 · The capability curve</span>
+      <h2>Coding ability went from 50% to 90% in two years</h2>
+      <p class="lead">SWE-bench Verified is a 500-question exam. Each question is a GitHub issue from a real open-source project; the AI has to change the code itself, and the project's own tests decide whether it's fixed. At the end of 2024 the best model fixed about half; by mid-2026 the top score reached 95%.</p>
+      <p class="elder"><b>In plain words</b>Like sending an apprentice to repair 500 items customers actually brought in, scoring one point per repair.</p>
+    </div>
+    <div class="chart-box">
+      <div class="series-toggle" id="toggles" role="group" aria-label="Show or hide series"></div>
+      <div class="chart-scroll" id="chartScroll"><svg id="chart" viewBox="0 0 900 460" role="img" aria-label="SWE-bench Verified scores of each lab's flagship models over time"></svg></div>
+      <p class="swipe">← Swipe to see the whole curve</p>
+      <p class="tip" id="tip" aria-live="polite">Tap a dot to see which model it is; the roster below highlights it too.</p>
+    </div>
+
+    <div class="grid3 mt">
+      <article class="card"><span class="tag">What to look at</span><h3>How fast the lines climb</h3><p>At the end of 2024 the best model fixed about half the problems; by 2026 every lab's flagship was above 80%. This is exactly when agent tools took off, and the two fed each other.</p></article>
+      <article class="card"><span class="tag">What to look at</span><h3>How far behind China's line is</h3><p>Chinese models started far behind, but from 2025 the gap closed quickly, and most of them are open-weight. How the gap closed is covered on the <a href="china.html">Catching up and distillation</a> page.</p></article>
+      <article class="card"><span class="tag">Note</span><h3>These are vendor-reported scores</h3><p>Each lab tests with different settings (thinking budget, agent harness, retries), so points can't be compared precisely. Just read the trend. Third-party reruns usually come out a few points lower, and this exam is nearly maxed out, so newer comparisons use Pro.</p></article>
+    </div>
+    <p class="caveat mt" id="chartsrc"></p>
+  </div>
+</section>
+
+<section class="s gutter" id="matrix">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">03 · Side by side</span>
+      <h2>Leading models compared, November 2026</h2>
+      <p class="lead">This table sticks to third-party numbers as much as possible: Artificial Analysis's composite index and Terminal-Bench, both rerun with one set of settings, plus LMArena rankings from anonymous user votes. Click a column header to sort.</p>
+    </div>
+    <div class="mx-box">
+      <div class="mx-scroll"><table class="mx" id="mx">
+        <thead><tr>
+          <th scope="col" data-k="1">Model</th>
+          <th scope="col" data-k="3" class="num">Composite<small>AA v5</small></th>
+          <th scope="col" data-k="4" class="num">Terminal tasks<small>Terminal-Bench 4.0</small></th>
+          <th scope="col" data-k="5" class="num">User votes<small>LMArena text</small></th>
+          <th scope="col" data-k="7" class="num">Price<small>per 1M tokens in / out</small></th>
+        </tr></thead>
+        <tbody></tbody>
+      </table></div>
+      <p class="swipe">← Swipe to see all columns</p>
+      <dl class="mx-key">
+        <dt>Composite</dt><dd>Artificial Analysis reruns a dozen-plus exams (reasoning, knowledge, coding, agents) with one set of settings and combines them into a total. Higher is better.</dd>
+        <dt>Terminal tasks</dt><dd>The AI completes real work in a terminal (installing packages, fixing configs, processing data). Closer to an agent's daily work than SWE-bench. Third-party rerun scores are used here.</dd>
+        <dt>User votes</dt><dd>LMArena shows users answers from two anonymous models side by side, has them pick the better one, and converts the results into a chess-like rating. It measures "which one people prefer", not correctness.</dd>
+        <dt>Price</dt><dd>API pricing in US dollars. Subscription plans (such as $20 a month) are separate.</dd>
+      </dl>
+      <p class="caveat">A snapshot from early November 2026. Numbers come from the public Artificial Analysis and LMArena leaderboards, as compiled by sites such as felloai.com, kingy.ai and handicraftm.com. The sites differ by 1–3 points, and rankings change all the time. "—" means the item wasn't in the data we found. Green tags mark open-weight models.</p>
+    </div>
+
+    <div class="s-head measure mt2">
+      <span class="eyebrow">For comparison · The vendor's own table</span>
+      <h3 class="h2s">The same models, in the vendor's own table</h3>
+      <p class="lead">Below is the table from Anthropic's Opus 5.5 announcement. On the same Terminal-Bench 4.0, Opus 5.5 self-reports 66.4%, while third-party reruns put it around 60%. And most of the exams chosen for the table are ones where the lab's own model leads.</p>
+    </div>
+    <div class="mx-scroll"><table class="mx vt">
+      <thead><tr><th scope="col">Exam</th><th scope="col" class="num">Opus 5.5</th><th scope="col" class="num">Fable 5.1</th><th scope="col" class="num">Opus 5</th><th scope="col" class="num">GPT-6 Astra</th><th scope="col" class="num">GPT-5.6 Sol</th></tr></thead>
+      <tbody>
+        <tr><td>Terminal-Bench 4.0</td><td class="num"><b>66.4%</b></td><td class="num">55.8%</td><td class="num">52.3%</td><td class="num">57.9%</td><td class="num">37.3%</td></tr>
+        <tr><td>GDPval-AA (knowledge work)</td><td class="num"><b>1846</b></td><td class="num">1735</td><td class="num">1708</td><td class="num">1542</td><td class="num">1588</td></tr>
+        <tr><td>Humanity's Last Exam (with tools)</td><td class="num"><b>67.7%</b></td><td class="num">65.6%</td><td class="num">63.6%</td><td class="num">57.2%</td><td class="num">—</td></tr>
+        <tr><td>AutomationBench</td><td class="num">40.0%</td><td class="num">31.4%</td><td class="num">26.9%</td><td class="num"><b>41.4%</b></td><td class="num">28.8%</td></tr>
+        <tr><td>Terminal-Bench-Science</td><td class="num">58.7%</td><td class="num">52.6%</td><td class="num">29.0%</td><td class="num"><b>64.6%</b></td><td class="num">22.4%</td></tr>
+      </tbody>
+    </table></div>
+    <p class="caveat">Source: Anthropic, "Claude Opus 5.5" (2026/9/22). The GPT columns are numbers OpenAI published, as cited by Anthropic.</p>
+  </div>
+</section>
+
+<section class="s gutter" id="strengths">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">04 · Who is good at what</span>
+      <h2>If you can only pick one, it depends on the job</h2>
+      <p class="lead">Based on the third-party numbers above, the vendors' own tables, and reviews from several evaluation sites (November 2026). This is general direction, not a verdict.</p>
+    </div>
+    <div class="good">
+      <article class="card" style="--c:var(--l-skills)"><span class="tag">Coding and long-running agent work</span><h3>Claude Opus 5.5</h3><p>Several review sites rate it the strongest overall and best coding model publicly available; its third-party composite index is the highest among publicly available models. About 40% cheaper than Opus 5. <b>To save money</b>, try Sonnet 5.5 first: it scores even higher on terminal tasks at half the price.</p></article>
+      <article class="card" style="--c:var(--text)"><span class="tag">The hardest reasoning, math and science</span><h3>GPT-6 Astra</h3><p>Third parties measured 95% on ARC-AGI-2 (abstract reasoning puzzles), and it leads on OpenAI's self-reported hard math tests; several sites call it the first choice for "the hardest reasoning problems". Priced like Fable, so on the expensive side. For everyday coding, GPT-6.1 Sol costs a fifth as much.</p></article>
+      <article class="card" style="--c:var(--l-hist)"><span class="tag">Long documents, video, general preference</span><h3>Gemini 4 Argon</h3><p>Ranked first among public models in LMArena user votes, meaning ordinary people most often prefer its answers. Long documents, long videos, and financial or legal documents are its recommended strengths. Its current promotional price is very competitive.</p></article>
+      <article class="card" style="--c:var(--l-skills)"><span class="tag">Writing</span><h3>Claude Fable 5.1</h3><p>Several sites rate it the best writer, suited to long, style-heavy text. But it's Anthropic's most expensive tier, its third-party composite index is actually below Opus 5.5, and you usually don't need it for coding.</p></article>
+      <article class="card" style="--c:var(--l-new)"><span class="tag">High-volume, low-cost everyday tasks</span><h3>GPT-6 Luna, DeepSeek V4.1 Flash, Gemini 3.8 Flash</h3><p>A small fraction of flagship prices, suited to classification, summarization and translation: lots of volume, not much difficulty. Cursor's Auto mode routes simple requests to this tier.</p></article>
+      <article class="card" style="--c:var(--l-mem)"><span class="tag">Self-hosting, open weights</span><h3>Kimi K3.1 Pro, GLM-5.3, DeepSeek V4</h3><p>You can download the weights and run them on your own servers. Kimi K3.1 Pro even ranks near the top on terminal tasks. Watch out for data storage and censorship issues; see the <a href="china.html#faq">Catching up and distillation</a> page.</p></article>
+    </div>
+    <p class="elder mt"><b>In plain words</b><span>It's like choosing a doctor: no one is best at everything, so first decide which specialty you need. For home use, the free versions of Claude, ChatGPT and Gemini are close; pick whichever feels comfortable.</span></p>
+    <p class="caveat mt">There are two even stronger models most people can't use: Google's Gemini 4 Carbon and Anthropic's Mythos, both available only to selected security partners.</p>
+  </div>
+</section>
+
+
+<section class="s gutter" id="roster-sec">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">05 · Model roster</span>
+      <h2>What each model is called,<br>when it came out, how it scored</h2>
+      <p class="lead">Since 2026 every lab splits its models into tiers, and the names look less and less like version numbers. Naming first, then the roster.</p>
+    </div>
+    <div class="names">
+      <article class="nm" style="--c:var(--l-skills)"><span class="who">Anthropic · Claude</span>
+        <dl><dt>Fable</dt><dd>Added June 2026, currently the top tier</dd><dt>Opus</dt><dd>Large flagship, the workhorse for coding and agents</dd><dt>Sonnet</dt><dd>Mid-size, balancing speed and price</dd><dt>Haiku</dt><dd>Small, fastest and cheapest</dd><dt>Mythos</dt><dd>Only for selected security partners</dd></dl></article>
+      <article class="nm" style="--c:var(--text)"><span class="who">OpenAI · GPT</span>
+        <dl><dt>Sol</dt><dd>Top of the three tiers from GPT-5.6; with GPT-6, Astra sits above it</dd><dt>Terra</dt><dd>The middle tier, the everyday workhorse</dd><dt>Luna</dt><dd>The fast, cheap tier</dd><dt>Astra</dt><dd>GPT-6's flagship (September 2026)</dd><dt>o series</dt><dd>Reasoning models of 2024–2025 (o1, o3)</dd></dl></article>
+      <article class="nm" style="--c:var(--l-hist)"><span class="who">Google · Gemini</span>
+        <dl><dt>Pro</dt><dd>Flagship</dd><dt>Flash</dt><dd>Fast and cheap</dd><dt>Gemini 4 Argon</dt><dd>The new top model of September 2026</dd></dl></article>
+      <article class="nm" style="--c:var(--l-mem)"><span class="who">Chinese labs</span>
+        <dl><dt>DeepSeek</dt><dd>V series general, R series reasoning; V4 comes in Pro and Flash</dd><dt>Kimi</dt><dd>Moonshot AI, the K series</dd><dt>Qwen</dt><dd>Alibaba; Max is the largest tier</dd><dt>GLM · MiniMax</dt><dd>Zhipu and MiniMax, focused on agents</dd></dl></article>
+    </div>
+
+    <div class="roster-box mt">
+      <div class="roster-top">
+        <div class="tabs" id="rosterTabs" role="group" aria-label="Filter by lab">
+          <button type="button" data-v="all" aria-pressed="true">All</button>
+          <button type="button" data-v="a" aria-pressed="false">Anthropic</button>
+          <button type="button" data-v="o" aria-pressed="false">OpenAI</button>
+          <button type="button" data-v="g" aria-pressed="false">Google</button>
+          <button type="button" data-v="c" aria-pressed="false">China</button>
+        </div>
+      </div>
+      <div class="roster-head" aria-hidden="true"><span>Model</span><span>Released</span><span>Verified</span><span>Pro</span></div>
+      <ol class="roster" id="roster"></ol>
+      <p class="caveat"><b>Verified</b>: the 500-question exam above. <b>Pro</b>: a newer exam from Scale AI, with longer, harder problems that models are less likely to have "memorized"; the same model usually scores 10–20 points lower. In February 2026 OpenAI said it would stop reporting Verified because the questions had leaked into training data and some tests were wrong, and switched to Pro. So OpenAI's 2026 models only have Pro scores, and the GPT-6 family mainly reported other exams, so both columns show "—".</p>
+    </div>
+
+  </div>
+</section>
+
+<section class="s gutter" id="refs">
+  <div class="frame measure">
+    <div class="s-head"><span class="eyebrow">06 · Sources</span><h2>Where the numbers come from</h2></div>
+    <ul class="refs">
+      <li>Lab announcements and model cards (OpenAI, Anthropic, Google, DeepSeek, Moonshot, Alibaba, Zhipu, MiniMax), 2024–2026.</li>
+      <li>Anthropic, "Claude Opus 4.6" (2026/2/5), "Claude Opus 4.7" (2026/4/16), "Claude Opus 4.8" (2026/5/28), "Claude Opus 5" (2026/7/24), "Claude Opus 5.5" (2026/9/22).</li>
+      <li>OpenAI, "Introducing GPT-5.2" (2025/12/11), "Why we no longer evaluate SWE-bench Verified" (2026/2/23).</li>
+      <li>vals.ai third-party SWE-bench Verified reruns (updates stopped 2026/9/1); Scale AI SWE-bench Pro.</li>
+      <li>Artificial Analysis composite index and Terminal-Bench; LMArena text leaderboard (early 2026/11, compiled via felloai.com, kingy.ai, handicraftm.com, onyx.app).</li>
+      <li>Roster scores compiled from llm-stats.com, benchlm.ai and morphllm.com (checked 2026/11).</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer class="gutter"><div class="frame">Written in November 2026.</div></footer>
+
+<script>
+(function () {
+  "use strict";
+  /* SWE-bench Verified at launch, vendor-reported. [label, "YYYY-MM", score, estMonth?] */
+  var SERIES = [
+    {"key": "a", "name": "Anthropic", "color": "var(--l-skills)", "pts": [["Claude 3.5 Sonnet (new)", "2024-10", 49.0], ["Claude 3.7 Sonnet", "2025-02", 62.3], ["Claude Opus 4", "2025-05", 72.5], ["Claude Opus 4.1", "2025-08", 74.5], ["Claude Sonnet 4.5", "2025-09", 77.2], ["Claude Opus 4.5", "2025-11", 80.9], ["Claude Opus 4.6", "2026-02", 80.8], ["Claude Opus 4.8", "2026-05", 88.6], ["Claude Fable 5", "2026-06", 95.0]]},
+    {"key": "o", "name": "OpenAI", "color": "var(--text)", "dy": -10, "pts": [["o1", "2024-12", 48.9], ["o3", "2025-04", 69.1], ["GPT-5", "2025-08", 74.9], ["GPT-5.1", "2025-11", 76.3], ["GPT-5.2", "2025-12", 80.0]]},
+    {"key": "g", "name": "Google", "color": "var(--l-hist)", "dy": 14, "pts": [["Gemini 2.5 Pro", "2025-03", 63.8], ["Gemini 3 Pro", "2025-11", 76.2], ["Gemini 3.1 Pro", "2026-02", 80.6]]},
+    {"key": "c", "name": "Best of China", "color": "var(--l-mem)", "dy": -2, "pts": [["DeepSeek V3", "2024-12", 42.0], ["DeepSeek R1", "2025-01", 49.2], ["Kimi K2", "2025-07", 65.8], ["Kimi K2 Thinking", "2025-11", 71.3], ["DeepSeek V4 Pro", "2026-08", 80.6, 1]]}
+  ];
+  var EVENTS = [["2024-11", "MCP"], ["2025-01", "DeepSeek R1"], ["2025-05", "Claude Code GA"], ["2026-02", "OpenAI drops Verified"]];
+  /* roster: [vendor, name, date label, sortKey, tier, verified|null, pro|null, note] */
+  var ROSTER = [
+    ["a","Claude 3.5 Sonnet (new)","2024.10","2024-10","Mid-size",49.0,null,""],
+    ["a","Claude 3.7 Sonnet","2025.02","2025-02","Mid-size",62.3,null,""],
+    ["a","Claude Opus 4","2025.05","2025-05","Flagship",72.5,null,"Launched with Claude Code GA"],
+    ["a","Claude Opus 4.1","2025.08","2025-08","Flagship",74.5,null,""],
+    ["a","Claude Sonnet 4.5","2025.09","2025-09","Mid-size",77.2,null,""],
+    ["a","Claude Haiku 4.5","2025.10","2025-10","Small",73.3,null,""],
+    ["a","Claude Opus 4.5","2025.11","2025-11","Flagship",80.9,null,""],
+    ["a","Claude Opus 4.6","2026.02","2026-02","Flagship",80.8,null,""],
+    ["a","Claude Opus 4.7","2026.04","2026-04","Flagship",87.6,64.3,""],
+    ["a","Claude Opus 4.8","2026.05","2026-05","Flagship",88.6,69.2,""],
+    ["a","Claude Fable 5","2026.06","2026-06","Top tier",95.0,80.0,"Paused from 6/12 under an export-control order, resumed 7/1"],
+    ["a","Claude Sonnet 5","2026.06","2026-06","Mid-size",85.2,63.2,""],
+    ["a","Claude Opus 5","2026.07","2026-07","Flagship",null,79.2,"Compiled Verified figures disagree, so none is listed"],
+    ["a","Claude Opus 5.5","2026.09","2026-09","Flagship",null,89.9,"Released the same day as GPT-6 Sol and Luna"],
+    ["a","Claude Mythos Preview","H1 2026","2026-04","Partners only",93.9,77.8,"Security partners only; Mythos 5 followed"],
+    ["o","o1","2024.12","2024-12","Reasoning",48.9,null,""],
+    ["o","o3","2025.04","2025-04","Reasoning",69.1,null,""],
+    ["o","GPT-5","2025.08","2025-08","Flagship",74.9,null,""],
+    ["o","GPT-5.1","2025.11","2025-11","Flagship",76.3,null,""],
+    ["o","GPT-5.2","2025.12","2025-12","Flagship",80.0,null,"Last OpenAI flagship to report Verified"],
+    ["o","GPT-5.5","Spring 2026","2026-04","Flagship",null,58.6,""],
+    ["o","GPT-5.6 Sol","2026.07","2026-07","Top tier",null,64.6,"Three tiers from GPT-5.6: Sol / Terra / Luna"],
+    ["o","GPT-5.6 Terra","2026.07","2026-07","Middle tier",null,63.4,""],
+    ["o","GPT-5.6 Luna","2026.07","2026-07","Fast & cheap",null,62.7,""],
+    ["o","GPT-6 Astra","2026.09","2026-09","Flagship",null,null,"Released 9/3; mainly reported other exams"],
+    ["o","GPT-6 Sol","2026.09","2026-09","Mid-tier",null,null,"Released 9/22"],
+    ["o","GPT-6 Luna","2026.09","2026-09","Small",null,null,"Released 9/22"],
+    ["o","GPT-6.1 Sol","2026.09","2026-09","Mid-tier",null,null,"Released 9/29"],
+    ["o","GPT-6.1 Terra","2026.10","2026-10","Middle tier",null,null,"Released 10/26"],
+    ["g","Gemini 2.5 Pro","2025.03","2025-03","Flagship",63.8,null,""],
+    ["g","Gemini 3 Pro","2025.11","2025-11","Flagship",76.2,null,""],
+    ["g","Gemini 3 Flash","2025.12","2025-12","Fast & cheap",78.0,null,""],
+    ["g","Gemini 3.1 Pro","2026.02","2026-02","Flagship",80.6,54.2,""],
+    ["g","Gemini 4 Argon","2026.09","2026-09","Top tier",null,null,"Released 9/30; mainly reported other exams"],
+    ["c","DeepSeek V3","2024.12","2024-12","General",42.0,null,"Open weights"],
+    ["c","DeepSeek R1","2025.01","2025-01","Reasoning",49.2,null,"Open weights"],
+    ["c","Kimi K2","2025.07","2025-07","General",65.8,null,"Open weights"],
+    ["c","Kimi K2 Thinking","2025.11","2025-11","Reasoning",71.3,null,"Open weights"],
+    ["c","GLM-5","2026","2026-01","Flagship",77.8,null,"Open weights; month unconfirmed"],
+    ["c","Kimi K2.6","2026","2026-05","Flagship",80.2,58.6,"Open weights; month unconfirmed"],
+    ["c","Qwen3.7 Max","2026","2026-05","Flagship",80.4,60.6,"Open weights; month unconfirmed"],
+    ["c","MiniMax M3","2026","2026-05","Flagship",80.5,59.0,"Open weights; month unconfirmed"],
+    ["c","DeepSeek V4 Pro","2026.08","2026-08","Flagship",80.6,55.4,"Open weights; month estimated from version"],
+    ["c","Qwen3.8 Max","2026","2026-09","Flagship",null,67.7,"Month unconfirmed"]
+  ];
+  var VN = { a: "Anthropic", o: "OpenAI", g: "Google", c: "China" };
+  var SRC = "Sources: Verified scores are as published by each lab at launch (vendor-reported, not third-party reruns). 2024–2025 from lab announcements and model cards; 2026 compiled from llm-stats.com, benchlm.ai and morphllm.com, OpenAI's \"Why we no longer evaluate SWE-bench Verified\" (2026/2/23), and launch coverage of GPT-5.6, GPT-6, Opus 5.5 and Gemini 4 Argon (checked 2026/11). Pro scores are mostly measured by vendors with their own agent harnesses, so they are only roughly comparable. The curve only plots flagships with a confirmed release month and a Verified score; hollow circles mark months estimated from version numbers. The vertical axis starts at 30%.";
+  var svg = document.getElementById("chart"), NS = "http://www.w3.org/2000/svg";
+  var W = 900, H = 460, m = { l: 56, r: 130, t: 24, b: 48 };
+  var t0 = mon("2024-07"), t1 = mon("2026-12"), y0 = 30, y1 = 100;
+  function mon(s) { var p = s.split("-"); return +p[0] * 12 + (+p[1] - 1); }
+  function X(s) { return m.l + (mon(s) - t0) / (t1 - t0) * (W - m.l - m.r); }
+  function Y(v) { return m.t + (1 - (v - y0) / (y1 - y0)) * (H - m.t - m.b); }
+  function el(n, a, parent) { var e = document.createElementNS(NS, n); for (var k in a) e.setAttribute(k, a[k]); (parent || svg).appendChild(e); return e; }
+  var hidden = {};
+
+  function draw() {
+    svg.innerHTML = "";
+    var g = el("g", { "class": "grid" });
+    for (var v = y0; v <= y1; v += 10) {
+      el("line", { x1: m.l, x2: W - m.r, y1: Y(v), y2: Y(v) }, g);
+      el("text", { x: m.l - 10, y: Y(v) + 5, "text-anchor": "end" }).textContent = v + "%";
+    }
+    ["2024-07", "2025-01", "2025-07", "2026-01", "2026-07"].forEach(function (s) {
+      el("text", { x: X(s), y: H - m.b + 28, "text-anchor": "middle" }).textContent = s.replace("-", ".");
+    });
+    var ev = el("g", { "class": "event" });
+    EVENTS.forEach(function (e, i) {
+      el("line", { x1: X(e[0]), x2: X(e[0]), y1: m.t, y2: H - m.b }, ev);
+      el("text", { x: X(e[0]) + 5, y: H - m.b - 10 - (i % 2) * 20 }, ev).textContent = e[1];
+    });
+    SERIES.forEach(function (s) {
+      var gs = el("g", { "class": "series" + (hidden[s.key] ? " dim" : "") });
+      var d = s.pts.map(function (p, i) { return (i ? "L" : "M") + X(p[1]).toFixed(1) + " " + Y(p[2]).toFixed(1); }).join(" ");
+      el("path", { d: d, stroke: s.color }, gs);
+      s.pts.forEach(function (p) {
+        var c = el("circle", { cx: X(p[1]), cy: Y(p[2]), r: 6, fill: p[3] ? "var(--surface)" : s.color, stroke: p[3] ? s.color : "var(--surface)", tabindex: 0 }, gs);
+        var show = function () { mark(p[0]); document.getElementById("tip").innerHTML = "<b>" + p[0] + "</b> · " + s.name + " · " + p[1].replace("-", ".") + " · SWE-bench Verified <b>" + p[2].toFixed(1) + "%</b>" + (p[3] ? " (month estimated)" : ""); };
+        c.addEventListener("mouseenter", show); c.addEventListener("focus", show); c.addEventListener("click", show);
+      });
+      var last = s.pts[s.pts.length - 1];
+      el("text", { x: X(last[1]) + 9, y: Y(last[2]) + 4 + (s.dy || 0), "class": "endlabel", fill: s.color }, gs).textContent = s.name;
+    });
+  }
+  var tg = document.getElementById("toggles");
+  SERIES.forEach(function (s) {
+    var b = document.createElement("button"); b.type = "button"; b.setAttribute("aria-pressed", "true");
+    b.innerHTML = '<i style="--c:' + s.color + '"></i>' + s.name;
+    b.onclick = function () { hidden[s.key] = !hidden[s.key]; b.setAttribute("aria-pressed", hidden[s.key] ? "false" : "true"); draw(); };
+    tg.appendChild(b);
+  });
+  document.getElementById("chartsrc").textContent = SRC;
+  draw();
+
+  /* roster */
+  var list = document.getElementById("roster"), vf = "all";
+  function cell(v, max) { return v == null ? '<span class="na">—</span>' : '<b>' + v.toFixed(1) + '%</b><i style="--w:' + v + '%"></i>'; }
+  function render() {
+    var rows = ROSTER.filter(function (r) { return vf === "all" || r[0] === vf; }).sort(function (x, y) { return x[3] < y[3] ? 1 : x[3] > y[3] ? -1 : 0; });
+    list.innerHTML = rows.map(function (r) {
+      return '<li data-n="' + r[1] + '" style="--c:' + ({a:"var(--l-skills)",o:"var(--text)",g:"var(--l-hist)",c:"var(--l-mem)"})[r[0]] + '">' +
+        '<div class="rn"><b>' + r[1] + '</b><span class="rt">' + VN[r[0]] + ' · ' + r[4] + '<span class="rdm"> · ' + r[2] + '</span></span>' + (r[7] ? '<span class="rx">' + r[7] + '</span>' : '') + '</div>' +
+        '<span class="rd">' + r[2] + '</span><span class="rs v">' + cell(r[5]) + '</span><span class="rs p">' + cell(r[6]) + '</span></li>';
+    }).join("");
+  }
+  function mark(name) {
+    if (vf !== "all") { vf = "all"; setTabs(); render(); }
+    [].forEach.call(list.children, function (li) { li.classList.toggle("hl", li.dataset.n === name); });
+  }
+  var tabs = [].slice.call(document.querySelectorAll("#rosterTabs button"));
+  function setTabs() { tabs.forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.v === vf ? "true" : "false"); }); }
+  tabs.forEach(function (b) { b.addEventListener("click", function () { vf = b.dataset.v; setTabs(); render(); }); });
+  render();
+
+
+  /* matrix */
+  var MX = [["a", "Claude Opus 5.5", "Flagship", 59.1, 59.6, 1509, 4, 20, 0, ""], ["a", "Claude Fable 5.1", "Top tier", 49.7, 55.1, 1501, 10, 50, 0, ""], ["a", "Claude Sonnet 5.5", "Mid-size", null, 63.6, null, 2, 10, 0, ""], ["o", "GPT-6 Astra", "Flagship", 56.9, 59.6, 1476, 10, 50, 0, ""], ["o", "GPT-6.1 Sol", "Mid-tier", 54.6, 56.1, null, 2, 10, 0, ""], ["o", "GPT-6.1 Terra", "Middle tier", 51.0, 55.6, null, 1, 5, 0, ""], ["o", "GPT-6 Luna", "Small", 27.9, null, null, 0.1, 0.5, 0, ""], ["g", "Gemini 4 Argon", "Top tier", 50.4, 57.1, 1520, 2, 10, 0, "Promo price until 11/30, then $4 / $20"], ["g", "Gemini 4 Carbon", "Limited", 60.0, 65.2, 1528, null, null, 0, "Not publicly available yet"], ["g", "Gemini 3.8 Flash", "Fast & cheap", 30.8, 19.7, null, 0.75, 3.75, 0, "Promo price"], ["c", "Kimi K3.1 Pro", "Flagship", 46.5, 67.2, null, 2, 10, 1, ""], ["c", "Qwen3.8 Max", "Flagship", 33.6, null, 1481, 2, 6, 0, ""], ["c", "DeepSeek V4.1 Flash", "Fast & cheap", 32.6, 33.8, null, 0.3, 1.2, 1, ""], ["c", "GLM-5.3", "Flagship", 31.7, 41.9, null, 1.4, 4.4, 1, ""]];
+  var CC = {a:"var(--l-skills)",o:"var(--text)",g:"var(--l-hist)",c:"var(--l-mem)"};
+  var mxBody = document.querySelector("#mx tbody"), sortK = 3;
+  var best = {}; [3,4,5].forEach(function (k) { best[k] = Math.max.apply(null, MX.map(function (r) { return r[k] || 0; })); });
+  function bar(v, k, max) { if (v == null) return '<span class="na">—</span>'; var w = k === 5 ? (v - 1400) / 1.4 : v / max * 100; return '<span class="bar' + (v === best[k] ? ' top' : '') + '"><b>' + (k === 5 ? v : v.toFixed(1)) + '</b><i style="--w:' + w.toFixed(0) + '%"></i></span>'; }
+  function price(r) { return r[6] == null ? '<span class="na">n/a</span>' : '$' + r[6] + ' / $' + r[7]; }
+  function drawMx() {
+    var rows = MX.slice().sort(function (a, b) {
+      if (sortK === 1) return a[1] < b[1] ? -1 : 1;
+      var x = a[sortK], y = b[sortK];
+      if (sortK === 7) { x = x == null ? 1e9 : x; y = y == null ? 1e9 : y; return x - y; }
+      return (y == null ? -1 : y) - (x == null ? -1 : x);
+    });
+    mxBody.innerHTML = rows.map(function (r) {
+      return '<tr style="--c:' + CC[r[0]] + '"><td><b>' + r[1] + (r[8] ? '<span class="open">open weights</span>' : '') + '</b><span>' + r[2] + (r[9] ? ' · ' + r[9] : '') + '</span></td>' +
+        '<td class="num">' + bar(r[3], 3, 70) + '</td><td class="num">' + bar(r[4], 4, 80) + '</td><td class="num">' + bar(r[5], 5) + '</td><td class="num">' + price(r) + '</td></tr>';
+    }).join("");
+    document.querySelectorAll("#mx th[data-k]").forEach(function (th) { if (+th.dataset.k === sortK) th.setAttribute("aria-sort", sortK === 1 || sortK === 7 ? "ascending" : "descending"); else th.removeAttribute("aria-sort"); });
+  }
+  document.querySelectorAll("#mx th[data-k]").forEach(function (th) {
+    th.tabIndex = 0;
+    var go = function () { sortK = +th.dataset.k; drawMx(); };
+    th.addEventListener("click", go); th.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+  });
+  drawMx();
+  /* phones: open the chart scrolled to the newest data */
+  var sc = document.getElementById("chartScroll");
+  requestAnimationFrame(function () { sc.scrollLeft = sc.scrollWidth; });
+})();
+</script>
+</body>
+</html>

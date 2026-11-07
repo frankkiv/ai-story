@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Catching up and distillation · AI Grew Hands</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+<link rel="alternate" hreflang="zh-Hant" href="../china.html">
+<link rel="alternate" hreflang="en" href="china.html">
+<script src="../assets/i18n.js"></script>
+<style>
+.reasons { counter-reset: r; }
+.reasons .card { position: relative; }
+.flowchart { display: grid; gap: .5rem; }
+@media (min-width: 900px) { .flowchart { grid-template-columns: repeat(5, minmax(0,1fr)); align-items: stretch; } }
+.fstep { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: .9rem 1rem; display: grid; gap: .3rem; align-content: start; position: relative; min-width: 0; }
+.fstep .n { font-family: var(--mono); font-size: .82rem; color: var(--warn); }
+.fstep b { font-size: 1rem; }
+.fstep span { font-size: .9rem; color: var(--muted); }
+.fstep.teacher { border-color: color-mix(in srgb, var(--l-skills) 60%, var(--line)); }
+.fstep.student { border-color: color-mix(in srgb, var(--l-mem) 60%, var(--line)); }
+.fstep.pulse { animation: glow 1.2s ease; }
+@keyframes glow { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--warn) 50%, transparent); } 100% { box-shadow: 0 0 0 12px transparent; } }
+
+.duel { display: grid; gap: .6rem; }
+.duel-row { display: grid; gap: .6rem; }
+@media (min-width: 820px) { .duel-row { grid-template-columns: minmax(0,1fr) 2.5rem minmax(0,1fr); align-items: stretch; } }
+.side { border-radius: 14px; padding: 1rem 1.1rem; display: grid; gap: .3rem; align-content: start; border: 1px solid var(--line); min-width: 0; }
+.side .tag { font-family: var(--mono); font-size: .82rem; }
+.side.atk { background: var(--warn-soft); }
+.side.atk .tag { color: var(--warn); }
+.side.def { background: var(--accent-soft); }
+.side.def .tag { color: var(--accent); }
+.side b { font-size: 1.02rem; }
+.side span { font-size: .93rem; color: var(--muted); }
+.vs { display: none; place-items: center; font-family: var(--mono); font-size: .82rem; color: var(--muted); }
+@media (min-width: 820px) { .vs { display: grid; } }
+.duel-head { display: none; }
+@media (min-width: 820px) { .duel-head { display: grid; grid-template-columns: 1fr 2.5rem 1fr; font-family: var(--mono); font-size: .82rem; color: var(--muted); padding: 0 .3rem; } }
+
+.cases { list-style: none; margin: 0; padding: 0; display: grid; gap: .75rem; border-left: 2px solid var(--line); }
+.cases li { position: relative; padding-left: 1.25rem; display: grid; gap: .2rem; }
+.cases li::before { content: ""; position: absolute; left: -7px; top: .55rem; width: 12px; height: 12px; border-radius: 50%; background: var(--surface); border: 2px solid var(--warn); }
+.cases .d { font-family: var(--mono); font-size: .82rem; color: var(--warn); }
+.cases span { color: var(--muted); font-size: .96rem; }
+
+.split-bars { display: grid; gap: .7rem; }
+.sb { display: grid; grid-template-columns: minmax(0, 10rem) 1fr 3.5rem; gap: .75rem; align-items: center; font-size: .92rem; }
+@media (max-width: 520px) { .sb { grid-template-columns: 1fr 3.4rem; } .sb .track { grid-column: 1 / -1; grid-row: 2; } }
+.sb .track { height: .9rem; background: var(--sunken); border-radius: 999px; overflow: hidden; }
+.sb .fill { display: block; height: 100%; border-radius: 999px; background: var(--c); }
+.sb .v { font-family: var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
+
+.lab-grid { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); }
+.lab { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 1rem 1.1rem; display: grid; gap: .3rem; }
+.lab b { font-size: 1.05rem; }
+.lab .who { font-family: var(--mono); font-size: .82rem; color: var(--muted); }
+.lab span { font-size: .92rem; color: var(--muted); }
+.sources { font-size: .88rem; color: var(--muted); display: grid; gap: .3rem; }
+.sources a { color: var(--muted); }
+</style>
+</head>
+<body>
+
+<nav class="nav gutter" aria-label="Site">
+  <div class="frame">
+    <a class="brand" href="index.html"><i></i><span>AI Grew Hands</span></a>
+    <ul>
+      <li><a class="l" href="history.html"><span class="lg">Timeline</span><span class="sh">Timeline</span></a></li>
+      <li><a class="l" href="bench.html"><span class="lg">Model benchmarks</span><span class="sh">Bench</span></a></li>
+      <li><a class="l" href="tech.html"><span class="lg">How it works</span><span class="sh">How</span></a></li>
+      <li><a class="l site-on" href="china.html"><span class="lg">Catching up</span><span class="sh">China</span></a></li>
+      <li><a class="l" href="future.html"><span class="lg">Next bottleneck</span><span class="sh">Limits</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero gutter">
+  <div class="frame" style="display:block">
+    <div class="hero-copy measure">
+      <span class="pill">PART 4 · <b>Catching up and distillation</b></span>
+      <h1>How Chinese AI caught up,<br><em>and how US labs push back</em></h1>
+      <p class="sub">At the end of 2024, China's best models still trailed US flagships by a wide margin on coding exams. By 2026 the gap had shrunk to a few points, and most of them are open-weight and much cheaper. Engineering innovation is one of the main reasons; "distilling" other companies' models is the most controversial one.</p>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section class="s gutter" id="rise">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">01 · The rise</span>
+      <h2>A few key players</h2>
+      <p class="lead">When DeepSeek R1 launched in January 2025, many people realized for the first time how close Chinese models had come. After that, several companies took turns releasing strong open-weight models. For how the scores changed, see <a href="bench.html#bench">the capability curve on the benchmarks page</a>.</p>
+    </div>
+    <div class="lab-grid">
+      <div class="lab"><span class="who">DeepSeek</span><b>V3 (2024.12), R1 (2025.01)</b><span>V3 is a 671B-parameter MoE model that activates only 37B per token; its technical report says full training took 2.788 million H800 GPU hours. R1 showed that reinforcement learning alone can teach a model to reason, and the paper was later published in Nature.</span></div>
+      <div class="lab"><span class="who">Moonshot AI</span><b>The Kimi K2 family</b><span>Focused on agents and coding, open-weight. Versions from K2 Thinking onward come close to US flagships on SWE-bench.</span></div>
+      <div class="lab"><span class="who">Alibaba</span><b>Qwen</b><span>Everything from small models to flagships. The open-weight versions are widely used by developers worldwide and often serve as the base for other models.</span></div>
+      <div class="lab"><span class="who">Zhipu</span><b>The GLM family</b><span>From GLM-4.5 on, focused on agent capabilities, also open-weight.</span></div>
+      <div class="lab"><span class="who">MiniMax</span><b>The M family</b><span>Focused on agents and coding, at very low prices.</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="why">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">02 · Why they caught up so fast</span>
+      <h2>Four reasons, only one of them controversial</h2>
+    </div>
+    <div class="grid2 reasons">
+      <article class="card"><span class="tag">Reason 1 · Engineering innovation</span><h3>Squeezing every bit of efficiency out of limited compute</h3><p>MoE (activating only a small part of the parameters each time), MLA (compressing the memory attention needs), low-precision training, and training reasoning with reinforcement learning. Labs around the world later borrowed many of these techniques.</p></article>
+      <article class="card"><span class="tag">Reason 2 · Export controls backfire</span><h3>Can't buy the best chips, so be more frugal</h3><p>The US restricts exports of advanced AI chips to China, which pushed Chinese teams to work harder on algorithms and systems. That's one reason their efficiency stands out.</p></article>
+      <article class="card"><span class="tag">Reason 3 · Open weights and low prices</span><h3>Anyone in the world can download and modify them</h3><p>Open weights let developers worldwide use them and report problems together, so the ecosystem moves fast; API prices are often a fraction of US flagships'.</p></article>
+      <article class="card hl" style="border-color: color-mix(in srgb, var(--warn) 55%, var(--line))"><span class="tag" style="color:var(--warn)">Reason 4 · Controversial</span><h3>Distilling other companies' models</h3><p>In early 2026, Anthropic and OpenAI both publicly accused some Chinese labs of using large numbers of accounts to query their models and training their own models on the answers. Details below.</p></article>
+    </div>
+    <div class="prose measure mt">
+      <p class="elder"><b>In plain words</b><span>A student whose grades improve fast might be a great, efficient learner, or might be secretly copying the top student's notes. In reality it's often both, and looking at only one side isn't fair.</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="what">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">03 · What distillation is</span>
+      <h2>A student model learns by imitating a teacher model's answers</h2>
+      <p class="lead">Distillation itself is an ordinary technique: use a large model's (the teacher's) outputs as teaching material to train a smaller, cheaper model (the student). Every lab uses it to shrink its own big models, and DeepSeek also distilled R1's reasoning into smaller models. The problem is when "the teacher belongs to someone else, who explicitly forbids it".</p>
+    </div>
+    <div class="flowchart" id="flow">
+      <div class="fstep"><span class="n">STEP 1</span><b>Prepare questions</b><span>Generate large numbers of prompts targeting the skills you want (coding, tool use, reasoning).</span></div>
+      <div class="fstep teacher"><span class="n">STEP 2</span><b>Ask the teacher model</b><span>Send them through the API, often asking it to "write out the reasoning step by step".</span></div>
+      <div class="fstep"><span class="n">STEP 3</span><b>Collect the answers</b><span>Turn the questions, answers and reasoning into training data.</span></div>
+      <div class="fstep student"><span class="n">STEP 4</span><b>Train the student</b><span>Supervised fine-tuning on this data, or use the teacher as a grader for reinforcement learning.</span></div>
+      <div class="fstep student"><span class="n">RESULT</span><b>The student picks up the teacher's "problem-solving style"</b><span>Similar abilities, without spending what the teacher spent on data and training.</span></div>
+    </div>
+    <div class="grid2 mt">
+      <div><div class="codehead"><span>What distillation training data looks like (illustrative)</span><span>jsonl</span></div>
+<pre><code>{<span class="k">"prompt"</span>: <span class="s">"Fix this race condition…"</span>,
+ <span class="k">"teacher_reasoning"</span>: <span class="p">"First look at the lock scope… step two…"</span>,  <span class="c">// the most valuable part</span>
+ <span class="k">"teacher_answer"</span>: <span class="s">"Move the mutex to…"</span>}
+{<span class="k">"prompt"</span>: <span class="s">"Use these three tools to find…"</span>,
+ <span class="k">"teacher_tool_calls"</span>: [ <span class="t">…</span> ],
+ <span class="k">"teacher_answer"</span>: <span class="s">"…"</span>}</code></pre></div>
+      <div class="prose">
+        <p><strong>Why is the reasoning the most valuable part?</strong> With only answers, the student can only memorize; with the full thinking steps, it learns "how to think". So one focus of anti-distillation is keeping the full reasoning from being taken.</p>
+        <p class="elder"><b>In plain words</b><span>Distillation is like asking the top student to write worked solutions for a big stack of problems and using them to train your own students. That's normal at the top student's own school; a rival cram school sending in fake students to collect the solutions in bulk is another matter.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="cases">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">04 · Public accusations</span>
+      <h2>From suspicion to naming names</h2>
+      <p class="lead">Everything below is the accusing company's own account. As of writing, this page found no detailed public response from the companies named.</p>
+    </div>
+    <ol class="cases measure">
+      <li><span class="d">2025.01</span><b>After DeepSeek R1 launched</b><span>OpenAI and Microsoft reportedly investigated whether someone had distilled OpenAI's models through the API.</span></li>
+      <li><span class="d">2025.09</span><b>Anthropic tightens sales restrictions</b><span>It stops serving companies controlled from China and other regions (including subsidiaries more than 50% owned), citing among other reasons that they might use distillation to build their own AI.</span></li>
+      <li><span class="d">2026.02.12</span><b>OpenAI's memo to the US House Select Committee on China</b><span>Says people linked to DeepSeek developed ways around access restrictions, getting US model outputs through "third-party routers that mask the source".</span></li>
+      <li><span class="d">2026.02</span><b>Google</b><span>Says a single campaign sent Gemini more than 100,000 prompts trying to replicate the model, calling it intellectual property theft.</span></li>
+      <li><span class="d">2026.02.23</span><b>Anthropic's report names DeepSeek, Moonshot and MiniMax</b><span>About 24,000 fraudulent accounts and over 16 million conversations. By Anthropic's count: MiniMax over 13 million, Moonshot over 3.4 million, DeepSeek over 150,000. Targets were agentic coding, tool use and reasoning, and DeepSeek is also said to have used Claude as a grader for reinforcement learning.</span></li>
+      <li><span class="d">2026.10.12</span><b>Anthropic's second report</b><span>Says new defenses cut the data distillers obtained by about 90–99%, blocked tens of thousands of accounts, and adds Zhipu for distilling security-related capabilities.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section class="s gutter" id="duel">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">05 · Attack and defense in detail</span>
+      <h2>How the attackers copy, how the defenders block</h2>
+      <p class="lead">The techniques described in the public reports, paired up. Each attack is followed by the matching defense.</p>
+    </div>
+    <div class="duel">
+      <div class="duel-head"><span>Attacker: the distiller</span><span></span><span>Defender: the model company</span></div>
+      <div class="duel-row">
+        <div class="side atk"><span class="tag">ATTACK · Scale</span><b>Masses of fake accounts + proxy networks</b><span>Traffic spread over tens of thousands of accounts, backed by what Anthropic calls "hydra cluster" proxy networks. A single network managed over 20,000 accounts at once; ban one and another takes its place.</span></div>
+        <div class="vs">vs</div>
+        <div class="side def"><span class="tag">DEFENSE · Detection</span><b>Behavioral fingerprints and classifiers</b><span>Linking accounts into a single campaign through IP correlation, request metadata and infrastructure traits; a two-stage classifier recognizes distillation patterns, with a false positive rate Anthropic puts below 0.1%.</span></div>
+      </div>
+      <div class="duel-row">
+        <div class="side atk"><span class="tag">ATTACK · Hiding the source</span><b>Third-party routers and resellers</b><span>Instead of using their own accounts directly, they go through third-party services that resell API access, so requests appear to come from someone else.</span></div>
+        <div class="vs">vs</div>
+        <div class="side def"><span class="tag">DEFENSE · Identity</span><b>Account verification and regional limits</b><span>Stronger verification for account types that are easy to impersonate, such as education, security research and startups; no service to China-controlled companies; sharing intelligence with cloud providers and other labs.</span></div>
+      </div>
+      <div class="duel-row">
+        <div class="side atk"><span class="tag">ATTACK · Extracting reasoning</span><b>Asking the model to write out its full thinking</b><span>Prompts designed to make the model spell out its reasoning step by step, or to reconstruct reasoning traces afterwards, because that's the most instructive part.</span></div>
+        <div class="vs">vs</div>
+        <div class="side def"><span class="tag">DEFENSE · Reasoning stays in</span><b>Show only summaries, limit where reasoning goes</b><span>Show the reasoning only as a summary, or only to the organization that made the request. Anthropic's experiment: a student trained on full reasoning scored 80.4% on SWE-bench; trained on summaries only, it dropped to 71.8%.</span></div>
+      </div>
+      <div class="duel-row">
+        <div class="side atk"><span class="tag">ATTACK · Targeted skills</span><b>Copy only the most expensive skills</b><span>Heavily concentrated on agentic coding, tool use, computer use and grading: the capabilities whose data is hardest to produce yourself.</span></div>
+        <div class="vs">vs</div>
+        <div class="side def"><span class="tag">DEFENSE · Cost</span><b>Bans, rate limits, and charging anyway</b><span>Tighter limits on repeat offenders, outright bans, and charging even for blocked requests, to raise the cost of copying.</span></div>
+      </div>
+      <div class="duel-row">
+        <div class="side atk"><span class="tag">ATTACK · Research frontier</span><b>Any visible output can be teaching material</b><span>As long as the API returns text, it can in theory be used for training. That's the root reason distillation is so hard to stop completely.</span></div>
+        <div class="vs">vs</div>
+        <div class="side def"><span class="tag">DEFENSE · Research frontier</span><b>Antidistillation sampling</b><span>A 2025 paper proposes slightly adjusting how the model picks the next token, so its reasoning traces train other models less effectively, with little effect on quality for ordinary users. Still at the research stage.</span></div>
+      </div>
+    </div>
+
+    <div class="card mt">
+      <span class="tag">With summaries only, how much can the student learn? (Anthropic experiment, 2026/10)</span>
+      <div class="split-bars">
+        <div class="sb"><span>Trained on full reasoning</span><span class="track"><span class="fill" style="width:80.4%; --c: var(--warn)"></span></span><span class="v">80.4%</span></div>
+        <div class="sb"><span>Trained on reasoning summaries only</span><span class="track"><span class="fill" style="width:71.8%; --c: var(--accent)"></span></span><span class="v">71.8%</span></div>
+      </div>
+      <p class="caveat">The student model's SWE-bench Verified score. Scale 0–100%.</p>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="debate">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">06 · Where the controversy lies</span>
+      <h2>It's not as black and white as it looks</h2>
+    </div>
+    <div class="grid3">
+      <article class="card"><span class="tag">Is it legal?</span><h3>Breaking terms of service isn't breaking the law</h3><p>Every lab forbids using outputs to train competing models, and fake accounts violate the terms too. But whether model outputs can be copyrighted is unsettled in every country, so it's mostly a business and policy question.</p></article>
+      <article class="card"><span class="tag">Double standard?</span><h3>US models used other people's data too</h3><p>Critics point out that large models were trained on huge amounts of other people's content from the web. Supporters argue that systematically taking a competitor's work through fake accounts is different in kind.</p></article>
+      <article class="card"><span class="tag">Security and policy</span><h3>Distillation can also get around export controls</h3><p>Anthropic argues distillation undermines chip export controls, and that distilled models don't necessarily keep the original's safety protections. That turns a business dispute into a geopolitical issue.</p></article>
+    </div>
+    <div class="prose measure mt">
+      <p>A balanced conclusion: Chinese labs do have a lot of real skill, as their published papers and open-weight models show; at the same time, the alleged distillation was large-scale, and US labs are pushing back with technology and policy. Both can be true.</p>
+      <p class="elder"><b>In plain words</b><span>Anti-distillation is like a famous teacher who writes only key points on the board instead of handing out full solutions, and who recognizes the people auditing the class under a hundred fake names. It stops most of them, but not all.</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="faq">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">07 · What family will ask</span>
+      <h2>Can I use Chinese AI apps?</h2>
+    </div>
+    <div class="faq measure">
+      <details open><summary>Yes, but know three things</summary><div class="a">
+        <p><b>Where your data is stored.</b> With a Chinese company's own app or website, conversations are usually stored on servers in China, subject to Chinese law, and may legally have to be handed over in government investigations. Taiwan's government agencies have banned official use of DeepSeek since 2025.</p>
+        <p><b>Content is censored.</b> On politically sensitive topics (such as Taiwan or Tiananmen), answers often dodge the question or follow the official line. When researching or learning, don't rely on it alone for these topics.</p>
+        <p><b>The app and the model are different things.</b> Many Chinese models are open-weight, so other companies can host them on servers in other countries. Then your data doesn't go through the original company, but the censorship tendencies trained into the model remain.</p>
+      </div></details>
+      <details><summary>So what should I do?</summary><div class="a"><p>Don't share personal data, work documents, or account passwords; check several sources on political and historical topics; and watch the permissions a mobile app asks for when you install it. These apply to any AI app, really; just take extra care with Chinese apps.</p></div></details>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="refs">
+  <div class="frame">
+    <div class="s-head measure"><span class="eyebrow">Sources</span></div>
+    <div class="sources measure">
+      <a href="https://www.anthropic.com/news/detecting-and-preventing-distillation-attacks">Anthropic · Detecting and preventing distillation attacks (2026/02/23)</a>
+      <a href="https://www.anthropic.com/news/distillation-defenses">Anthropic · Strengthening our defenses against distillation attacks (2026/10/12)</a>
+      <a href="https://www.anthropic.com/news/updating-restrictions-of-sales-to-unsupported-regions">Anthropic · Updating restrictions of sales to unsupported regions (2025/09)</a>
+      <a href="https://restofworld.org/2026/openai-deepseek-distillation-dispute-us-china/">Rest of World · OpenAI–DeepSeek distillation dispute (2026/02)</a>
+      <a href="https://the-decoder.com/google-and-openai-complain-about-distillation-attacks-that-clone-their-ai-models-on-the-cheap/">The Decoder · Google and OpenAI on distillation attacks (2026/02)</a>
+      <a href="https://arxiv.org/abs/2412.19437">DeepSeek-V3 Technical Report (arXiv 2412.19437)</a>
+      <a href="https://arxiv.org/abs/2501.12948">DeepSeek-R1 (arXiv 2501.12948)</a>
+      <a href="https://arxiv.org/abs/2504.13146">Antidistillation Sampling (arXiv 2504.13146)</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="gutter"><div class="frame">Written in November 2026. All accusations are as stated by the accusing party.</div></footer>
+
+<script>
+(function () {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) return;
+  var steps = document.querySelectorAll("#flow .fstep"), started = false;
+  new IntersectionObserver(function (es) {
+    if (started || !es[0].isIntersecting) return; started = true;
+    steps.forEach(function (s, i) { setTimeout(function () { s.classList.add("pulse"); }, i * 450); });
+  }, { threshold: .5 }).observe(document.getElementById("flow"));
+})();
+</script>
+</body>
+</html>

@@ -8,7 +8,8 @@
 重點提醒：
 
 - 沒有建置步驟。預覽：`python3 -m http.server 8000`。
-- 所有 benchmark 內容只放在 `bench.html`。
+- 所有 benchmark 內容只放在 `bench.html`（英文版在 `en/bench.html`）。
+- 網站是雙語：中文在根目錄（預設），英文在 `en/`，檔名相同。改內容時兩邊都要改，規則見 SPEC 第 9 節。
 - 數字要查證、要列來源，並區分廠商自報與第三方重測。
 - 改完要在 390px 手機寬和桌機寬、淺色和深色各看一次，不能有橫向捲動。
 - push 到 `main` 就會自動部署到 https://frankkiv.github.io/ai-story/

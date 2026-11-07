@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Timeline · AI Grew Hands</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+<link rel="alternate" hreflang="zh-Hant" href="../history.html">
+<link rel="alternate" hreflang="en" href="history.html">
+<script src="../assets/i18n.js"></script>
+<style>
+/* ---------- timeline ---------- */
+.tl-bar { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 3.5rem); z-index: 15; display: flex; align-items: center; gap: .6rem; padding: .55rem 0; margin-bottom: 1.5rem; background: color-mix(in srgb, var(--bg) 88%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+.tl-filter { display: flex; gap: .35rem; overflow-x: auto; scrollbar-width: none; min-width: 0; flex: 1; }
+.tl-filter::-webkit-scrollbar { display: none; }
+.tl-filter button { display: inline-flex; align-items: center; gap: .4rem; flex: none; border: 1px solid var(--line); background: var(--surface); color: var(--muted); border-radius: 999px; padding: .3rem .8rem; font: inherit; font-size: .86rem; cursor: pointer; min-height: 38px; }
+.tl-filter button[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+.tl-filter i { width: .6rem; height: .6rem; border-radius: 50%; background: var(--c); }
+.tl-now { flex: none; font-family: var(--mono); font-weight: 500; font-size: 1.05rem; padding: .2rem .7rem; border-radius: 10px; background: var(--sunken); min-width: 4.2rem; text-align: center; }
+.tl-now span { display: inline-block; transition: transform .3s; }
+.tl-now.bump span { transform: translateY(-2px) scale(1.08); }
+.tl-now { position: fixed; z-index: 25; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); background: var(--text); color: var(--bg); box-shadow: var(--shadow); padding: .35rem .9rem; opacity: 0; transition: opacity .3s; pointer-events: none; }
+.tl-now.show { opacity: 1; }
+@media (max-width: 720px) {
+  .tl-bar { top: env(safe-area-inset-top, 0px); }
+  .tl-now-x { position: fixed; z-index: 25; right: 16px; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); background: var(--text); color: var(--bg); box-shadow: var(--shadow); padding: .35rem .8rem; opacity: 0; transition: opacity .3s; pointer-events: none; }
+  .tl-now.show { opacity: 1; }
+}
+
+.tl { --rail: .7rem; list-style: none; margin: 0; padding: 0 0 1rem; position: relative; display: grid; gap: 1.1rem; }
+.tl-line { position: absolute; top: 0; bottom: 0; left: var(--rail); width: 2px; margin-left: -1px; background: var(--line); border-radius: 2px; }
+.tl-line i { position: absolute; inset: 0; transform-origin: top; transform: scaleY(var(--p, 0)); background: linear-gradient(var(--l-hist), var(--l-new) 45%, var(--l-mem) 75%, var(--l-skills)); border-radius: 2px; }
+
+.tl-era { position: relative; padding: 1.6rem 0 .4rem calc(var(--rail) * 2 + 1rem); display: grid; gap: .15rem; }
+.tl-era::before { content: ""; position: absolute; left: var(--rail); top: 2.15rem; width: 1.1rem; height: 1.1rem; margin-left: -.55rem; border-radius: 50%; background: var(--bg); border: 3px solid var(--text); }
+.tl-era .en { font-family: var(--mono); font-size: .82rem; color: var(--accent); letter-spacing: .08em; }
+.tl-era b { font-size: clamp(1.6rem, 4vw, 2.2rem); letter-spacing: -.02em; line-height: 1.2; }
+.tl-era .es { color: var(--muted); }
+
+.ev { position: relative; padding-left: calc(var(--rail) * 2 + 1rem); min-width: 0; }
+.ev .dot { position: absolute; left: var(--rail); top: 1.35rem; width: .9rem; height: .9rem; margin-left: -.45rem; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 4px var(--bg); transform: scale(.4); transition: transform .5s cubic-bezier(.3,1.6,.5,1); }
+.ev.small .dot { width: .6rem; height: .6rem; margin-left: -.3rem; top: .95rem; }
+.evc { min-width: 0; display: grid; gap: .45rem; opacity: .4; transform: translateY(28px); transition: opacity .35s, transform .4s cubic-bezier(.2,.8,.2,1); }
+.ev.big .evc { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--c); border-radius: 16px; padding: 1.1rem 1.25rem; box-shadow: var(--shadow); }
+.ev.small .evc { gap: .15rem; padding: .35rem 0; }
+.ev.in .evc { opacity: 1; transform: none; }
+.ev.in .dot { transform: scale(1); }
+.evm { display: flex; align-items: center; gap: .55rem; font-family: var(--mono); font-size: .82rem; color: var(--muted); }
+.evm .cat { color: var(--c); border: 1px solid currentColor; border-radius: 999px; padding: 0 .5rem; font-size: .82rem; }
+.ev h3 { margin: 0; font-size: 1.3rem; line-height: 1.35; }
+.ev p { margin: 0; }
+.ev.small b { font-size: 1.02rem; }
+.ev .sm { color: var(--muted); font-size: .95rem; }
+.tl-elder { display: grid; grid-template-columns: auto 1fr; gap: .6rem; align-items: start; background: var(--accent-soft); border-radius: 10px; padding: .6rem .8rem; font-size: .98rem; }
+.tl-elder b { font-size: .82rem; font-family: var(--mono); color: var(--accent); background: var(--surface); border-radius: 6px; padding: .05rem .4rem; margin-top: .3rem; white-space: nowrap; }
+.ev.off { display: none; }
+.tl-empty { color: var(--muted); }
+
+@media (min-width: 900px) {
+  .tl { --rail: 50%; gap: .6rem; }
+  .tl-era { padding: 3rem 0 1rem; text-align: center; justify-items: center; }
+  .tl-era::before { left: 50%; top: 1.2rem; }
+  .tl-era b, .tl-era .en, .tl-era .es { background: var(--bg); padding: 0 .6rem; position: relative; }
+  .ev { width: 50%; padding-left: 0; }
+  .ev.L { padding-right: 2.4rem; }
+  .ev.R { margin-left: 50%; padding-left: 2.4rem; }
+  .ev.L .dot { left: auto; right: 0; margin-left: 0; margin-right: -.45rem; }
+  .ev.L.small .dot { margin-right: -.3rem; }
+  .ev.R .dot { left: 0; }
+  .ev.L .evc { transform: translateX(-24px); }
+  .ev.R .evc { transform: translateX(24px); }
+  .ev.L.small .evc { text-align: right; justify-items: end; }
+  .ev.in .evc { transform: none; }
+  .ev.small { margin-top: -.2rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .evc, .ev .dot, .tl-now span { transition: none; }
+}
+
+.next { display: grid; gap: 1rem; }
+@media (min-width: 760px) { .next { grid-template-columns: 1fr 1fr; } }
+.next a { text-decoration: none; color: inherit; }
+.next .card:hover { border-color: var(--text); }
+</style>
+</head>
+<body>
+
+<nav class="nav gutter" aria-label="Site">
+  <div class="frame">
+    <a class="brand" href="index.html"><i></i><span>AI Grew Hands</span></a>
+    <ul>
+      <li><a class="l site-on" href="history.html"><span class="lg">Timeline</span><span class="sh">Timeline</span></a></li>
+      <li><a class="l" href="bench.html"><span class="lg">Model benchmarks</span><span class="sh">Bench</span></a></li>
+      <li><a class="l" href="tech.html"><span class="lg">How it works</span><span class="sh">How</span></a></li>
+      <li><a class="l" href="china.html"><span class="lg">Catching up</span><span class="sh">China</span></a></li>
+      <li><a class="l" href="future.html"><span class="lg">Next bottleneck</span><span class="sh">Limits</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero gutter">
+  <div class="frame" style="display:block">
+    <div class="hero-copy measure">
+      <span class="pill">PART 1 · <b>Timeline</b></span>
+      <h1>From talking,<br><em>to doing</em></h1>
+      <p class="sub">From late 2022 to now, AI took four big steps: consultant → tradesperson → butler → general contractor. Scroll down to watch each event appear along the timeline. What changed under the hood at each step is explained on the <a href="tech.html">How it works</a> page.</p>
+      <p class="caveat">Every major lab's key releases are included, but agent tool examples mostly use Claude Code, which the author uses daily, so Anthropic events are slightly overrepresented.</p>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="s gutter" id="timeline" style="padding-top:2rem">
+  <div class="frame">
+    <div class="tl-bar">
+      <div class="tl-filter" role="group" aria-label="Filter events">
+        <button type="button" data-f="all" aria-pressed="true">All</button>
+        <button type="button" data-f="model" aria-pressed="false"><i style="--c:var(--l-hist)"></i>Models</button>
+        <button type="button" data-f="agent" aria-pressed="false"><i style="--c:var(--l-new)"></i>Agents</button>
+        <button type="button" data-f="china" aria-pressed="false"><i style="--c:var(--l-mem)"></i>China</button>
+        <button type="button" data-f="infra" aria-pressed="false"><i style="--c:var(--l-skills)"></i>Infrastructure</button>
+      </div>
+    </div>
+    <span class="tl-now" aria-live="polite"><span id="tlNow">2022</span></span>
+    <ol class="tl" id="tl">
+      <li class="tl-line" aria-hidden="true"><i id="tlFill"></i></li>
+      <li class="tl-era"><span class="en">Consultant</span><b>You ask, it answers</b><span class="es">From late 2022, AI got very good at answering questions, but you still did the work yourself.</span></li>
+      <li class="ev big" data-cat="model" data-year="2022" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2022.11</span><span class="cat">Model</span></span><h3>ChatGPT launches</h3><p>Many people chat with an AI for the first time. It can only "talk": it gives you text or code, and you copy, paste and run it yourself.</p><p class="tl-elder"><b>In plain words</b>Like phoning a very knowledgeable consultant who won't come over to fix your plumbing.</p></div></li>
+      <li class="ev small" data-cat="model" data-year="2023" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2023.03</span><span class="cat">Model</span></span><b>GPT-4 and the first Claude</b><span class="sm">The large-model race officially begins.</span></div></li>
+      <li class="ev small" data-cat="model" data-year="2023" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2023.12</span><span class="cat">Model</span></span><b>Google launches Gemini</b><span class="sm">The big three take shape.</span></div></li>
+      <li class="ev small" data-cat="model" data-year="2024" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2024.05</span><span class="cat">Model</span></span><b>GPT-4o: real-time voice and vision</b><span class="sm">AI starts to look at photos and hold spoken conversations.</span></div></li>
+      <li class="ev big" data-cat="model" data-year="2024" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2024.09</span><span class="cat">Model</span></span><h3>Reasoning models arrive (OpenAI o1)</h3><p>The model writes out a long chain of thinking before answering. That's a prerequisite for letting AI carry out multi-step work on its own.</p><p class="tl-elder"><b>In plain words</b>From the student who blurts out answers to the one who drafts on scrap paper first.</p></div></li>
+      <li class="tl-era"><span class="en">Tradesperson</span><b>It starts doing the work</b><span class="es">From late 2024, AI gets tools and works directly on your computer.</span></li>
+      <li class="ev big" data-cat="agent" data-year="2024" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2024.10</span><span class="cat">Agent</span></span><h3>Claude learns to use a computer (computer use)</h3><p>It looks at the screen, moves the mouse and types. Still slow and often clicks the wrong thing, but for the first time AI has hands inside a computer.</p></div></li>
+      <li class="ev big" data-cat="agent" data-year="2024" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2024.11</span><span class="cat">Agent</span></span><h3>Anthropic introduces MCP</h3><p>One common format for plugging any tool into AI. OpenAI and Google later adopt it too.</p><p class="tl-elder"><b>In plain words</b>USB-C for AI: any tool plugs in.</p></div></li>
+      <li class="ev small" data-cat="china" data-year="2024" style="--c:var(--l-mem)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2024.12</span><span class="cat">China</span></span><b>DeepSeek V3</b><span class="sm">A 671B-parameter MoE model that gets close to the frontier at a very low training cost.</span></div></li>
+      <li class="ev big" data-cat="china" data-year="2025" style="--c:var(--l-mem)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.01</span><span class="cat">China</span></span><h3>DeepSeek R1 shakes the market</h3><p>An open-weight reasoning model that comes close to US flagships. Nvidia's stock plunges in a single day. Many people realize for the first time how close Chinese models are.</p></div></li>
+      <li class="ev small" data-cat="agent" data-year="2025" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.01</span><span class="cat">Agent</span></span><b>OpenAI Operator</b><span class="sm">AI opens a browser to book tables and fill in forms for you. "Doing things" on the web.</span></div></li>
+      <li class="ev big" data-cat="agent" data-year="2025" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.02</span><span class="cat">Agent</span></span><h3>Claude Code preview, and vibe coding</h3><p>AI reads and edits files, runs tests and fixes bugs right on your computer. Karpathy coins "vibe coding": building software just by talking.</p><p class="tl-elder"><b>In plain words</b>The consultant becomes a tradesperson you invite into your home.</p></div></li>
+      <li class="ev small" data-cat="agent" data-year="2025" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.04</span><span class="cat">Agent</span></span><b>OpenAI Codex CLI</b><span class="sm">A coding agent in the terminal becomes standard for every lab.</span></div></li>
+      <li class="ev small" data-cat="agent" data-year="2025" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.05</span><span class="cat">Agent</span></span><b>Claude Code becomes generally available</b><span class="sm">Released alongside the Claude 4 family.</span></div></li>
+      <li class="ev small" data-cat="agent" data-year="2025" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.06</span><span class="cat">Agent</span></span><b>Google Gemini CLI</b><span class="sm">All three big labs now have their own terminal agent.</span></div></li>
+      <li class="ev small" data-cat="agent" data-year="2025" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.07</span><span class="cat">Agent</span></span><b>ChatGPT agent</b><span class="sm">ChatGPT gets its own virtual computer that can browse, build slides and work on spreadsheets.</span></div></li>
+      <li class="ev small" data-cat="model" data-year="2025" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.08</span><span class="cat">Model</span></span><b>GPT-5</b><span class="sm">OpenAI merges chat and reasoning into one model that decides how long to think.</span></div></li>
+      <li class="ev small" data-cat="china" data-year="2025" style="--c:var(--l-mem)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.09</span><span class="cat">China</span></span><b>Anthropic stops serving Chinese-controlled companies</b><span class="sm">Preventing distillation is one of the stated reasons.</span></div></li>
+      <li class="ev small" data-cat="agent" data-year="2025" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.10</span><span class="cat">Agent</span></span><b>Agent Skills</b><span class="sm">Workflows written as folders and loaded on demand. "Training your AI" becomes managing text files.</span></div></li>
+      <li class="tl-era"><span class="en">Butler</span><b>Send a message, get it done</b><span class="es">From late 2025, you can get AI to do things from a chat app.</span></li>
+      <li class="ev small" data-cat="model" data-year="2025" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.11</span><span class="cat">Model</span></span><b>Gemini 3 and Claude Opus 4.5</b><span class="sm">In the same month, Google's and Anthropic's flagships both push past 80% on the coding exam.</span></div></li>
+      <li class="ev small" data-cat="agent" data-year="2025" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.11</span><span class="cat">Agent</span></span><b>The "lobster" is born</b><span class="sm">A personal project by engineer Peter Steinberger, with a lobster mascot: send a WhatsApp message and the AI on your home computer does the job. Later renamed OpenClaw.</span></div></li>
+      <li class="ev big" data-cat="agent" data-year="2026" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.01</span><span class="cat">Agent</span></span><h3>OpenClaw goes viral</h3><p>Clawdbot → Moltbot → renamed OpenClaw on 1/30, hitting 100,000 stars in days. Fake extensions, scam coins and prompt injection follow.</p><p class="tl-elder"><b>In plain words</b>Texting your butler, but a butler who's too trusting can also be conned.</p></div></li>
+      <li class="ev big" data-cat="agent" data-year="2026" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.02</span><span class="cat">Agent</span></span><h3>Remote Control: steer the AI on your computer from your phone</h3><p>Code and files stay on the computer; the phone is just a remote, with messages relayed through Anthropic.</p></div></li>
+      <li class="ev big" data-cat="china" data-year="2026" style="--c:var(--l-mem)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.02</span><span class="cat">China</span></span><h3>Distillation accusations go public</h3><p>OpenAI sends a memo to the US House; Anthropic names DeepSeek, Moonshot and MiniMax, with about 24,000 accounts and 16 million conversations.</p></div></li>
+      <li class="ev small" data-cat="agent" data-year="2026" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.03</span><span class="cat">Agent</span></span><b>Sending work from your phone becomes a built-in feature</b><span class="sm">Anthropic features like Dispatch and Channels let you hand work to the AI on your computer from your phone or a chat app, without setting anything up yourself.</span></div></li>
+      <li class="tl-era"><span class="en">General contractor</span><b>A crew of AIs working together</b><span class="es">In 2026, one person leads a team of AIs.</span></li>
+      <li class="ev small" data-cat="infra" data-year="2026" style="--c:var(--l-skills)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.04</span><span class="cat">Infrastructure</span></span><b>IEA: data center electricity up 17% in a year</b><span class="sm">Electricity use at AI-focused data centers grows 50%, and is projected to double by 2030.</span></div></li>
+      <li class="ev small" data-cat="model" data-year="2026" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.06</span><span class="cat">Model</span></span><b>Claude Fable 5</b><span class="sm">Scores 95% on SWE-bench Verified (an exam where AI fixes 500 real software issues). The exam is close to maxed out.</span></div></li>
+      <li class="ev small" data-cat="model" data-year="2026" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.07</span><span class="cat">Model</span></span><b>GPT-5.6 in three tiers, and Claude Opus 5</b><span class="sm">OpenAI starts splitting each generation into Sol (strongest), Terra (balanced) and Luna (fast and cheap); two weeks later Anthropic releases Opus 5.</span></div></li>
+      <li class="ev small" data-cat="model" data-year="2026" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.09</span><span class="cat">Model</span></span><b>GPT-6, Claude Opus 5.5, Gemini 4</b><span class="sm">All three labs ship a new generation in September: GPT-6 Astra (9/3), GPT-6 Sol and Luna on the same day as Opus 5.5 (9/22), and Gemini 4 Argon (9/30).</span></div></li>
+      <li class="ev big" data-cat="agent" data-year="2026" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">Fall 2026</span><span class="cat">Agent</span></span><h3>Multi-agent becomes a product feature</h3><p>Claude Code launches the new Projects: one coordinating agent talks with you and hands work to threads, each with its own context.</p><p class="tl-elder"><b>In plain words</b>You only tell the general contractor what you need; they bring in the plumber and the carpenter to work in parallel.</p></div></li>
+      <li class="ev small" data-cat="china" data-year="2026" style="--c:var(--l-mem)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.10</span><span class="cat">China</span></span><b>Anti-distillation measures work</b><span class="sm">Anthropic's second report: the data distillers obtained dropped by about 90–99%.</span></div></li>
+      <li class="ev small" data-cat="infra" data-year="2026" style="--c:var(--l-skills)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026 —</span><span class="cat">Infrastructure</span></span><b>Memory and hard drive shortages</b><span class="sm">AI data centers buy up HBM, DRAM and hard drive capacity. The next bottlenecks are power and hardware.</span></div></li>
+    </ol>
+  </div>
+</section>
+
+<section class="s gutter" id="refs">
+  <div class="frame measure">
+    <div class="s-head"><span class="eyebrow">02 · Sources</span><h2>Where this page's dates and numbers come from</h2></div>
+    <ul class="refs">
+      <li>Lab announcements and model cards: OpenAI (ChatGPT, GPT-4, GPT-4o, o1, o3, Operator, ChatGPT agent, the GPT-5 family, GPT-6), Anthropic (Claude 3.5–5.5, computer use, MCP, Claude Code, Agent Skills, Remote Control), Google (Gemini 1–4, Gemini CLI).</li>
+      <li>DeepSeek V3 technical report (arXiv 2412.19437); DeepSeek-R1 paper (Nature, 2025).</li>
+      <li>Anthropic, "Detecting and preventing distillation attacks" (2026/2/23) and the follow-up report of 2026/10/12; OpenAI's memo to the US House Select Committee on China (2026/2/12).</li>
+      <li>Sources for model scores are listed on the <a href="bench.html#refs">Model benchmarks</a> page.</li>
+      <li>OpenClaw: the GitHub project page and coverage from January 2026.</li>
+      <li>IEA, <i>Energy and AI</i> and its 2026 update.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="s gutter">
+  <div class="frame">
+    <div class="next">
+      <a href="bench.html"><article class="card"><span class="tag">PART 2 · Model benchmarks →</span><h3>How to read the scores, and who is good at what</h3><p>The capability curve, a model comparison table, and a roster of 44 models.</p></article></a>
+      <a href="tech.html"><article class="card"><span class="tag">PART 3 · How it works →</span><h3>AI isn't learning you. It rereads everything, every time</h3><p>Context, prompt cache, the agent loop, skills and device sync, with an interactive simulator.</p></article></a>
+      <a href="china.html"><article class="card"><span class="tag">PART 4 · Catching up and distillation →</span><h3>How Chinese AI caught up, and how US labs push back</h3><p>How did Chinese models catch up? What is "distillation", and how do labs defend against it?</p></article></a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="gutter"><div class="frame">Written in November 2026.</div></footer>
+
+<script>
+(function () {
+  "use strict";
+  var tl = document.getElementById("tl"), fill = document.getElementById("tlFill"), now = document.getElementById("tlNow");
+  var evs = [].slice.call(tl.querySelectorAll(".ev"));
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function sides() {
+    var k = 0;
+    evs.forEach(function (e) {
+      e.classList.remove("L", "R");
+      if (e.classList.contains("off")) return;
+      e.classList.add(k++ % 2 ? "R" : "L");
+    });
+  }
+  sides();
+
+  if (reduce || !("IntersectionObserver" in window)) {
+    evs.forEach(function (e) { e.classList.add("in"); });
+  } else {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (x) { if (x.isIntersecting) { x.target.classList.add("in"); io.unobserve(x.target); } });
+    }, { rootMargin: "0px 0px -4% 0px" });
+    evs.forEach(function (e) { io.observe(e); });
+  }
+
+  var last = "", ticking = false;
+  function onScroll() {
+    ticking = false;
+    var r = tl.getBoundingClientRect(), mid = innerHeight * 0.55;
+    var p = Math.min(1, Math.max(0, (mid - r.top) / r.height));
+    fill.style.setProperty("--p", p.toFixed(4));
+    now.parentNode.classList.toggle("show", r.top < innerHeight * 0.5 && r.bottom > innerHeight * 0.5);
+    var vis = evs.filter(function (e) { return !e.classList.contains("off"); });
+    var y = vis.length ? vis[0].dataset.year : "";
+    for (var i = 0; i < evs.length; i++) {
+      if (evs[i].classList.contains("off")) continue;
+      if (evs[i].getBoundingClientRect().top < mid) y = evs[i].dataset.year; else break;
+    }
+    if (y !== last) {
+      last = y; now.textContent = y;
+      var chip = now.parentNode; chip.classList.remove("bump"); void chip.offsetWidth; chip.classList.add("bump");
+      setTimeout(function () { chip.classList.remove("bump"); }, 300);
+    }
+  }
+  addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+  addEventListener("resize", onScroll);
+  onScroll();
+
+  var btns = [].slice.call(document.querySelectorAll(".tl-filter button"));
+  btns.forEach(function (b) {
+    b.addEventListener("click", function () {
+      var f = b.dataset.f;
+      btns.forEach(function (o) { o.setAttribute("aria-pressed", o === b ? "true" : "false"); });
+      evs.forEach(function (e) {
+        var off = f !== "all" && e.dataset.cat !== f;
+        e.classList.toggle("off", off);
+        if (!off) e.classList.add("in");
+      });
+      sides(); onScroll();
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI Grew Hands · From chat to agents</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="How AI evolved over the past few years, how it actually works today, the rise of Chinese AI and the fight over distillation, and the future of power, memory and storage.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+<link rel="alternate" hreflang="zh-Hant" href="../index.html">
+<link rel="alternate" hreflang="en" href="index.html">
+<script src="../assets/i18n.js"></script>
+<style>
+.parts { display: grid; gap: 1rem; }
+@media (min-width: 760px) { .parts { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+.part { text-decoration: none; color: inherit; display: grid; gap: .8rem; align-content: start; background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 1.5rem; box-shadow: var(--shadow); transition: transform .25s, border-color .25s; position: relative; overflow: hidden; min-width: 0; }
+.part:hover { transform: translateY(-3px); border-color: var(--text); }
+.part .num { font-family: var(--mono); font-size: .82rem; color: var(--muted); }
+.part h2 { font-size: 1.6rem; }
+.part p { color: var(--muted); }
+.part .go { font-weight: 600; color: var(--text); }
+.part .band { height: .4rem; border-radius: 999px; background: linear-gradient(90deg, var(--a), var(--b)); }
+.hero .stack-wrap { min-height: 20rem; }
+</style>
+</head>
+<body>
+
+<nav class="nav gutter" aria-label="Site">
+  <div class="frame">
+    <a class="brand" href="index.html"><i></i><span>AI Grew Hands</span></a>
+    <ul>
+      <li><a class="l" href="history.html"><span class="lg">Timeline</span><span class="sh">Timeline</span></a></li>
+      <li><a class="l" href="bench.html"><span class="lg">Model benchmarks</span><span class="sh">Bench</span></a></li>
+      <li><a class="l" href="tech.html"><span class="lg">How it works</span><span class="sh">How</span></a></li>
+      <li><a class="l" href="china.html"><span class="lg">Catching up</span><span class="sh">China</span></a></li>
+      <li><a class="l" href="future.html"><span class="lg">Next bottleneck</span><span class="sh">Limits</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero gutter">
+  <div class="frame">
+    <div class="hero-copy">
+      <span class="pill">For anyone who wants to understand AI, <b>and for their parents too</b></span>
+      <h1>AI grew hands.<br><em>From chat to agents.</em></h1>
+      <p class="sub">AI went from a consultant that talks to a team of assistants that do the work, and you can direct them from your phone. But it isn't actually "learning" you. The model itself never changes; what changes is the set of "notes" handed to it every time, which engineers call the context. Five parts explain how it works, with practical tips for your family at the end.</p>
+      <div class="cta">
+        <a class="btn primary" href="history.html">Start with the timeline →</a>
+        <a class="btn" href="tech.html#sim">Jump to the context simulator</a>
+      </div>
+    </div>
+    <div>
+      <div class="stack-wrap" id="stack" aria-hidden="true">
+        <div class="stack" id="stackInner">
+          <div class="layer model" style="--i:0"><span>model weights (fixed)</span></div>
+          <div class="layer" style="--i:1; --c: var(--l-tools)"><span>tools · MCP</span></div>
+          <div class="layer" style="--i:2; --c: var(--l-sys)"><span>system prompt</span></div>
+          <div class="layer" style="--i:3; --c: var(--l-skills)"><span>skills</span></div>
+          <div class="layer" style="--i:4; --c: var(--l-mem)"><span>memory · CLAUDE.md</span></div>
+          <div class="layer" style="--i:5; --c: var(--l-hist)"><span>conversation history</span></div>
+          <div class="layer" style="--i:6; --c: var(--l-new)"><span>the line you just typed</span></div>
+        </div>
+      </div>
+      <ol class="stack-legend" aria-label="What one request contains, top to bottom">
+        <li><i style="--c:var(--l-new)"></i>The line you just typed</li>
+        <li><i style="--c:var(--l-hist)"></i>The conversation so far</li>
+        <li><i style="--c:var(--l-mem)"></i>Memory file (CLAUDE.md)</li>
+        <li><i style="--c:var(--l-skills)"></i>List of skills</li>
+        <li><i style="--c:var(--l-sys)"></i>System prompt (the rules)</li>
+        <li><i style="--c:var(--l-tools)"></i>Tool definitions (tools · MCP)</li>
+        <li><i style="--c:var(--model-bg)"></i>The model itself (fixed)</li>
+      </ol>
+      <p class="stack-cap">Every request stacks these layers and sends the whole bundle to the same fixed model.</p>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="s gutter">
+  <div class="frame">
+    <div class="parts">
+      <a class="part" href="history.html" style="--a: var(--l-skills); --b: var(--l-hist)">
+        <span class="band"></span><span class="num">PART 1 · Timeline</span>
+        <h2>From talking to doing</h2>
+        <p>A scrolling timeline from ChatGPT to multi-agent teams: thirty-odd events, big and small, in order, with filters by category.</p>
+        <span class="go">Read →</span>
+      </a>
+      <a class="part" href="bench.html" style="--a: var(--l-skills); --b: var(--l-tools)">
+        <span class="band"></span><span class="num">PART 2 · Model benchmarks</span>
+        <h2>How to read the scores, and who is good at what</h2>
+        <p>Why vendor scores can't be taken at face value, 14 leading models compared in one table, what each one is good for, plus the capability curve and a roster of 44 models.</p>
+        <span class="go">Read →</span>
+      </a>
+      <a class="part" href="tech.html" style="--a: var(--l-tools); --b: var(--l-new)">
+        <span class="band"></span><span class="num">PART 3 · How it works</span>
+        <h2>AI isn't learning you. It rereads everything, every time</h2>
+        <p>Context, prompt cache, the agent loop, skills, multi-agent teams, and how phone and computer stay in sync, with an interactive simulator.</p>
+        <span class="go">Read →</span>
+      </a>
+      <a class="part" href="china.html" style="--a: var(--l-mem); --b: var(--warn)">
+        <span class="band"></span><span class="num">PART 4 · Catching up and distillation</span>
+        <h2>How Chinese AI caught up, and how US labs push back</h2>
+        <p>How did Chinese models close the gap in two years? What distillation is, what the accusations say, and how model companies fight back.</p>
+        <span class="go">Read →</span>
+      </a>
+      <a class="part" href="future.html" style="--a: var(--l-hist); --b: var(--l-mem)">
+        <span class="band"></span><span class="num">PART 5 · The next bottleneck</span>
+        <h2>Power, memory and storage</h2>
+        <p>Data center electricity, the HBM shortage, and the storage needs of video training, with a power converter and a KV cache calculator.</p>
+        <span class="go">Read →</span>
+      </a>
+    </div>
+  </div>
+</section>
+<section class="s gutter" id="tips">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">For family · The practical part</span>
+      <h2>So what should you watch out for when using AI?</h2>
+      <p class="lead">The rest of the site covers how things work. In daily life it comes down to these five things. Feel free to forward this section to your family.</p>
+    </div>
+    <ol class="tips">
+      <li><b>Anything involving money or passwords, check it yourself</b><span>AI can look things up and organize them for you, but transfers, payments and typing in passwords are always your job. A web page or message the AI reads may hide instructions from a scammer.</span></li>
+      <li><b>Don't paste in ID numbers, bank accounts or medical records</b><span>Everything you type is sent to the provider's servers. If you really need to, black out names and numbers first.</span></li>
+      <li><b>Take a look at the privacy settings</b><span>Most apps let you opt out of having your chats used for training, and you can turn off memory too. It takes a minute, once.</span></li>
+      <li><b>Double-check numbers, drug names and legal questions</b><span>Sounding confident doesn't make it right. For anything important, check two sources or ask a professional.</span></li>
+      <li><b>Be suspicious of "AI investing" or "AI trading" offers</b><span>Anything that promises guaranteed returns in the name of AI is almost always a scam. AI can also fake celebrity videos and voices. If a "friend" calls asking for money, hang up and call them back.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section class="s gutter" id="faq">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">What parents ask</span>
+      <h2>Answers you can pass straight to your family</h2>
+    </div>
+    <div class="faq measure">
+      <details>
+        <summary>Does it remember me?</summary>
+        <div class="a"><p>The model doesn't. It "remembers" because the app saves the conversation and sends it again next time, or because a memory feature writes key points into notes that get included in new chats. Turn memory off and start a new chat, and it's meeting you for the first time.</p></div>
+      </details>
+      <details>
+        <summary>If I teach it something, will it learn it?</summary>
+        <div class="a"><p>Within the same conversation it will follow along, because what you said is in the context. To make it stick, it has to be written into memory, project instructions or a skill file that gets included every time. The model doesn't change because you taught it.</p></div>
+      </details>
+      <details>
+        <summary>Will my chats be used to train the next model?</summary>
+        <div class="a"><p>That depends on the service's privacy settings, which you can choose. Even if they are, it shows up in a new model months later; the one you're talking to isn't learning in real time. For anything confidential, check the settings first.</p></div>
+      </details>
+      <details>
+        <summary>Does it get dumber if we chat too long?</summary>
+        <div class="a"><p>It can. The context has a limit, and when it's stuffed with unrelated material, important details are easier to miss. Very long chats get automatically summarized, and details can get lost. Starting a new chat with only what's needed is often more accurate.</p></div>
+      </details>
+      <details>
+        <summary>How can an AI assistant be tricked?</summary>
+        <div class="a"><p>Web pages, emails and files are put into the context too, and the model can't always tell "what the owner said" from "text it read". A scammer can hide an instruction in a web page and it may be treated as a request. This is called prompt injection. Anything involving money or passwords needs a human to confirm.</p></div>
+      </details>
+    </div>
+</section>
+</main>
+
+<footer class="gutter"><div class="frame">Written in November 2026.</div></footer>
+
+<script>
+(function () {
+  var wrap = document.getElementById("stack"), inner = document.getElementById("stackInner");
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  wrap.addEventListener("pointermove", function (e) {
+    if (e.pointerType !== "mouse") return;
+    var r = wrap.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+    inner.style.transform = "rotateX(" + (58 - y * 16) + "deg) rotateZ(" + (-38 + x * 22) + "deg)";
+  });
+  wrap.addEventListener("pointerleave", function () { inner.style.transform = ""; });
+  if ("IntersectionObserver" in window && matchMedia("(hover: none)").matches) {
+    new IntersectionObserver(function (es) { es.forEach(function (e) { wrap.classList.toggle("open", e.isIntersecting); }); }, { threshold: .6 }).observe(wrap);
+  }
+})();
+</script>
+</body>
+</html>

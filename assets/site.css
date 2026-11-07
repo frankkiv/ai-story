@@ -386,3 +386,21 @@ footer { padding-block: 3rem 4rem; border-top: 1px solid var(--line); color: var
 #compact h3 { font-size: 1.3rem; margin: 0 0 .5rem; }
 #compact + .log-wrap { margin-top: 1rem; }
 .modes td code { font-size: .85em; white-space: nowrap; }
+
+/* ---------- v4: settings menu (language + appearance) ---------- */
+.nav details.settings { position: relative; flex: 0 0 auto; background: none; border: 0; border-radius: 0; padding: 0; }
+.settings summary { font-weight: 500; min-height: 44px; list-style: none; display: flex; align-items: center; gap: .3rem; min-height: 44px; min-width: 44px; justify-content: center; padding: 0 .55rem; border-radius: 10px; color: var(--muted); cursor: pointer; font-size: .82rem; font-family: var(--mono); }
+.settings summary::-webkit-details-marker { display: none; }
+.settings summary::after { content: none; }
+.settings summary:hover, .settings[open] summary { color: var(--text); background: var(--sunken); }
+.settings .set-pop { position: absolute; right: 0; top: calc(100% + .4rem); width: 15rem; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); padding: .8rem; display: grid; gap: .45rem; z-index: 30; }
+.settings .set-h { margin: 0; font-size: .78rem; color: var(--muted); font-family: var(--mono); }
+.settings .set-row { display: flex; gap: .35rem; flex-wrap: wrap; }
+.settings .set-row a, .settings .set-row button { flex: 1 1 auto; text-align: center; border: 1px solid var(--line); background: var(--bg); color: var(--text); border-radius: 9px; padding: .45rem .5rem; font: inherit; font-size: .88rem; text-decoration: none; cursor: pointer; min-height: 40px; display: grid; place-items: center; }
+.settings .set-row [aria-current="true"], .settings .set-row [aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+@media (max-width: 560px) { .settings .st-cur { display: none; } .settings summary { padding: 0 .3rem; min-width: 40px; } .nav .frame { gap: .35rem; } }
+@media (max-width: 560px) {
+  .nav a.l { padding: .45rem .4rem; }
+  .nav .brand { min-width: 32px; }
+  html[lang="en"] .nav a.l { font-size: .9rem; padding: .45rem .35rem; }
+}

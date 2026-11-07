@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The next bottleneck · AI Grew Hands</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+<link rel="alternate" hreflang="zh-Hant" href="../future.html">
+<link rel="alternate" hreflang="en" href="future.html">
+<script src="../assets/i18n.js"></script>
+<style>
+.four { display: grid; gap: .75rem; grid-template-columns: repeat(2, minmax(0,1fr)); }
+@media (min-width: 900px) { .four { grid-template-columns: repeat(4, minmax(0,1fr)); } }
+.four a { text-decoration: none; color: inherit; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 1rem 1.1rem; display: grid; gap: .25rem; box-shadow: var(--shadow); }
+.four a:hover { border-color: var(--text); }
+.four .k { font-family: var(--mono); font-size: .82rem; color: var(--c); }
+.four b { font-size: 1.15rem; }
+.four span { font-size: .9rem; color: var(--muted); }
+
+.vbars { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: .75rem; align-items: end; height: 15rem; padding: 1.8rem .25rem 0; border-bottom: 1px solid var(--line); }
+.vb { position: relative; display: flex; flex-direction: column; justify-content: flex-end; height: 100%; text-align: center; }
+.vb .bar { display: block; flex: none; border-radius: 8px 8px 0 0; background: var(--c); height: var(--h); min-height: 4px; transition: height .8s cubic-bezier(.2,.7,.2,1); }
+.vb .val { position: absolute; left: 0; right: 0; bottom: calc(var(--h) + .3rem); font-family: var(--mono); font-size: .9rem; font-variant-numeric: tabular-nums; }
+.vlabels { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: .75rem; padding: .5rem .25rem 0; text-align: center; font-size: .82rem; color: var(--muted); }
+
+.calc { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); padding: 1.25rem; display: grid; gap: 1rem; }
+.calc label { display: grid; gap: .4rem; font-size: .95rem; }
+.calc label span { display: flex; justify-content: space-between; gap: 1rem; }
+.calc label b { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.calc input[type=range] { width: 100%; accent-color: var(--accent); min-height: 32px; }
+.calc select { font: inherit; padding: .45rem .6rem; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+.outs { display: grid; gap: .6rem; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); }
+.out { background: var(--bg); border-radius: 12px; padding: .8rem .9rem; display: grid; gap: .1rem; min-width: 0; }
+.out span { font-size: .82rem; color: var(--muted); }
+.out b { font-family: var(--mono); font-size: 1.3rem; font-weight: 500; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.out.hl b { color: var(--accent); }
+.gauge { height: .9rem; background: var(--sunken); border-radius: 999px; overflow: hidden; position: relative; }
+.gauge i { position: absolute; inset: 0 auto 0 0; background: var(--c, var(--accent)); border-radius: 999px; transition: width .3s; }
+.gauge-row { display: grid; gap: .3rem; font-size: .85rem; color: var(--muted); }
+
+.facts { list-style: none; margin: 0; padding: 0; display: grid; gap: .7rem; }
+.facts li { display: grid; grid-template-columns: .3rem 1fr; gap: .9rem; }
+.facts li::before { content: ""; border-radius: 3px; background: var(--c, var(--accent)); }
+.facts b { display: block; }
+.facts span { color: var(--muted); font-size: .95rem; }
+.formula { font-family: var(--mono); font-size: .88rem; background: var(--bg); border-radius: 10px; padding: .7rem .9rem; overflow-x: auto; white-space: nowrap; }
+.sources { font-size: .88rem; color: var(--muted); display: grid; gap: .3rem; }
+.sources a { color: var(--muted); }
+</style>
+</head>
+<body>
+
+<nav class="nav gutter" aria-label="Site">
+  <div class="frame">
+    <a class="brand" href="index.html"><i></i><span>AI Grew Hands</span></a>
+    <ul>
+      <li><a class="l" href="history.html"><span class="lg">Timeline</span><span class="sh">Timeline</span></a></li>
+      <li><a class="l" href="bench.html"><span class="lg">Model benchmarks</span><span class="sh">Bench</span></a></li>
+      <li><a class="l" href="tech.html"><span class="lg">How it works</span><span class="sh">How</span></a></li>
+      <li><a class="l" href="china.html"><span class="lg">Catching up</span><span class="sh">China</span></a></li>
+      <li><a class="l site-on" href="future.html"><span class="lg">Next bottleneck</span><span class="sh">Limits</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero gutter">
+  <div class="frame" style="display:block">
+    <div class="hero-copy measure">
+      <span class="pill">PART 5 · <b>The next bottleneck</b></span>
+      <h1>The next bottleneck:<br><em>power, memory and storage</em></h1>
+      <p class="sub">Models keep getting stronger, but letting more people use them for longer is running into real-world limits: the power grid, data centers, memory chips, and storage. This page looks at those four, and how they connect to the context and video models discussed earlier.</p>
+    </div>
+    <div class="four mt" style="max-width:72rem">
+      <a href="#power" style="--c: var(--l-skills)"><span class="k">01</span><b>Power</b><span>Data center electricity doubles by 2030</span></a>
+      <a href="#dc" style="--c: var(--l-tools)"><span class="k">02</span><b>Data centers</b><span>Over $600 billion a year</span></a>
+      <a href="#memory" style="--c: var(--l-hist)"><span class="k">03</span><b>Memory</b><span>HBM sold out; phones and PCs cost more</span></a>
+      <a href="#storage" style="--c: var(--l-mem)"><span class="k">04</span><b>Storage</b><span>Video training sells out hard drives</span></a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section class="s gutter" id="power">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">01 · Power</span>
+      <h2>Data center electricity doubles in five or six years</h2>
+      <p class="lead">The International Energy Agency (IEA) estimates global data center electricity use will double by 2030, with AI-focused data centers growing fastest.</p>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <span class="tag">Global data center electricity (TWh / year)</span>
+        <div class="vbars" id="vbars">
+          <div class="vb" style="--c: var(--l-sys); --h: 43.7%"><span class="val">415</span><span class="bar"></span></div>
+          <div class="vb" style="--c: var(--l-sys); --h: 51%"><span class="val">485</span><span class="bar"></span></div>
+          <div class="vb" style="--c: var(--l-skills); --h: 99.5%"><span class="val">945</span><span class="bar"></span></div>
+          <div class="vb" style="--c: var(--l-skills); --h: 100%"><span class="val">950</span><span class="bar"></span></div>
+        </div>
+        <div class="vlabels"><span>2024<br>actual</span><span>2025<br>actual</span><span>2030 forecast<br>(2025 ed.)</span><span>2030 forecast<br>(2026 ed.)</span></div>
+        <p class="caveat">IEA, <i>Energy and AI</i> (2025/4) and the 2026 update. Scale starts at 0. In 2030 this is about 3% of global electricity.</p>
+      </div>
+      <div class="prose">
+        <ul class="facts">
+          <li style="--c: var(--l-skills)"><div><b>Data center electricity grew 17% in 2025</b><span>AI-focused data centers grew 50%, while total global electricity use grew only about 3% over the same period.</span></div></li>
+          <li style="--c: var(--l-skills)"><div><b>Racks are getting "hotter"</b><span>The IEA notes the power density of AI servers rose about 11× from 2020 to 2025. Fans can't keep up, so liquid cooling has become standard.</span></div></li>
+          <li style="--c: var(--accent)"><div><b>But energy per task is falling fast</b><span>The IEA's 2026 update says the energy to complete the same AI task drops by at least an order of magnitude each year. Total use keeps rising because users and tasks grow even faster.</span></div></li>
+          <li style="--c: var(--l-tools)"><div><b>Tech companies are sourcing their own power</b><span>Microsoft signed with Constellation to restart Three Mile Island Unit 1 (835 MW); Google with Kairos and Amazon with X-energy invest in small modular reactors (SMRs); Meta announced nuclear deals of up to 6.6 GW.</span></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="calc mt" id="powerCalc">
+      <span class="tag" style="font-family:var(--mono);font-size: .82rem;color:var(--muted)">Converter · How much power does an AI data center use?</span>
+      <label for="gw"><span>Data center size (full-load power)<b id="gwv">1.0 GW</b></span><input id="gw" type="range" min="0.1" max="10" step="0.1" value="1"></label>
+      <div class="outs">
+        <div class="out"><span>Electricity per year</span><b id="twh">8.8 TWh</b></div>
+        <div class="out hl"><span>Share of Taiwan's annual electricity</span><b id="tw">3.1%</b></div>
+        <div class="out"><span>Taiwanese households for a year</span><b id="homes">—</b></div>
+      </div>
+      <div class="gauge-row"><span>Share of Taiwan's annual electricity</span><div class="gauge"><i id="twg" style="width:3.1%"></i></div></div>
+      <p class="caveat">Assumptions: running at full load all year (real usage is usually lower); Taiwan's annual electricity use taken as about 280 TWh, and a typical household as about 4,000 kWh a year. The numbers are only for a sense of scale. The industry is already building 1–5 GW campuses.</p>
+    </div>
+    <div class="prose measure mt">
+      <p class="elder"><b>In plain words</b><span>One large AI data center can use as much electricity as one or two million homes. So when building AI facilities today, the first question is often not whether you can buy the chips, but where the power will come from.</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="dc">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">02 · Data centers and investment</span>
+      <h2>A building boom of over $600 billion a year</h2>
+      <p class="lead">Estimates from early 2026 put the combined capital spending of Amazon, Microsoft, Google, Meta and Oracle above $600 billion, with roughly three quarters going to AI infrastructure.</p>
+    </div>
+    <div class="grid3">
+      <article class="card"><span class="tag">Scale</span><h3>From MW to GW</h3><p>Traditional data centers are measured in tens of MW; AI campuses are starting to be measured in GW. The Stargate project announced in January 2025 targets investment of up to $500 billion.</p></article>
+      <article class="card"><span class="tag">The real bottlenecks</span><h3>Transformers, grid connections, cooling</h3><p>The chips can be bought, but grid connections have years-long queues, and large transformers and turbine generators have long lead times. Liquid cooling, energy storage and on-site power plants have become site-selection criteria.</p></article>
+      <article class="card"><span class="tag">Link to the tech page</span><h3>Inference will use more than training</h3><p>Training happens once; inference runs for every user and every round of conversation. One agent task can make dozens of requests, each resending the whole context, so total demand scales with usage.</p></article>
+    </div>
+    <div class="s-head measure mt" style="margin-top:3rem">
+      <h3 style="margin:0;font-size:1.5rem">Back to Taiwan</h3>
+    </div>
+    <div class="grid3">
+      <article class="card"><span class="tag">Chips</span><h3>Almost all AI chips are made in Taiwan</h3><p>The most advanced process nodes and CoWoS advanced packaging for Nvidia, AMD and Google AI chips are mainly at TSMC. A large share of the orders from this building boom ends up in Taiwan.</p></article>
+      <article class="card"><span class="tag">Power</span><h3>Taiwan is worried about power too</h3><p>In 2024 the Ministry of Economic Affairs said it would no longer approve power for large data centers over 5 MW north of Taoyuan, hoping new data centers would move to central and southern Taiwan. Semiconductor expansion plus AI has made power supply a long-running issue.</p></article>
+      <article class="card"><span class="tag">Memory</span><h3>Price rises matter to Taiwanese makers too</h3><p>Prices at Taiwanese memory makers such as Nanya Technology and Winbond follow this wave of DRAM price increases; the prices you see when buying phones, computers and memory cards are part of the same story.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="memory">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">03 · Memory</span>
+      <h2>Longer contexts and more users mean not enough memory</h2>
+      <p class="lead">No matter how fast the GPU computes, the model weights and every conversation's KV cache have to sit next to it in high-bandwidth memory (HBM). The prompt cache from the <a href="tech.html#cache">How it works</a> page is exactly this.</p>
+    </div>
+    <div class="grid2">
+      <div class="prose">
+        <ul class="facts">
+          <li style="--c: var(--l-hist)"><div><b>HBM eats production capacity</b><span>A Micron executive says each GB of HBM uses about three times the wafer capacity of regular DRAM. The more HBM is made, the less DRAM is left for phones and computers.</span></div></li>
+          <li style="--c: var(--l-hist)"><div><b>2026 capacity sold out long ago</b><span>At its October 2025 earnings call, SK hynix said its 2026 HBM, DRAM and NAND capacity was "essentially sold out".</span></div></li>
+          <li style="--c: var(--warn)"><div><b>Ordinary people feel it too</b><span>A Samsung executive said in January 2026 the shortage "will affect everyone"; reports say a 32GB DDR5 stick rose from $149 in September 2025 to $239. Computers and phones getting pricier or cutting specs is related.</span></div></li>
+        </ul>
+      </div>
+      <div class="col">
+        <div><div class="codehead"><span>How KV cache size is calculated</span><span>formula</span></div>
+        <p class="formula">per token = 2 (K,V) × layers × KV heads × head dim × bytes per value</p></div>
+        <p style="color:var(--muted);font-size:.95rem">Taking the openly documented Llama 3 70B as an example (80 layers, 8 KV heads, dimension 128, BF16 at 2 bytes per value), each token takes about 0.31 MB.</p>
+      </div>
+    </div>
+
+    <div class="calc mt" id="kvCalc">
+      <span class="tag" style="font-family:var(--mono);font-size: .82rem;color:var(--muted)">Calculator · How much memory does the KV cache need to serve these conversations at once?</span>
+      <label for="ctx"><span>Context length per conversation<b id="ctxv">128K tokens</b></span><input id="ctx" type="range" min="0" max="5" step="1" value="3"></label>
+      <label for="users"><span>Simultaneous conversations<b id="userv">8</b></span><input id="users" type="range" min="1" max="64" step="1" value="8"></label>
+      <div class="outs">
+        <div class="out"><span>KV cache for one conversation</span><b id="kvOne">—</b></div>
+        <div class="out hl"><span>All conversations combined</span><b id="kvAll">—</b></div>
+        <div class="out"><span>Memory of this many 80GB GPUs</span><b id="gpus">—</b></div>
+      </div>
+      <div class="gauge-row"><span>Compared with the model weights themselves (70B × 2 bytes ≈ 140 GB)</span><div class="gauge"><i id="kvg" style="--c: var(--l-hist)"></i></div></div>
+      <p class="caveat">A simplified estimate that ignores quantization, paged attention, cache compression and other optimizations; real services use these to save a lot of memory. The point is the ratio: make the context 8× longer and memory needs go up about 8×.</p>
+    </div>
+    <div class="prose measure mt">
+      <p class="elder"><b>In plain words</b><span>Before AI answers you, it has to spread your whole notebook out on the desk. The thicker the notebook and the more people reading notebooks at once, the bigger the desk has to be. The whole world is scrambling for these "desks" now, which is why memory in phones and computers got more expensive too.</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="storage">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">04 · Storage and the next generation of models</span>
+      <h2>Text is running out; next comes video and audio</h2>
+      <p class="lead">There's only so much good public text on the internet; the research group Epoch AI estimates it could be used up in the second half of the 2020s. Next-generation models rely more and more on video, audio, synthetic data and reinforcement learning environments, and video and audio data are orders of magnitude larger than text.</p>
+    </div>
+    <div class="grid3">
+      <article class="card"><span class="tag">Video in the context</span><h3>One hour of video ≈ a million tokens</h3><p>By Gemini's published accounting, an hour of video is about 1 million tokens of context. Whether reading or generating it, video models use more memory and compute than text.</p></article>
+      <article class="card"><span class="tag">Training data</span><h3>From TB to EB</h3><p>Text-only training data is on the order of tens of TB; video datasets easily reach PB or EB. The data has to be stored, cleaned and read repeatedly, which takes both hard drives and SSDs.</p></article>
+      <article class="card"><span class="tag">During training</span><h3>A single checkpoint is several TB</h3><p>Training saves checkpoints regularly in case of crashes. Rough estimate: a 1-trillion-parameter model with optimizer state takes about 14 bytes per parameter, so about 14 TB per save, and one training run saves many times.</p></article>
+    </div>
+    <div class="prose measure mt">
+      <ul class="facts">
+        <li style="--c: var(--l-mem)"><div><b>Hard drives sold out</b><span>Western Digital's CEO said in early 2026 that its 2026 capacity was "pretty much sold out", with some enterprise contracts running to 2028. Reports say enterprise hard drive lead times stretched to 12 months.</span></div></li>
+        <li style="--c: var(--l-mem)"><div><b>A big shift to QLC flash</b><span>Industry insiders say cloud providers buy tens to hundreds of EB of flash storage a year, and high-capacity QLC SSDs are starting to replace some hard drives. SSD prices are rising as a result.</span></div></li>
+        <li style="--c: var(--accent)"><div><b>The direction of model training is changing</b><span>Natively multimodal models (hearing, seeing and speaking at once), "world models" that understand the physical world, and reinforcement learning practice in simulated environments. What they share: bigger data, more compute and more storage.</span></div></li>
+      </ul>
+      <p class="elder"><b>In plain words</b><span>AI used to read books; now it's starting to watch movies and listen to radio. One movie file is worth tens of thousands of books. So the world's hard drives are being bought up to hold these videos.</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="faq">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">05 · Common questions</span>
+      <h2>How does this affect ordinary people?</h2>
+    </div>
+    <div class="faq measure">
+      <details><summary>Will electricity bills go up because of AI?</summary><div class="a"><p>It depends on local grids and regulations. In areas where data centers cluster, there's already debate over who should pay for new power plants and transmission lines. The IEA also notes that data centers tend to be concentrated in a few places, so the pressure on local grids is greater than global figures suggest.</p></div></details>
+      <details><summary>Why do phones and computers seem more expensive?</summary><div class="a"><p>Memory factories give priority to more profitable HBM and server memory, so consumer products get less, and prices rise. Most of the industry expects this shortage to last at least into 2027.</p></div></details>
+      <details><summary>Will AI always use this much power?</summary><div class="a"><p>Energy per task is falling fast, and models keep getting more efficient (prompt cache, small models and distillation, as discussed earlier). But users and tasks grow even faster, so total electricity use will keep rising in the short term. Nobody can say for sure what happens in the long run.</p></div></details>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="refs">
+  <div class="frame">
+    <div class="s-head measure"><span class="eyebrow">Sources</span></div>
+    <div class="sources measure">
+      <a href="https://www.iea.org/reports/energy-and-ai">IEA · Energy and AI (2025/4)</a>
+      <a href="https://www.enlit.world/library/ai-and-data-centre-electricity-use-continue-to-surge-iea-finds">Enlit · Coverage of the IEA 2026 update (2026/4)</a>
+      <a href="https://www.networkworld.com/article/4113772/samsung-warns-of-memory-shortages-driving-industry-wide-price-surge-in-2026.html">Network World · Samsung warns of memory shortages (2026/1)</a>
+      <a href="https://www.gadgetreview.com/hard-drives-are-sold-out-for-2026-and-ai-data-centers-are-to-blame">GadgetReview · Hard drives are sold out for 2026 (2026/2)</a>
+      <a href="https://www.datacenterdynamics.com/en/analysis/storage-wars-is-this-the-end-for-hard-drives-in-the-data-center/">DCD · Storage wars</a>
+      <a href="https://introl.com/blog/hyperscaler-capex-600b-2026-ai-infrastructure-debt-january-2026">Introl · Hyperscaler capex 2026 (estimate)</a>
+      <a href="https://epoch.ai/blog/will-we-run-out-of-data-limits-of-llm-scaling-based-on-human-generated-data">Epoch AI · Will we run out of data?</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="gutter"><div class="frame">Written in November 2026. Numbers marked as forecasts or estimates are predictions, not actual values.</div></footer>
+
+<script>
+(function () {
+  "use strict";
+  function fmt(n, d) { return n.toLocaleString("en-US", { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 }); }
+  /* power */
+  var TW = 280, HOME = 4000; /* TWh per year, kWh per household per year (approximations) */
+  var gw = document.getElementById("gw");
+  function power() {
+    var g = +gw.value, twh = g * 8.76;
+    document.getElementById("gwv").textContent = fmt(g, 1) + " GW";
+    document.getElementById("twh").textContent = fmt(twh, 1) + " TWh";
+    var pct = twh / TW * 100;
+    document.getElementById("tw").textContent = fmt(pct, 1) + "%";
+    document.getElementById("twg").style.width = Math.min(100, pct) + "%";
+    var homes = twh * 1e9 / HOME;
+    document.getElementById("homes").textContent = homes >= 1e6 ? fmt(homes / 1e6, 1) + " million" : fmt(homes / 1e3, 0) + ",000";
+  }
+  gw.addEventListener("input", power); power();
+
+  /* KV cache: Llama 3 70B — 80 layers, 8 KV heads, head dim 128, bf16 */
+  var PER_TOKEN = 2 * 80 * 8 * 128 * 2; /* bytes */
+  var CTX = [8192, 32768, 65536, 131072, 262144, 1048576], CTXL = ["8K", "32K", "64K", "128K", "256K", "1M"];
+  var ctx = document.getElementById("ctx"), users = document.getElementById("users");
+  function gb(b) { return b / 1e9; }
+  function kv() {
+    var c = CTX[+ctx.value], u = +users.value, one = PER_TOKEN * c, all = one * u;
+    document.getElementById("ctxv").textContent = CTXL[+ctx.value] + " tokens";
+    document.getElementById("userv").textContent = u;
+    document.getElementById("kvOne").textContent = gb(one) >= 100 ? fmt(gb(one), 0) + " GB" : fmt(gb(one), 1) + " GB";
+    document.getElementById("kvAll").textContent = gb(all) >= 1000 ? fmt(gb(all) / 1000, 2) + " TB" : fmt(gb(all), 0) + " GB";
+    document.getElementById("gpus").textContent = fmt(Math.ceil(gb(all) / 80));
+    document.getElementById("kvg").style.width = Math.min(100, gb(all) / 140 * 100 / 10) + "%";
+    document.querySelector("#kvCalc .gauge-row span").textContent = "Total KV cache is " + fmt(gb(all) / 140, 1) + "× the model weights (about 140 GB)";
+  }
+  ctx.addEventListener("input", kv); users.addEventListener("input", kv); kv();
+})();
+</script>
+</body>
+</html>

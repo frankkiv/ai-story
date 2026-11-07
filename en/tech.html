@@ -1,0 +1,740 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>How it works · AI Grew Hands</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="How AI evolved over the past few years, how it actually works today, the rise of Chinese AI and the fight over distillation, and the future of power, memory and storage.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+<link rel="alternate" hreflang="zh-Hant" href="../tech.html">
+<link rel="alternate" hreflang="en" href="tech.html">
+<script src="../assets/i18n.js"></script>
+</head>
+<body>
+
+<nav class="nav gutter" aria-label="Site">
+  <div class="frame">
+    <a class="brand" href="index.html"><i></i><span>AI Grew Hands</span></a>
+    <ul>
+      <li><a class="l" href="history.html"><span class="lg">Timeline</span><span class="sh">Timeline</span></a></li>
+      <li><a class="l" href="bench.html"><span class="lg">Model benchmarks</span><span class="sh">Bench</span></a></li>
+      <li><a class="l site-on" href="tech.html"><span class="lg">How it works</span><span class="sh">How</span></a></li>
+      <li><a class="l" href="china.html"><span class="lg">Catching up</span><span class="sh">China</span></a></li>
+      <li><a class="l" href="future.html"><span class="lg">Next bottleneck</span><span class="sh">Limits</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<nav class="toc gutter" aria-label="On this page">
+  <div class="frame">
+    <ul>
+      <li><a class="l" href="#myth">Myth</a></li>
+      <li><a class="l" href="#request">A request</a></li>
+      <li><a class="l" href="#sim">Simulator</a></li>
+      <li><a class="l" href="#cache">Cache</a></li>
+      <li><a class="l" href="#agent">Agent</a></li>
+      <li><a class="l" href="#auto">Auto</a></li>
+      <li><a class="l" href="#sync">Sync</a></li>
+      <li><a class="l" href="#orch">Multi-agent</a></li>
+      <li><a class="l" href="#skills">Skills</a></li>
+      <li><a class="l" href="#faq">FAQ</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero gutter" id="top">
+  <div class="frame">
+    <div class="hero-copy">
+      <span class="pill">PART 3 · <b>How it works</b></span>
+      <h1>AI isn't learning you.<br><em>It rereads everything, every time.</em></h1>
+      <p class="sub">The longer you chat with AI, the better it seems to know you. But not a single bit of the model has changed. What changes is the context sent in each time: the system prompt, tools, skills, memory, and the whole conversation so far.</p>
+      <div class="cta">
+        <a class="btn primary" href="#sim">Try the context simulator →</a>
+        <a class="btn" href="#myth">Start with the most common myth</a>
+      </div>
+    </div>
+    <div>
+      <div class="stack-wrap" id="stack" aria-hidden="true">
+        <div class="stack" id="stackInner">
+          <div class="layer model" style="--i:0"><span>model weights (fixed)</span></div>
+          <div class="layer" style="--i:1; --c: var(--l-tools)"><span>tools · MCP</span></div>
+          <div class="layer" style="--i:2; --c: var(--l-sys)"><span>system prompt</span></div>
+          <div class="layer" style="--i:3; --c: var(--l-skills)"><span>skills</span></div>
+          <div class="layer" style="--i:4; --c: var(--l-mem)"><span>memory · CLAUDE.md</span></div>
+          <div class="layer" style="--i:5; --c: var(--l-hist)"><span>conversation history</span></div>
+          <div class="layer" style="--i:6; --c: var(--l-new)"><span>the line you just typed</span></div>
+        </div>
+      </div>
+      <ol class="stack-legend" aria-label="What one request contains, top to bottom">
+        <li><i style="--c:var(--l-new)"></i>The line you just typed</li>
+        <li><i style="--c:var(--l-hist)"></i>The conversation so far</li>
+        <li><i style="--c:var(--l-mem)"></i>Memory file (CLAUDE.md)</li>
+        <li><i style="--c:var(--l-skills)"></i>List of skills</li>
+        <li><i style="--c:var(--l-sys)"></i>System prompt (the rules)</li>
+        <li><i style="--c:var(--l-tools)"></i>Tool definitions (tools · MCP)</li>
+        <li><i style="--c:var(--model-bg)"></i>The model itself (fixed)</li>
+      </ol>
+      <p class="stack-cap">Every request stacks these layers and sends the whole bundle to the same fixed model.</p>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section class="s gutter" id="myth">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">01 · The most common myth</span>
+      <h2>"Am I training it by chatting with it?" No.</h2>
+      <p class="lead">"Training" and "using" are completely different things. They happen at different times, in different places, and their costs differ by orders of magnitude.</p>
+    </div>
+    <div class="grid2">
+      <article class="card">
+        <span class="tag">TRAINING</span>
+        <h3>Done by the model company, every few months</h3>
+        <ul class="kv">
+          <li><span>What changes</span><span>The model's <strong>weights</strong> (an enormous number of parameters)</span></li>
+          <li><span>How</span><span>Gradient descent over massive data, on huge numbers of GPUs running for weeks</span></li>
+          <li><span>Result</span><span>A new version of the model</span></li>
+          <li><span>Can you do it?</span><span>No. It doesn't happen while you chat</span></li>
+        </ul>
+      </article>
+      <article class="card hl">
+        <span class="tag">INFERENCE · Using it</span>
+        <h3>Happens every time you press send</h3>
+        <ul class="kv">
+          <li><span>What changes</span><span><strong>Nothing.</strong> The weights are read-only</span></li>
+          <li><span>How it works</span><span>The whole context is turned into tokens and fed in; the model continues one token at a time</span></li>
+          <li><span>Result</span><span>Some output. Next round, it's added to the context and sent again</span></li>
+          <li><span>Can you do it?</span><span>Yes. What you control is <strong>what goes into the context</strong></span></li>
+        </ul>
+      </article>
+    </div>
+    <div class="prose measure mt">
+      <p>The model itself is <strong>stateless</strong>: the API doesn't remember your previous message. It feels like "it remembers" because the client (the app, Claude Code) saves the whole conversation and sends it again with your new message. "Making AI understand you better" really means <strong>improving the context sent in each time</strong>: better prompts, a tidier memory file, common workflows written as skills. That's engineering, not training.</p>
+      <p class="elder"><b>In plain words</b><span>AI is like an expert whose memory lasts one meal. Every time you meet, you hand over your whole notebook (what you talked about before, your home situation, how you like things done) for them to reread. They didn't get smarter; your notebook got better.</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="request">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">02 · What one request looks like</span>
+      <h2>You type "look at this bug", and a whole bundle goes out</h2>
+      <p class="lead">Taking Claude Code as the example, each round sends these layers to the API, in this order (Anthropic's cache matches prefixes in tools → system → messages order). The order matters; the cache section uses it.</p>
+    </div>
+    <div class="grid2">
+      <ol class="anatomy">
+        <li style="--c: var(--l-tools)"><div><b>Tool definitions</b><span>Each tool's name, description and JSON schema. Tools from MCP servers are here too; with many tools this can be tens of thousands of tokens. Anthropic's cache prefix starts from this layer.</span></div></li>
+        <li style="--c: var(--l-sys)"><div><b>System prompt</b><span>Who the model is, the rules, environment info. The same every round.</span></div></li>
+        <li style="--c: var(--l-skills)"><div><b>List of skills</b><span>Inside the system prompt: just each skill's name and a one-line description. The full text loads only when needed.</span></div></li>
+        <li style="--c: var(--l-mem)"><div><b>Memory file</b><span>CLAUDE.md, project conventions, your preferences. Claude Code reads it at the start and puts it in the first message of the conversation.</span></div></li>
+        <li style="--c: var(--l-hist)"><div><b>Conversation history</b><span>Every earlier user and assistant message, every tool call and result, attached as is.</span></div></li>
+        <li style="--c: var(--l-new)"><div><b>This round's new message</b><span>What you just typed. Often it's the only new thing in the whole bundle.</span></div></li>
+      </ol>
+      <div class="col">
+        <div><div class="codehead"><span>POST /v1/messages (simplified)</span><span>JSON</span></div>
+<pre><code>{
+  <span class="k">"model"</span>: <span class="s">"claude-…"</span>,
+  <span class="k">"tools"</span>: [ <span class="c">// each tool's schema (cache matching starts here)</span>
+    { <span class="k">"name"</span>: <span class="s">"Read"</span>, <span class="k">"input_schema"</span>: { <span class="y">…</span> } },
+    { <span class="k">"name"</span>: <span class="s">"Bash"</span>, <span class="k">"input_schema"</span>: { <span class="y">…</span> } }
+  ],
+  <span class="k">"system"</span>: [ <span class="c">// rules + list of skills</span>
+    { <span class="k">"type"</span>: <span class="s">"text"</span>, <span class="k">"text"</span>: <span class="s">"You are Claude Code…"</span>,
+      <span class="k">"cache_control"</span>: { <span class="k">"type"</span>: <span class="s">"ephemeral"</span> } }
+  ],
+  <span class="k">"messages"</span>: [ <span class="c">// the whole history, resent every round</span>
+    { <span class="k">"role"</span>: <span class="s">"user"</span>,      <span class="k">"content"</span>: <span class="s">"look at this bug"</span> },
+    { <span class="k">"role"</span>: <span class="s">"assistant"</span>, <span class="k">"content"</span>: [ <span class="t">tool_use: Read</span> ] },
+    { <span class="k">"role"</span>: <span class="s">"user"</span>,      <span class="k">"content"</span>: [ <span class="t">tool_result: …</span> ] },
+    { <span class="k">"role"</span>: <span class="s">"assistant"</span>, <span class="k">"content"</span>: <span class="s">"The problem is on line 42…"</span> },
+    { <span class="k">"role"</span>: <span class="s">"user"</span>,      <span class="k">"content"</span>: <span class="p">"OK, fix it"</span> }  <span class="c">// ← new</span>
+  ]
+}</code></pre></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="sim">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">03 · Interactive simulator</span>
+      <h2>Follow a conversation and watch the data flow</h2>
+      <p class="lead">On the left is your computer, in the middle the context bundle sent each time, on the right the model. Press "Next" for the guided tour, or play with the buttons below. Watch the number on the right: it stays at 0 the whole time.</p>
+    </div>
+
+    <div class="sim2">
+      <div class="sim2-guide">
+        <div class="guide-step"><span class="gs-n" id="gN">1 / 8</span><p id="narr" aria-live="polite"></p></div>
+        <div class="guide-btns">
+          <button class="go" id="gNext" type="button">Next →</button>
+          <button id="bReset" type="button">Reset</button>
+        </div>
+      </div>
+
+      <div class="sim2-stage">
+        <div class="zone z-local">
+          <div class="zh"><span class="zt">Your computer</span><span class="zs">Claude Code client</span></div>
+          <ol class="chat" id="chat"></ol>
+          <div class="file"><span class="fi">📄</span><div><b>session.jsonl</b><span id="fLines">0 lines · on your disk</span></div></div>
+        </div>
+
+        <div class="zone z-wire">
+          <div class="zh"><span class="zt">Context sent this time</span><span class="zs" id="mReq">Request #0</span></div>
+          <div class="ctxbar" id="bar" role="img" aria-label="Composition of this request's context"></div>
+          <div class="legend">
+            <span><i class="swatch" style="--c:var(--l-tools)"></i>tools</span>
+            <span><i class="swatch" style="--c:var(--l-sys)"></i>system</span>
+            <span><i class="swatch" style="--c:var(--l-skills)"></i>skills</span>
+            <span><i class="swatch" style="--c:var(--l-mem)"></i>memory</span>
+            <span><i class="swatch" style="--c:var(--l-hist)"></i>history</span>
+            <span><i class="swatch" style="--c:var(--l-new)"></i>new message</span>
+            <span><i class="swatch hatch"></i>cache hit</span>
+          </div>
+          <div class="gauge"><span>context used</span><div class="gtrack"><i id="gFill"></i></div><b id="mUsed">0</b><span class="of">/ 200K</span></div>
+          <div class="wf-head"><span>How much each request sent (newest on the right)</span></div>
+          <svg class="wf" id="wf" viewBox="0 0 520 170" role="img" aria-label="Tokens per request, split into cache hits, new writes and output"></svg>
+          <div class="legend"><span><i class="swatch hatch-g"></i>cache hit (0.1×)</span><span><i class="swatch" style="--c:var(--warn)"></i>new write (1.25×)</span><span><i class="swatch" style="--c:var(--l-out)"></i>model output (5×)</span></div>
+        </div>
+
+        <div class="zone z-model">
+          <div class="zh"><span class="zt">The model</span><span class="zs">in the data center</span></div>
+          <div class="weights"><span>Model weights</span><b>Never change</b><div class="wcount"><b id="wChange">0</b><span>times you've changed them</span></div></div>
+          <div class="cachebox" id="cacheBox"><span>Temporary storage on the server (prompt cache)</span><div class="ctrack"><i id="cFill"></i></div><b id="cLeft">None yet</b></div>
+          <div class="cost">
+            <span>Running cost (illustrative units)</span>
+            <div class="crow"><em>With cache</em><div class="ctrk"><i id="costC"></i></div><b id="costCn">0</b></div>
+            <div class="crow"><em>No cache</em><div class="ctrk"><i id="costN"></i></div><b id="costNn">0</b></div>
+            <p class="saved" id="saved"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="sim-top" role="toolbar" aria-label="Free play">
+        <span class="free">Play:</span>
+        <button id="bAsk" type="button">Ask something</button>
+        <button id="bTool" type="button">AI calls a tool</button>
+        <button id="bSkill" type="button">Load a skill</button>
+        <button id="bWait" type="button">Step away 6 min</button>
+        <button id="bCompact" type="button">Compact</button>
+        <label class="cmode">Compaction style
+          <select id="cMode">
+            <option value="cc">Claude Code</option>
+            <option value="codex">Codex</option>
+            <option value="gemini">Gemini CLI</option>
+          </select>
+        </label>
+      </div>
+    </div>
+    <p class="note measure">Numbers are illustrative. Cost units: regular input = 1, cache read = 0.1, cache write = 1.25, output = 5, proportional to Anthropic's published 5-minute cache pricing.</p>
+    <div class="prose measure mt" id="compact">
+      <h3>How does each tool compact? It's different everywhere</h3>
+      <p>The model doesn't deal with "the conversation is too long". Compaction is a strategy the client (or API service) decides on, so every vendor does it differently. Switch "Compaction style" in the simulator above to see how three approaches change the context.</p>
+    </div>
+    <div class="log-wrap modes">
+      <table>
+        <thead><tr><th scope="col">Tool</th><th scope="col">When it compacts</th><th scope="col">How</th><th scope="col">What's left afterwards</th></tr></thead>
+        <tbody>
+          <tr><td>Claude Code</td><td>Automatically when nearly full (around 90%, after reserving room for output); or manually with <code>/compact</code>, followed by what to keep</td><td>In layers: first, without the model, old tool results are cleared to a one-line "cleared"; if that's not enough, the model writes a structured summary</td><td>The summary (goals, files changed, errors, to-dos, what you said, etc.) plus the most recently edited files read back in; CLAUDE.md is in the system prompt and unaffected</td></tr>
+          <tr><td>OpenAI Codex CLI</td><td>Automatically at around 90%; manually with <code>/compact</code></td><td>The model writes a "handoff summary"; with Codex models this can go to the server's compact API, which returns encrypted content</td><td>Everything you said, verbatim; the AI's replies and tool results are replaced by that summary</td></tr>
+          <tr><td>Gemini CLI</td><td>By default at about half full (adjustable); manually with <code>/compress</code></td><td>Writes a summary, then has the model check it once for omissions</td><td>The most recent ~30% of the conversation verbatim, plus a summary of the older part</td></tr>
+          <tr><td>OpenCode</td><td>Only at about 96%–99%</td><td>First prunes old tool output, then summarizes if still needed</td><td>The last ~40,000 tokens of tool output and your last two turns</td></tr>
+          <tr><td>Anthropic API context editing</td><td>A threshold the developer sets</td><td>The server automatically clears old tool results, with no summary</td><td>The conversation's structure is unchanged; old tool results just become "cleared"</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="grid3 mt">
+      <article class="card"><span class="tag">The shared cost</span><h3>The cache misses once</h3><p>Compaction rewrites the conversation history, so the next request can only hit the cache for the tools and system at the front; the rest is written again. So compacting more often isn't better.</p></article>
+      <article class="card"><span class="tag">The trade-off</span><h3>Compact early or late?</h3><p>Compacting early (like Gemini CLI) sends less each time and costs less, but summarizes more often and loses more detail. Compacting late (like OpenCode) keeps the most original text, but by the time it's nearly full, the model's attention is already diluted.</p></article>
+      <article class="card"><span class="tag">Practical tip</span><h3>New topic, new conversation</h3><p>Compaction is a last resort. When one task is done and you're moving to the next, start a new session and have the AI read CLAUDE.md or the spec docs. That's usually cleaner than continuing after a compaction.</p></article>
+    </div>
+    <p class="elder mt"><b>In plain words</b><span>Chat too long and the notebook fills up. One approach tears out old pages and keeps the highlights (Claude Code); another keeps every word you said and condenses the rest into a handoff note (Codex); another writes the highlights and then double-checks for anything missed (Gemini). Every approach loses some detail.</span></p>
+    <p class="caveat mt">Thresholds and details change between versions. Claude Code's internals come from community analysis (it isn't open source); the rest draws on each tool's documentation and April 2026 comparison articles (Daniel Vaughan, "Context Compaction Showdown"; Justin3go, "Context Compaction in Codex, Claude Code, and OpenCode").</p>
+  </div>
+</section>
+
+<section class="s gutter" id="cache">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">04 · Prompt cache</span>
+      <h2>If everything is resent each time, why isn't it unbearably slow?</h2>
+      <p class="lead">Because the model's side keeps the "already computed prefix" for a while. If the next context starts exactly the same, it picks up from there.</p>
+    </div>
+    <div class="grid3">
+      <article class="card">
+        <span class="tag">What's cached</span>
+        <h3>An intermediate state, halfway through reading</h3>
+        <p>As the model reads the context, each token produces a set of internal state (the KV cache). Prompt caching keeps that state on the server for a while. It stores "the state after reading this text", not anything the model learned.</p>
+      </article>
+      <article class="card">
+        <span class="tag">When it hits</span>
+        <h3>The prefix must match exactly</h3>
+        <p>Matching starts from the beginning; one character different and everything after it is invalid. So things that rarely change (tools, system, the skills list) go first, and the conversation that changes every round goes last. Change one tool definition and the whole cache has to be rebuilt.</p>
+      </article>
+      <article class="card">
+        <span class="tag">Lifetime and price</span>
+        <h3>5 minutes by default, reads at about 10%</h3>
+        <p>Anthropic's cache lives 5 minutes by default, resetting on each hit, with a 1-hour option. Reads cost about 10% of the regular input price; writes cost a bit more. Step away too long and the first round has to recompute everything.</p>
+      </article>
+    </div>
+    <div class="prose measure mt">
+      <p class="elder"><b>In plain words</b><span>Like a restaurant that recognizes a regular: order again within five minutes and the kitchen doesn't have to prep from scratch. What it remembers is the prepped ingredients; the chef's skill hasn't changed at all.</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="agent">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">05 · The agent loop</span>
+      <h2>"AI doing things itself" is really a while loop</h2>
+      <p class="lead">The model never actually runs anything. It only outputs "I want to call this tool with these arguments". The client on your computer runs it, puts the result back into the context, and asks the model again.</p>
+    </div>
+    <div class="loop">
+      <ol class="steps" id="loopSteps">
+        <li><div><span class="who">USER → CLIENT</span><b>You say "fix the login bug"</b><span>The client appends it to the end of the conversation.</span></div></li>
+        <li><div><span class="who">CLIENT → MODEL</span><b>Send the whole context</b><span>system + tools + history + new message.</span></div></li>
+        <li><div><span class="who">MODEL → CLIENT</span><b>stop_reason: tool_use</b><span>The model replies "I want to Read auth.ts". It didn't read anything; it only asked.</span></div></li>
+        <li><div><span class="who">CLIENT</span><b>Run the tool on your computer</b><span>Read files, run commands, call MCP servers. Ask you for permission when needed.</span></div></li>
+        <li><div><span class="who">CLIENT → MODEL</span><b>Send again with the tool_result</b><span>The context grows again. Back to step 3, until the model stops asking for tools.</span></div></li>
+        <li><div><span class="who">MODEL → USER</span><b>stop_reason: end_turn</b><span>Final reply: "Fixed it. Changed two places, tests pass."</span></div></li>
+      </ol>
+      <div class="col">
+        <div><div class="codehead"><span>agent loop (pseudocode)</span><span>python</span></div>
+<pre><code>messages.append(user(<span class="s">"fix the login bug"</span>))
+<span class="k">while</span> <span class="y">True</span>:
+    resp = model.create(system, tools, messages)  <span class="c"># resend everything</span>
+    messages.append(resp)                         <span class="c"># save to local history</span>
+    <span class="k">if</span> resp.stop_reason != <span class="s">"tool_use"</span>:
+        <span class="k">break</span>                                     <span class="c"># done</span>
+    result = run_tool_locally(resp.tool_use)      <span class="c"># the client runs it</span>
+    messages.append(tool_result(result))</code></pre></div>
+        <div class="card">
+          <span class="tag">Much of the progress in recent years happened in this loop</span>
+          <ul class="kv">
+            <li><span>MCP</span><span>A standard format for tool definitions; any server can plug into the tools layer</span></li>
+            <li><span>Subagent</span><span>Runs a subtask in a fresh context and brings back only a summary, so the main context doesn't overflow</span></li>
+            <li><span>Compaction</span><span>When the context is nearly full, old conversation is summarized and the summary replaces the original</span></li>
+            <li><span>Remote</span><span>The loop runs on your computer or in the cloud; the phone just views the history and sends new messages</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="auto">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">06 · Auto modes in AI IDEs</span>
+      <h2>"Auto" means two things: picking the model, and pressing "Allow" for you</h2>
+      <p class="lead">Tools like Cursor and Claude Code have an Auto switch, but behind it are two different things. What they share: both add a smaller, faster model on the side just to make judgment calls. The main model itself is unchanged.</p>
+    </div>
+    <div class="grid2">
+      <article class="card auto-card">
+        <span class="tag">Type 1 · Automatic model choice</span>
+        <h3>Cursor Auto: classify each request, then send it to a suitable model</h3>
+        <ol class="flow">
+          <li><b>You send a request</b><span>Say, "rename this variable" or "refactor the whole login flow".</span></li>
+          <li><b>A routing classifier takes a look first</b><span>It judges the task type and difficulty. Cursor Router, launched by Cursor in July 2026, is a classifier built just for this.</span></li>
+          <li><b>It goes to the matching model</b><span>Simple ones go to cheap, fast models; hard ones to big models like Opus or Fable. You can lean toward Cost, Balance or Intelligence.</span></li>
+        </ol>
+        <p class="note">Cursor's own claim: 30–50% cheaper than using Opus 4.8 for everything. That's a vendor number, not independently verified.</p>
+      </article>
+      <article class="card auto-card">
+        <span class="tag">Type 2 · Automatic approval</span>
+        <h3>Claude Code auto mode: every action goes through a security check first</h3>
+        <ol class="flow">
+          <li><b>Three tiers</b><span>Read-only tools go straight through; editing files inside the project goes through too; everything else (running commands, going online, touching files outside the project) goes through the classifier.</span></li>
+          <li><b>The classifier sees only two things</b><span>What you said, and the action the AI is about to take. It doesn't see the AI's own explanations or tool output, so it can't be talked into things or swayed by instructions hidden in web pages.</span></li>
+          <li><b>Two-stage check</b><span>A quick "allowed or not" first, erring on the side of blocking; anything blocked is then reasoned through more carefully to reduce false blocks.</span></li>
+          <li><b>What happens when it's blocked</b><span>The AI is told "not allowed" and looks for a safe alternative. After 3 blocks in a row or 20 in total, it stops and asks you.</span></li>
+        </ol>
+        <p class="note">Over twenty categories are blocked by default, such as force-overwriting git history, mass deletions, harvesting passwords and keys, and sharing code externally. Another layer also scans what tools read back for prompt injection.</p>
+      </article>
+    </div>
+    <div class="grid3 mt">
+      <article class="card"><span class="tag">Numbers</span><h3>How accurate is it?</h3><p>Anthropic's published tests: in real use, about 0.4% of normal actions get wrongly blocked; but about 17% of overreaching actions by an "overeager" AI still get through. So it's a tool for fewer interruptions, not insurance.</p></article>
+      <article class="card"><span class="tag">How it relates</span><h3>Still the same agent loop</h3><p>Auto mode doesn't change the loop itself: the model still outputs tool_use; only the "should we ask you?" step moves from a pop-up every time to the classifier's judgment.</p></article>
+      <article class="card"><span class="tag">Watch out</span><h3>The cost and the responsibility are still yours</h3><p>Automatic model choice may use a pricier model without you knowing; automatic approval means you won't see every step. For important projects, try it in a test environment first.</p></article>
+    </div>
+    <p class="elder mt"><b>In plain words</b><span>Automatic model choice is like a switchboard operator who listens to your question and puts you through to the right specialist; automatic approval is like a guard at the door who follows a checklist, letting routine things through and stopping anything suspicious to ask the homeowner.</span></p>
+    <p class="caveat mt">Sources: Anthropic Engineering, "Claude Code auto mode" (2026/3/25); Cursor docs, "Available models", and coverage of the Cursor Router launch (2026/7).</p>
+  </div>
+</section>
+
+<section class="s gutter" id="sync">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">07 · How phone and computer stay in sync</span>
+      <h2>One account, but the data lives in three different places</h2>
+      <p class="lead">"Picking up on your phone" looks like magic, but first sort out: where is this conversation stored? Which machine runs the loop? What kind of remote is the phone?</p>
+    </div>
+    <div class="sync" aria-label="How Remote Control connects">
+      <div class="node">
+        <span class="tag">Your phone / the web</span>
+        <h3>Claude app, claude.ai/code</h3>
+        <ul><li>Shows the conversation and sends new messages</li><li>Lets you allow or deny tool permissions</li><li>Runs no code and has none of your files</li></ul>
+      </div>
+      <div class="wire" aria-hidden="true"><i></i><i class="b"></i><span>TLS</span></div>
+      <div class="node mid">
+        <span class="tag">Anthropic API (relay)</span>
+        <h3>Account, conversations, message relay</h3>
+        <ul><li>Regular chat history is stored here, so every device sees the same list</li><li>While Remote Control is connected, the transcript is stored here too</li><li>A streaming connection relays messages between the two ends</li></ul>
+      </div>
+      <div class="wire" aria-hidden="true"><i></i><i class="b"></i><span>outbound only</span></div>
+      <div class="node">
+        <span class="tag">Your computer</span>
+        <h3>Local Claude Code</h3>
+        <ul><li>The agent loop runs here</li><li>Reading files, running commands and MCP tools all happen here</li><li>Only makes outbound HTTPS connections and opens no inbound ports; shut down the computer or quit the program and the phone goes offline</li></ul>
+      </div>
+    </div>
+    <div class="log-wrap modes">
+      <table>
+        <thead><tr><th scope="col">Mode</th><th scope="col">Conversation stored in</th><th scope="col">Where the code runs</th><th scope="col">What the phone can do</th></tr></thead>
+        <tbody>
+          <tr><td>Regular chat (app / web)</td><td>Anthropic's servers, tied to your account</td><td>Only model inference, not your computer</td><td>Everything; continue on any device</td></tr>
+          <tr><td>Local Claude Code</td><td><code>~/.claude/projects/</code> on your computer</td><td>Your computer</td><td>Nothing; the history never leaves the computer</td></tr>
+          <tr><td>Remote Control</td><td>A local copy; the server keeps one too while connected</td><td>Your computer (must stay on)</td><td>Watch progress, give instructions, approve permissions</td></tr>
+          <tr><td>Cloud session (Claude Code on the web)</td><td>Anthropic's servers</td><td>A cloud container managed by Anthropic</td><td>Start work from the phone; the computer can be off</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="prose measure mt">
+      <p>In every case, the model itself stores nothing. What gets "synced" is the conversation and the messages; the next round still resends the whole context.</p>
+      <p class="elder"><b>In plain words</b><span>The phone is a TV remote and the computer is the TV. The remote's signal goes to Anthropic's "relay station" first, then on to the computer at home. So the computer has to be on, and the files always stay at home.</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="orch">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">08 · Multi-agent teamwork</span>
+      <h2>From BMAD to Projects: how one AI manages several AIs</h2>
+      <p class="lead">One agent loop is great for small tasks. But a big project needs planning, coding, testing and review, and cramming it all into one context fills it fast; one role also can't cover everything well. Over the past two years, engineers' answer went from "build your own orchestration system" to "it's built into the tool".</p>
+    </div>
+
+    <div class="grid3">
+      <article class="card"><span class="tag">2024–2025 · Build your own</span><h3>Homegrown orchestrators</h3><p>Engineers chained model calls together with scripts or frameworks like LangGraph, CrewAI and AutoGen: one splits the task, a few do the work, a final one checks it. Maximum flexibility, but how state is saved, how failures are retried and who can see what all have to be written yourself.</p></article>
+      <article class="card"><span class="tag">2025 · Hand off with documents</span><h3>BMAD-METHOD</h3><p>An open-source methodology (Breakthrough Method for Agile AI-Driven Development). It splits the AI into roles such as Analyst, PM, Architect, Scrum Master, Dev and QA, each defined by a Markdown file. The planning phase produces a PRD and an architecture doc; the Scrum Master then cuts them into story files, and Dev works on one at a time. Handoffs happen entirely through files in Git, and each role loads only the documents it needs.</p></article>
+      <article class="card"><span class="tag">2025–2026 · Built into the tool</span><h3>Subagents, then Projects</h3><p>Claude Code first added subagents: the main agent hands a subtask to a small agent with its own context, which returns only the result. Projects (beta), launched on September 17, 2026, goes further: one Claude directly manages several full sessions running in parallel.</p></article>
+    </div>
+
+    <div class="grid2 mt">
+      <article class="card auto-card">
+        <span class="tag">How Projects works</span>
+        <h3>One switchboard, plus many threads each doing their own job</h3>
+        <ol class="flow">
+          <li><b>You only talk to the project chat</b><span>The Claude there is the coordinator. It decides whether to answer a message itself or start a new thread to do the work.</span></li>
+          <li><b>Each thread is its own session</b><span>With its own context window and cloud container, it clones the project's repos, works on its own branch, and opens a PR when needed. Five things can run at once without their contexts crowding each other.</span></li>
+          <li><b>Report back when done</b><span>A thread replies to you in its own thread. The coordinator sees every thread's replies, and when you add a follow-up, it forwards your exact words rather than paraphrasing them.</span></li>
+          <li><b>Back to your computer when needed</b><span>A thread can run on your computer through Remote Control, using your local tools and sign-ins. That's how this website was pushed to GitHub.</span></li>
+        </ol>
+      </article>
+      <article class="card auto-card">
+        <span class="tag">How they communicate, what they share</span>
+        <h3>Most messages go through the coordinator</h3>
+        <ol class="flow">
+          <li><b>Shared things</b><span>The project's repos, file area (Library), project memory and instructions, and connectors. A new thread starts with all of these.</span></li>
+          <li><b>Threads rarely talk directly</b><span>They message each other only when their work depends on each other; everything else goes through the coordinator. That keeps a crowd of AIs from chatting among themselves and burning through usage.</span></li>
+          <li><b>Whose words count is labeled</b><span>Only messages you wrote yourself count as "approval". Messages from other AIs are just information; they can't press push or delete files for you.</span></li>
+          <li><b>Wake up only when something happens</b><span>Threads don't run idle. Your new message, a comment on a PR, or a failing CI run wakes them up.</span></li>
+        </ol>
+      </article>
+    </div>
+
+    <div class="log-wrap modes mt">
+      <table>
+        <thead><tr><th scope="col">Approach</th><th scope="col">Who assigns work</th><th scope="col">How work is handed off</th><th scope="col">How contexts are separated</th><th scope="col">What you maintain</th></tr></thead>
+        <tbody>
+          <tr><td>Homegrown orchestrator</td><td>Your code</td><td>Variables and queues in your code</td><td>Depends on how you wrote it</td><td>Everything</td></tr>
+          <tr><td>BMAD</td><td>You, switching roles by the process (or its Orchestrator role)</td><td>PRD, architecture doc and story files in Git</td><td>Each role loads only the documents it needs</td><td>Role definitions and templates</td></tr>
+          <tr><td>Claude Code Projects</td><td>The coordinator Claude</td><td>Thread reports, forwarding your exact words, shared files and memory</td><td>Each thread is its own session</td><td>Project instructions, memory, specs in the repo</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid3 mt">
+      <article class="card"><span class="tag">Watch out</span><h3>It burns through usage faster</h3><p>Every thread is a full session, and the coordinator uses tokens too, so the same plan's limits get used up faster. There's also a daily cap on new threads.</p></article>
+      <article class="card"><span class="tag">Still in beta</span><h3>Things may change at any time</h3><p>Opened to some Pro and Max users in September 2026, expanding gradually. Team and Enterprise plans and the terminal CLI can't use it yet.</p></article>
+      <article class="card"><span class="tag">Same as BMAD</span><h3>Documentation is still key</h3><p>The AI that picks up the work doesn't remember the past; it relies on CLAUDE.md, spec docs and project memory in the repo. That's why this website's repo has docs/SPEC.md.</p></article>
+    </div>
+    <p class="elder mt"><b>In plain words</b><span>It used to be like being your own foreman: scheduling, passing messages and tracking progress yourself. BMAD is a "work order" system where each tradesperson only reads their own order. Projects is like hiring a site manager: you only talk to the manager, who hands out work orders to different tradespeople, they report back when done, and the important calls still need your OK.</span></p>
+    <p class="caveat mt">Sources: the BMAD-METHOD open-source project and introductory articles; the Claude Code Projects documentation (code.claude.com/docs/en/claude-projects) and launch coverage from September 2026. How threads communicate is partly based on observations from actually building this website with Projects, and may change during the beta.</p>
+  </div>
+</section>
+
+<section class="s gutter" id="skills">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">09 · Memory and Skills</span>
+      <h2>"It gets easier the more I use it" comes from local text files</h2>
+      <p class="lead">Everything you and the AI work out together ends up in a few files on your computer. They're read into the context the next time you start, so it looks like it "learned".</p>
+    </div>
+    <div class="grid2">
+      <div class="col">
+        <div><div class="codehead"><span>Your project and home directory</span><span>tree</span></div>
+<pre class="tree"><code>my-project/
+├── <span class="p">CLAUDE.md</span>              <span class="c"># project conventions, read every time</span>
+└── .claude/skills/
+    └── <span class="y">release-notes/</span>
+        ├── <span class="y">SKILL.md</span>           <span class="c"># name, description, steps</span>
+        └── template.md
+
+~/.claude/
+├── <span class="p">CLAUDE.md</span>              <span class="c"># your personal preferences</span>
+└── projects/…/<span class="t">*.jsonl</span>    <span class="c"># full record of each conversation</span></code></pre></div>
+      </div>
+      <div class="col">
+        <div><div class="codehead"><span>.claude/skills/release-notes/SKILL.md</span><span>md</span></div>
+<pre><code><span class="c">---</span>
+<span class="k">name</span>: <span class="s">release-notes</span>
+<span class="k">description</span>: <span class="s">Generate user-facing release notes from git log</span>
+<span class="c">---</span>
+1. Read the commits since the last tag
+2. Group them into new features / fixes / other
+3. Output in the format of template.md
+4. <span class="p">Don't list internal refactors</span>   <span class="c"># ← added after last week's chat</span></code></pre></div>
+      </div>
+    </div>
+    <div class="grid3 mt">
+      <article class="card">
+        <span class="tag">Progressive loading</span>
+        <h3>Usually just a few dozen tokens</h3>
+        <p>The context holds only each skill's name and description. Only when the model decides it needs one does it read the full SKILL.md and attached files. So you can install many skills without overflowing the context.</p>
+      </article>
+      <article class="card">
+        <span class="tag">How it "improves"</span>
+        <h3>Chat → spot a problem → edit the file</h3>
+        <p>The output listed something it shouldn't, so you say "don't list internal refactors from now on". Write that line back into SKILL.md, and any future conversation that loads it follows the new rule.</p>
+      </article>
+      <article class="card hl">
+        <span class="tag">The point</span>
+        <h3>This is prompt engineering, not training</h3>
+        <p>What changes is a text file: you can diff it, git commit it and share it with colleagues. Switch to a new model version and the skill still works. The weights were never touched.</p>
+      </article>
+    </div>
+    <div class="prose measure mt">
+      <p class="elder"><b>In plain words</b><span>We're not "teaching AI to be smarter"; we're writing it an ever-better work manual. The manual lives on our own computer, and every time we ask it to do something, we flip it open to the relevant pages first.</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="faq">
+  <div class="frame measure">
+    <a class="card linkcard" href="index.html#faq"><span class="tag">10 · What parents ask →</span><h3>"Does it remember me?" "Will my chats be used for training?"</h3><p>These common questions, along with five tips for using AI, are collected at the bottom of the home page, ready to send to your family.</p></a>
+  </div>
+</section>
+
+</main>
+
+<footer class="gutter"><div class="frame">Written in November 2026. Simulator numbers are illustrative; check each provider's official docs for cache lifetimes and prices.</div></footer>
+
+<script>
+(function () {
+  "use strict";
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* hero 3D stack follows the pointer; on touch screens it fans out when in view */
+  var wrap = document.getElementById("stack"), inner = document.getElementById("stackInner");
+  if (!reduce) {
+    wrap.addEventListener("pointermove", function (e) {
+      if (e.pointerType !== "mouse") return;
+      var r = wrap.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+      inner.style.transform = "rotateX(" + (58 - y * 16) + "deg) rotateZ(" + (-38 + x * 22) + "deg)";
+    });
+    wrap.addEventListener("pointerleave", function () { inner.style.transform = ""; });
+    if ("IntersectionObserver" in window && matchMedia("(hover: none)").matches) {
+      new IntersectionObserver(function (es) { es.forEach(function (e) { wrap.classList.toggle("open", e.isIntersecting); }); }, { threshold: .6 }).observe(wrap);
+    }
+  }
+
+  /* nav highlight */
+  var links = document.querySelectorAll(".toc a.l");
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        links.forEach(function (a) { a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id); });
+      });
+    }, { rootMargin: "-40% 0px -55% 0px" });
+    document.querySelectorAll("section.s").forEach(function (s) { io.observe(s); });
+  }
+
+  /* agent loop stepper: 1 2 3 4 5 → 3 4 5 → 6 */
+  var steps = document.querySelectorAll("#loopSteps li"), seq = [0, 1, 2, 3, 4, 2, 3, 4, 5], k = 0;
+  function show(i) { steps.forEach(function (li, j) { li.classList.toggle("on", j === i); }); }
+  show(0);
+  if (!reduce) setInterval(function () { k = (k + 1) % seq.length; show(seq[k]); }, 1600);
+
+  /* ---------- context simulator ---------- */
+  var COLORS = { sys: "var(--l-sys)", tools: "var(--l-tools)", skills: "var(--l-skills)", mem: "var(--l-mem)", hist: "var(--l-hist)", new: "var(--l-new)", out: "var(--l-out)" };
+  var PRE = [
+    { id: "tools", k: "tools", label: "Tool definitions (incl. MCP)", t: 6000 },
+    { id: "sys", k: "sys", label: "System prompt", t: 3000 },
+    { id: "skills", k: "skills", label: "Skills list (names + descriptions)", t: 400 },
+    { id: "mem", k: "mem", label: "CLAUDE.md memory file", t: 1200 }
+  ];
+  var QUESTIONS = ["The login button does nothing, can you look?", "OK, fix it", "Add a test while you're at it", "Write the commit message in English", "Turn it into a PR description", "Could anything else break?"];
+  var TTL = 5, LIMIT = 200000, S, uid;
+  function blk(k, label, t, role, chat) { uid++; return { id: k + uid, k: k, label: label, t: t, role: role || "user", chat: chat }; }
+  function sum(a) { return a.reduce(function (s, b) { return s + b.t; }, 0); }
+  function fmt(n) { return Math.round(n).toLocaleString("en-US"); }
+  function esc(x) { return String(x).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+  function reset() { S = { hist: [], prev: null, lastAt: -99, clock: 0, req: 0, costC: 0, costN: 0, rows: [], last: null, q: 0, lines: 0 }; uid = 0; }
+
+  function request(newBlocks, out) {
+    newBlocks.forEach(function (b) { S.hist.push(b); });
+    var blocks = PRE.concat(S.hist), cached = 0, hit = {};
+    if (S.prev && (S.clock - S.lastAt) <= TTL) {
+      for (var i = 0; i < blocks.length && i < S.prev.length; i++) {
+        if (S.prev[i] !== blocks[i].id) break;
+        cached += blocks[i].t; hit[blocks[i].id] = 1;
+      }
+    }
+    var input = sum(blocks), write = input - cached;
+    S.costC += cached * .1 + write * 1.25 + out.t * 5; S.costN += input + out.t * 5; S.req++;
+    S.prev = blocks.map(function (b) { return b.id; });
+    S.lastAt = S.clock; S.clock += 1;
+    S.hist.push(out); S.lines += newBlocks.length + 1;
+    S.last = { input: input, cached: cached, write: write, hit: hit, fresh: newBlocks.map(function (b) { return b.id; }), outId: out.id };
+    S.rows.push({ c: cached, w: write, o: out.t, miss: S.req > 1 && cached === 0 });
+  }
+
+  /* actions return the narration */
+  function ask() {
+    var q = QUESTIONS[S.q++ % QUESTIONS.length], first = S.req === 0, cold = S.req > 0 && (S.clock - S.lastAt) > TTL;
+    request([blk("new", "user: \"" + q + "\"", 60, "user", q)], blk("out", "assistant: reply", 450, "assistant", "(reply)"));
+    if (first) return "Your first question. The client bundles the tools, system, memory file and your message and sends them. The first time there's no cache at all, so everything is computed and everything is written to the server's cache.";
+    if (cold) return "More than 5 minutes passed and the cache expired, so even though the content is identical to last time, everything is recomputed (see the all-orange bar on the far right). The model didn't forget anything, because it never remembered; the history was on your computer all along.";
+    return "Second message. Look at the middle: the client sent the whole bundle again, including the last round. The long prefix is identical to last time, so it hits the cache (hatched); only the new part is charged at full price.";
+  }
+  function tool() {
+    request([blk("new", "user: \"check the server log\"", 40, "user", "Check the server log")], blk("out", "assistant: tool_use Bash(tail log)", 90, "assistant", "🔧 Running tail server.log"));
+    request([blk("new", "tool_result: log contents", 3200, "tool", "📋 Log contents (3,200 tokens)")], blk("out", "assistant: reply based on the log", 380, "assistant", "(reply based on the log)"));
+    return "The AI wants to see the log. The model only \"says\" what it wants to run (tool_use); the client on your computer actually runs it. The result goes back into the context and is sent again, so one tool call = two requests, and tool results are what make the context grow fastest.";
+  }
+  function skill() {
+    request([blk("new", "user: \"write the release notes for this version\"", 50, "user", "Write the release notes for this version")], blk("out", "assistant: tool_use read SKILL.md", 60, "assistant", "📖 Reading release-notes/SKILL.md"));
+    request([blk("skills", "full skill: release-notes/SKILL.md", 1800, "tool", "📄 Full SKILL.md (1,800 tokens)")], blk("out", "assistant: output following the skill", 600, "assistant", "(output following the skill's steps)"));
+    return "Normally the context holds only the skill's name and description. Only when it's needed does the AI read the whole SKILL.md. That's how AI \"learns\" a new workflow: by reading a text file, not by changing the model.";
+  }
+  function wait() { S.clock += 6; return "You stepped away for 6 minutes. Look on the right: the server keeps the cache for only 5 minutes, and it has now expired. The model and the history on your computer are still there; only the cache is gone. Ask something next and see what happens."; }
+  var CMODE = "cc";
+  function relabel(b) { return blk("hist", b.label, b.t, b.role, b.chat); }
+  function compact() {
+    if (S.hist.length < 6) return "The conversation is still short; no need to compact. Ask a few more things or call some tools, then try again.";
+    var before = sum(S.hist), msg;
+    if (CMODE === "codex") {
+      var users = S.hist.filter(function (b) { return b.role === "user" && b.chat; }).map(relabel);
+      request([blk("new", "(auto) write a handoff summary", 80, "user", "(auto) Please write a handoff summary")], blk("out", "assistant: handoff summary", 700, "assistant", "(handoff summary)"));
+      S.hist = users.concat([blk("hist", "handoff summary", 700, "assistant", "📝 Handoff summary: notes for whoever picks this up")]);
+      msg = "Codex: everything you said is kept verbatim; the AI's replies and tool results are dropped and replaced by one \"handoff summary\". With Codex models this can also go to the server's compact API, which returns encrypted content.";
+    } else if (CMODE === "gemini") {
+      var keep = [], acc = 0;
+      for (var i = S.hist.length - 1; i >= 0; i--) {
+        if (keep.length && acc + S.hist[i].t > before * .3) break;
+        acc += S.hist[i].t; keep.unshift(relabel(S.hist[i]));
+      }
+      request([blk("new", "(auto) summarize the older conversation", 80, "user", "(auto) Summarize the older 70%")], blk("out", "assistant: draft summary", 800, "assistant", "(draft summary)"));
+      request([blk("new", "(auto) check the summary for gaps", 60, "user", "(auto) Check the summary for anything missed")], blk("out", "assistant: revised summary", 800, "assistant", "(revised summary)"));
+      S.hist = [blk("hist", "summary of older conversation", 800, "user", "📝 Summary of the older conversation (self-checked)")].concat(keep);
+      msg = "Gemini CLI: by default it compacts at half full. The most recent ~30% is kept verbatim, the older part is summarized, and the model checks its own summary once (hence two extra requests).";
+    } else {
+      var lastTool = -1, cleared = 0;
+      S.hist.forEach(function (b, i) { if (b.role === "tool") lastTool = i; });
+      S.hist = S.hist.map(function (b, i) {
+        if (b.role === "tool" && i !== lastTool && b.t > 200) { cleared += b.t - 20; return blk("hist", "[old tool result cleared]", 20, "tool", "🧹 Old tool result cleared (was " + fmt(b.t) + " tokens)"); }
+        return b;
+      });
+      request([blk("new", "(auto) write a structured summary", 120, "user", "(auto) Summarize: goals, files, errors, to-dos, what I said")], blk("out", "assistant: structured summary", 1100, "assistant", "(structured summary)"));
+      S.hist = [blk("hist", "structured recap", 1100, "user", "📝 Recap: goals, files changed, errors, to-dos"), blk("hist", "recently edited files read back", 1500, "tool", "📂 Recently edited files read back in")];
+      msg = "Claude Code works in two layers: first, without the model, old tool results are cleared to a one-line \"cleared\"" + (cleared ? " (saving " + fmt(cleared) + " tokens)" : "") + "; if that's not enough, the model writes a structured summary and the recently edited files are read back in.";
+    }
+    S.last.fresh = S.hist.map(function (b) { return b.id; });
+    return msg + " History " + fmt(before) + " → " + fmt(sum(S.hist)) + " tokens; the cost is lost detail, and only the start can still hit the cache.";
+  }
+
+  var TOUR = [
+    function () { return ask(); }, function () { return ask(); }, tool, skill,
+    function () { return wait(); }, function () { return ask(); },
+    function () { tool(); ask(); return compact() + " Use \"Compaction style\" below to compare other vendors."; },
+    function () { return "Tour over. How many times was the model changed during all that? Top right says: 0. When AI seems to \"know you better the more you use it\", it's really the history, memory files and skills on your computer growing, and all of it resent every time. Use the buttons below to keep playing."; }
+  ];
+  var step = 0;
+
+  function render(msg) {
+    var blocks = PRE.concat(S.hist), total = sum(blocks), L = S.last;
+    document.getElementById("narr").textContent = msg;
+    document.getElementById("gN").textContent = Math.min(step, TOUR.length) + " / " + TOUR.length;
+    document.getElementById("gNext").textContent = step >= TOUR.length ? "Watch again" : "Next →";
+    /* local: chat bubbles + file */
+    var chat = S.hist.filter(function (b) { return b.chat; }).slice(-7);
+    document.getElementById("chat").innerHTML = chat.length ? chat.map(function (b) {
+      return '<li class="' + b.role + (L && L.fresh.indexOf(b.id) >= 0 || (L && b.id === L.outId) ? " fresh" : "") + '">' + esc(b.chat) + "</li>";
+    }).join("") : '<li class="empty">Not started yet</li>';
+    var ch = document.getElementById("chat"); ch.scrollTop = ch.scrollHeight;
+    document.getElementById("fLines").textContent = S.lines + " lines · on your disk";
+    /* wire: this request */
+    document.getElementById("mReq").textContent = "Request #" + S.req;
+    document.getElementById("bar").innerHTML = blocks.map(function (b) {
+      var k = L && b.id === L.outId ? "out" : (L && L.fresh.indexOf(b.id) >= 0 ? (b.k === "skills" ? "skills" : "new") : (b.k === "new" || b.k === "out" ? "hist" : b.k));
+      return '<i class="' + (L && L.hit[b.id] ? "hit" : "") + '" style="flex:0 0 ' + (b.t / total * 100).toFixed(3) + "%;--c:" + COLORS[k] + '" title="' + esc(b.label) + " · " + fmt(b.t) + ' tokens"></i>';
+    }).join("");
+    document.getElementById("mUsed").textContent = fmt(total);
+    document.getElementById("gFill").style.width = Math.min(100, total / LIMIT * 100) + "%";
+    /* waterfall */
+    var svg = document.getElementById("wf"), rows = S.rows.slice(-14), W = 520, H = 170, pad = 4;
+    var max = Math.max(12000, Math.max.apply(null, rows.map(function (r) { return r.c + r.w + r.o; }).concat([0])));
+    var bw = (W - pad * 2) / 14;
+    svg.innerHTML = '<defs><pattern id="hg" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="var(--accent)" opacity=".35"/><rect width="3" height="6" fill="var(--accent)" opacity=".8"/></pattern></defs>' +
+      '<line x1="0" x2="' + W + '" y1="' + (H - 1) + '" y2="' + (H - 1) + '" stroke="var(--line)"/>' +
+      rows.map(function (r, i) {
+        var x = pad + i * bw + bw * .15, w = bw * .7, y = H - 1, out = "";
+        [["c", "url(#hg)"], ["w", "var(--warn)"], ["o", "var(--l-out)"]].forEach(function (p) {
+          var h = r[p[0]] / max * (H - 18); if (h <= 0) return; y -= h;
+          out += '<rect x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + w.toFixed(1) + '" height="' + h.toFixed(1) + '" fill="' + p[1] + '" rx="2"/>';
+        });
+        if (i === rows.length - 1) out += '<text x="' + (x + w / 2).toFixed(1) + '" y="' + (y - 4).toFixed(1) + '" text-anchor="middle" class="wfl">#' + S.req + '</text>';
+        return out;
+      }).join("");
+    /* model: weights never change; cache timer */
+    var left = TTL - (S.clock - S.lastAt) + 1, box = document.getElementById("cacheBox");
+    if (!S.req) { document.getElementById("cLeft").textContent = "None yet"; document.getElementById("cFill").style.width = "0%"; box.className = "cachebox"; }
+    else if (left > 0) { document.getElementById("cLeft").textContent = "About " + left + " min left"; document.getElementById("cFill").style.width = (left / TTL * 100) + "%"; box.className = "cachebox ok"; }
+    else { document.getElementById("cLeft").textContent = "Expired"; document.getElementById("cFill").style.width = "0%"; box.className = "cachebox gone"; }
+    var mx = Math.max(S.costN, 1);
+    document.getElementById("costC").style.width = (S.costC / mx * 100) + "%";
+    document.getElementById("costN").style.width = (S.costN / mx * 100) + "%";
+    document.getElementById("costCn").textContent = fmt(S.costC);
+    document.getElementById("costNn").textContent = fmt(S.costN);
+    document.getElementById("saved").textContent = S.costN ? "Cache saved about " + Math.round((1 - S.costC / S.costN) * 100) + "%" : "";
+  }
+
+  function run(fn) { render(fn()); }
+  document.getElementById("gNext").onclick = function () {
+    if (step >= TOUR.length) { reset(); step = 0; }
+    var msg = TOUR[step](); step++; render(msg);
+  };
+  document.getElementById("bReset").onclick = function () { reset(); step = 0; render("Cleared. Press \"Next\" to start the tour from the beginning, or play with the buttons below."); };
+  document.getElementById("bAsk").onclick = function () { run(ask); };
+  document.getElementById("bTool").onclick = function () { run(tool); };
+  document.getElementById("bSkill").onclick = function () { run(skill); };
+  document.getElementById("bWait").onclick = function () { run(wait); };
+  document.getElementById("bCompact").onclick = function () { run(compact); };
+  document.getElementById("cMode").onchange = function () { CMODE = this.value; };
+
+  reset(); render("Press \"Next\" to start. We'll simulate fixing a login page bug in Claude Code, in 8 steps.");
+})();
+</script>
+</body>
+</html>

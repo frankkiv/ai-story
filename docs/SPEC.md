@@ -28,9 +28,11 @@
 | `history.html` | 時間線 | 捲動式時間線：中軸隨捲動填滿、事件依序出現、分類篩選、右下角年份標籤、資料來源 |
 | `bench.html` | 模型評比（評比） | 分數為什麼不能全信、能力曲線、第三方對照表、廠商自家表、誰擅長什麼、命名對照、模型名冊、資料來源 |
 | `tech.html` | 它怎麼運作（原理） | 誤會、一次請求的組成、互動模擬器、prompt cache、agent 迴圈、AI IDE 的 Auto 模式、手機與電腦同步、多 agent 協作（BMAD → Projects）、記憶與 skills |
-| `china.html` | 追趕與蒸餾（中國追趕） | 中國各家、追上來的原因、蒸餾是什麼、指控時間線、攻防對照、爭議、能不能用中國 AI App |
+| `china.html` | 追趕與蒸餾（中國） | 中國各家、追上來的原因、蒸餾是什麼、指控時間線、攻防對照、爭議、能不能用中國 AI App |
 | `future.html` | 下一個瓶頸（瓶頸） | 電力（含換算器）、資料中心、台灣角度、記憶體（含 KV cache 計算器）、儲存、常見問題 |
 | `assets/site.css` | | 全站共用樣式與設計 token |
+| `assets/i18n.js` | | 右上角設定選單（語言、外觀），記住使用者的選擇 |
+| `en/*.html` | | 英文版，檔名與中文版一一對應，見第 9 節 |
 
 **所有 benchmark 內容只放在 `bench.html`。** 其他頁面要提到分數，用連結指過去，不要另外畫圖或放表格（`china.html` 的蒸餾實驗長條圖例外，那是在講蒸餾，不是比模型）。
 
@@ -86,3 +88,13 @@
 ## 8. 發布
 
 GitHub Pages，從 `main` 分支根目錄發布（根目錄有 `.nojekyll`）。push 到 `main` 後大約一分鐘自動更新：https://frankkiv.github.io/ai-story/
+
+## 9. 雙語（繁體中文／English）
+
+- **預設語言是繁體中文。** 中文頁放在 repo 根目錄、維持原本網址；英文頁放在 `en/`，檔名一模一樣（`tech.html` ↔ `en/tech.html`）。
+- **切換方式**：每頁導覽列右邊的齒輪是設定選單，由 `assets/i18n.js` 產生，可選語言（繁體中文／English）和外觀（跟隨系統／淺色／深色）。選擇存在瀏覽器的 localStorage（`ai-story-lang`、`ai-story-theme`）。沒選過語言的人一律看到中文；選過 English 的人，打開中文網址會自動轉到對應的英文頁，反之亦然。網址加 `?lang=stay` 可以停在目前語言不轉址。
+- **每一頁 `<head>` 都要有**：`<script src="assets/i18n.js"></script>`（英文頁是 `../assets/i18n.js`），以及兩行 `<link rel="alternate" hreflang="…">` 指向兩種語言的同一頁。英文頁 `<html lang="en">`，中文頁 `<html lang="zh-Hant-TW">`。
+- **兩邊要同步**：改任何內容、數字、事件、模型資料，中英兩版都要改。英文頁的 HTML 結構、`id`、class、JS 邏輯跟中文版保持一致，只換文字；錨點（例如 `#orch`、`#sim`）兩邊共用，切換語言時會保留。
+- **英文寫作**：寫給一般英文讀者，不是逐字翻譯。「白話說」譯為 **In plain words**。台灣相關段落（例如 `future.html` 的「拉回台灣」、電力換算器以台灣用電為基準）保留，譯為 Back to Taiwan。模型名稱、考試名稱、日期格式（2026.09、2026/9/22）不翻譯。
+- **檢查**：英文頁不能殘留中文字（可以用 `LC_ALL=C.UTF-8 grep -nP '\p{Han}' en/*.html` 檢查，沒有輸出才對）。手機寬 390px 時，導覽列五個分頁加齒輪要剛好放得下（`.nav ul` 的 scrollWidth 等於 clientWidth），英文短名是 Timeline／Bench／How／China／Limits。
+
