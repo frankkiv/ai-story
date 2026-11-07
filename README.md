@@ -1,5 +1,7 @@
 # AI 長出手了 · 從聊天到代理
 
+線上網站：<https://frankkiv.github.io/ai-story/>
+
 一個靜態網站，用繁體中文講 AI 這幾年的變化：
 
 - `index.html`：首頁，含給家人的五個提醒與常見問題
