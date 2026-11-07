@@ -24,7 +24,7 @@
 .stage { position: relative; height: 100%; border-radius: 22px; overflow: hidden; background: var(--code-bg); color: var(--code-text); display: grid; grid-template-rows: auto auto auto minmax(0, 1fr) auto auto; box-shadow: var(--shadow); isolation: isolate; }
 
 
-.st-top { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: .75rem; padding: .85rem 1rem .4rem; z-index: 4; }
+.st-top { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: end; gap: .6rem; padding: .7rem 1rem .4rem .7rem; z-index: 4; }
 .st-tag { border-left: 3px solid var(--st-gold); padding-left: .55rem; line-height: 1.3; color: #fff; font-weight: 700; font-size: .98rem; }
 .st-tag small { display: block; font-weight: 500; font-size: .74rem; color: var(--st-gold); letter-spacing: .04em; }
 .st-prog { width: 4.5rem; height: 4px; border-radius: 4px; background: rgba(255,255,255,.15); overflow: hidden; margin-bottom: .35rem; }
@@ -261,6 +261,25 @@
   .sheet, .st-cap button,
   .scene, .packet, .hotable, .bar, .st-term, .recap, .st-prog i, .cands i::before { transition: none !important; }
 }
+
+.st-exit { flex: none; width: 2.5rem; height: 2.5rem; border-radius: 50%; border: 1px solid rgba(255,255,255,.22); display: grid; place-items: center; color: #fff; text-decoration: none; font-size: 1.15rem; line-height: 1; align-self: center; transition: border-color .2s, color .2s; }
+.st-exit:hover { border-color: var(--st-gold); color: var(--st-gold); }
+.side { display: none; }
+@media (min-width: 1100px) {
+  .story { display: grid; grid-template-columns: minmax(0, 1.85fr) minmax(18rem, 1fr); column-gap: 1.5rem; align-items: start; }
+  .stage-col { grid-column: 1; grid-row: 1; max-width: none; margin: 0; }
+  .steps { grid-column: 1 / -1; grid-row: 1; }
+  .side { display: grid; grid-column: 2; grid-row: 1; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 4.25rem); height: calc(100svh - 5.5rem); max-height: 58rem; z-index: 3; align-content: start; gap: .85rem; overflow-y: auto; padding: 1.5rem 1.5rem 1.75rem; background: var(--surface); border: 1px solid var(--line); border-radius: 22px; }
+  .st-narr, .sheet { display: none; }
+}
+.side-top { display: flex; justify-content: space-between; gap: .75rem; align-items: baseline; }
+.side-top .eyebrow { margin: 0; }
+.side-n { font-family: var(--mono); font-size: .8rem; color: var(--muted); white-space: nowrap; }
+.side h3 { margin: 0; font-size: 1.3rem; line-height: 1.4; }
+.side-txt { display: grid; gap: .85rem; font-size: 1rem; line-height: 1.8; color: var(--text); }
+.side-txt p { margin: 0; }
+.side-txt .elder { font-size: .96rem; }
+.side-txt.swap { animation: narrIn .35s both; }
 </style>
 </head>
 <body>
@@ -292,9 +311,10 @@
   <div class="frame story">
     <div class="stage-col">
       <div class="stage" id="stage">
-        <div class="st-top" aria-hidden="true">
-          <div class="st-tag" id="tag"></div>
-          <div><div class="st-count" id="count"></div><div class="st-prog"><i id="prog"></i></div></div>
+        <div class="st-top">
+          <a class="st-exit" id="exit" href="tech.html" aria-label="Leave the walkthrough and go back">&#8592;</a>
+          <div class="st-tag" id="tag" aria-hidden="true"></div>
+          <div aria-hidden="true"><div class="st-count" id="count"></div><div class="st-prog"><i id="prog"></i></div></div>
         </div>
         <div class="st-you" id="youBar" aria-hidden="true"><i></i><span id="youK"></span><b id="you"></b></div>
         <div class="st-term" id="term" aria-hidden="true"><b></b><span></span></div>
@@ -599,6 +619,7 @@
         </div>
       </section>
     </div>
+    <aside class="side" id="side" aria-hidden="true"><div class="side-top"><span class="eyebrow" id="sideCh"></span><span class="side-n" id="sideN"></span></div><h3 id="sideH"></h3><div class="side-txt" id="sideTxt"></div></aside>
   </div>
 </main>
 
@@ -625,6 +646,14 @@
     if (i < 0 || i >= steps.length) return;
     scrollTo({ top: steps[i].getBoundingClientRect().top + scrollY - innerHeight * .5 + 12, behavior: reduce ? "auto" : "smooth" });
   }
+  var side = document.getElementById("side"), sideCh = document.getElementById("sideCh"), sideN = document.getElementById("sideN"), sideH = document.getElementById("sideH"), sideTxt = document.getElementById("sideTxt");
+  /* back to where you came from when it was a page of this site; otherwise the link's own href */
+  document.getElementById("exit").addEventListener("click", function (e) {
+    try {
+      var r = document.referrer ? new URL(document.referrer) : null;
+      if (r && r.origin === location.origin && !/journey\.html$/.test(r.pathname) && history.length > 1) { e.preventDefault(); history.back(); }
+    } catch (x) {}
+  });
   var more = document.getElementById("more"), sheet = document.getElementById("sheet");
   var sheetTxt = document.getElementById("sheetTxt"), sheetTitle = document.getElementById("sheetTitle"), closeB = document.getElementById("close");
   function openSheet() { sheet.classList.add("open"); sheet.setAttribute("aria-hidden", "false"); closeB.tabIndex = 0; sheetTxt.scrollTop = 0; closeB.focus({ preventScroll: true }); }
@@ -706,6 +735,13 @@
     ps.forEach(function (q) { sheetTxt.appendChild(q.cloneNode(true)); });
     closeSheet();
     count.textContent = n > 0 && n < S.length - 1 ? n + " / " + (S.length - 2) : "";
+    sideCh.textContent = s.ch ? CH[s.ch] : s.name;
+    sideN.textContent = count.textContent;
+    sideH.textContent = sheetTitle.textContent;
+    sideTxt.innerHTML = "";
+    ps.forEach(function (q) { sideTxt.appendChild(q.cloneNode(true)); });
+    side.scrollTop = 0;
+    sideTxt.classList.remove("swap"); void sideTxt.offsetWidth; if (!reduce) sideTxt.classList.add("swap");
     prevB.disabled = n === 0; nextB.disabled = n === S.length - 1;
     if (s.term) { term.firstChild.textContent = s.term[0]; term.lastChild.textContent = s.term[1]; term.classList.add("on"); }
     else term.classList.remove("on");
