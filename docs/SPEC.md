@@ -27,7 +27,7 @@
 | `index.html` | 首頁 | Hero、3D context 堆疊圖、五個分頁的入口卡、五個提醒、爸媽常問 |
 | `history.html` | 時間線 | 捲動式時間線：中軸隨捲動填滿、事件依序出現、分類篩選、右下角年份標籤、資料來源 |
 | `bench.html` | 模型評比（評比） | 分數為什麼不能全信、能力曲線、第三方對照表、廠商自家表、誰擅長什麼、命名對照、模型名冊、資料來源 |
-| `tech.html` | 它怎麼運作（原理） | 誤會、一次請求的組成、互動模擬器、prompt cache、agent 迴圈、AI IDE 的 Auto 模式、手機與電腦同步、記憶與 skills |
+| `tech.html` | 它怎麼運作（原理） | 誤會、一次請求的組成、互動模擬器、prompt cache、agent 迴圈、AI IDE 的 Auto 模式、手機與電腦同步、多 agent 協作（BMAD → Projects）、記憶與 skills |
 | `china.html` | 追趕與蒸餾（中國追趕） | 中國各家、追上來的原因、蒸餾是什麼、指控時間線、攻防對照、爭議、能不能用中國 AI App |
 | `future.html` | 下一個瓶頸（瓶頸） | 電力（含換算器）、資料中心、台灣角度、記憶體（含 KV cache 計算器）、儲存、常見問題 |
 | `assets/site.css` | | 全站共用樣式與設計 token |
@@ -71,7 +71,7 @@
 | 能力曲線 | `bench.html#bench` | SVG 折線圖，手機開啟時自動捲到最右（最新）；點圓點會在名冊標出該列 |
 | 對照表 | `bench.html#matrix` | 點欄位名稱排序；手機第一欄固定 |
 | 模型名冊 | `bench.html#roster-sec` | 依廠商篩選，依日期新到舊 |
-| context 模擬器 | `tech.html#sim` | 三區：你的電腦／這次送出的 context／模型。8 步導覽加自由操作。重點訊息：模型被改的次數永遠是 0 |
+| context 模擬器 | `tech.html#sim` | 三區：你的電腦／這次送出的 context／模型。8 步導覽加自由操作。「壓縮方式」可切換 Claude Code／Codex／Gemini CLI 三種做法，下方 `#compact` 有各家壓縮比較表。重點訊息：模型被改的次數永遠是 0 |
 | 電力換算器、KV cache 計算器 | `future.html` | 滑桿換算 |
 
 ## 7. 驗收

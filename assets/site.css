@@ -377,3 +377,12 @@ footer { padding-block: 3rem 4rem; border-top: 1px solid var(--line); color: var
   .guide-btns { flex-direction: column; gap: .35rem; }
   .guide-btns button { padding: .45rem .7rem; min-height: 40px; font-size: .9rem; }
 }
+
+/* ---------- v3: compaction mode picker + compare + orchestration ---------- */
+.sim-top .cmode { display: inline-flex; align-items: center; gap: .45rem; font-size: .9rem; color: var(--muted); }
+.sim-top .cmode select { border: 1px solid var(--line); background: var(--surface); color: var(--text); border-radius: 10px; padding: .5rem .6rem; font: inherit; font-size: .93rem; min-height: 44px; cursor: pointer; }
+.sim-top .cmode select:hover { border-color: var(--text); }
+#compact { margin-top: 3rem; }
+#compact h3 { font-size: 1.3rem; margin: 0 0 .5rem; }
+#compact + .log-wrap { margin-top: 1rem; }
+.modes td code { font-size: .85em; white-space: nowrap; }

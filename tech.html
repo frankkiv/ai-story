@@ -35,6 +35,7 @@
       <li><a class="l" href="#agent">Agent</a></li>
       <li><a class="l" href="#auto">Auto</a></li>
       <li><a class="l" href="#sync">同步</a></li>
+      <li><a class="l" href="#orch">多 Agent</a></li>
       <li><a class="l" href="#skills">Skills</a></li>
       <li><a class="l" href="#faq">FAQ</a></li>
     </ul>
@@ -219,9 +220,39 @@
         <button id="bSkill" type="button">載入 skill</button>
         <button id="bWait" type="button">離開 6 分鐘</button>
         <button id="bCompact" type="button">壓縮對話</button>
+        <label class="cmode">壓縮方式
+          <select id="cMode">
+            <option value="cc">Claude Code</option>
+            <option value="codex">Codex</option>
+            <option value="gemini">Gemini CLI</option>
+          </select>
+        </label>
       </div>
     </div>
     <p class="note measure">數字為示意。成本單位：一般 input = 1、cache 讀取 = 0.1、cache 寫入 = 1.25、output = 5，比例參考 Anthropic 公開的 5 分鐘 cache 計價。</p>
+    <div class="prose measure mt" id="compact">
+      <h3>各家怎麼壓縮？做法其實不一樣</h3>
+      <p>模型本身不管「對話太長」這件事，壓縮是客戶端（或 API 服務）自己決定的策略，所以每家都不同。上面模擬器的「壓縮方式」可以切換三種做法，看 context 怎麼變。</p>
+    </div>
+    <div class="log-wrap modes">
+      <table>
+        <thead><tr><th scope="col">工具</th><th scope="col">什麼時候壓</th><th scope="col">怎麼壓</th><th scope="col">壓完留下什麼</th></tr></thead>
+        <tbody>
+          <tr><td>Claude Code</td><td>快滿時自動（約九成，會先扣掉留給輸出的空間）；也能手動打 <code>/compact</code>，後面加上要保留的重點</td><td>分層：先不用模型，把舊的工具結果清成一行「已清除」；還不夠，才請模型寫結構化摘要</td><td>摘要（目標、改過的檔案、錯誤、待辦、你說過的話等）＋重新讀回最近改過的檔案；CLAUDE.md 在 system 裡，不受影響</td></tr>
+          <tr><td>OpenAI Codex CLI</td><td>約九成時自動；手動 <code>/compact</code></td><td>請模型寫一則「交接摘要」；用 Codex 模型時，可以交給伺服器的 compact API，回傳一段加密內容</td><td>你說過的每句話原文保留；AI 的回覆和工具結果換成那則摘要</td></tr>
+          <tr><td>Gemini CLI</td><td>預設用到一半左右就壓（可調）；手動 <code>/compress</code></td><td>先寫摘要，再請模型自己檢查一次有沒有漏</td><td>最近約 30% 的對話原文＋較舊部分的摘要</td></tr>
+          <tr><td>OpenCode</td><td>約 96%–99% 才壓</td><td>先剪掉舊的工具輸出，不夠再寫摘要</td><td>最近約 4 萬 token 的工具輸出、最後兩輪你的訊息</td></tr>
+          <tr><td>Anthropic API 的 context editing</td><td>開發者自己設定門檻</td><td>伺服器端自動把舊的工具結果清掉，不寫摘要</td><td>對話結構不變，只是舊工具結果變成「已清除」</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="grid3 mt">
+      <article class="card"><span class="tag">共同的代價</span><h3>cache 會失效一次</h3><p>壓縮等於改寫了對話歷史，下一次請求只有最前面的 tools、system 還能命中 cache，後面要重新寫入。所以壓縮不是愈常做愈好。</p></article>
+      <article class="card"><span class="tag">取捨</span><h3>早壓還是晚壓？</h3><p>早壓（像 Gemini CLI）每次送得少、比較省，但摘要次數多，細節流失也多；晚壓（像 OpenCode）保留最多原文，但快滿時模型的注意力已經被稀釋。</p></article>
+      <article class="card"><span class="tag">實用建議</span><h3>換題目就開新對話</h3><p>壓縮是不得已的補救。做完一件事、要換下一件時，直接開新 session，再讓 AI 讀 CLAUDE.md 或 spec 文件，通常比壓縮後繼續聊乾淨。</p></article>
+    </div>
+    <p class="elder mt"><b>白話說</b><span>聊太久，筆記本寫滿了。有人把舊頁撕掉、只留重點（Claude Code）；有人留下你說過的每句話、其他的濃縮成一張交接單（Codex）；有人寫完重點還再對一次有沒有漏（Gemini）。哪種都會丟掉一些細節。</span></p>
+    <p class="caveat mt">門檻與細節會隨版本改變。Claude Code 的內部做法來自社群的分析文章（它不是開源的），其餘參考各工具的說明文件與 2026 年 4 月的比較文章（Daniel Vaughan〈Context Compaction Showdown〉、Justin3go〈Context Compaction in Codex, Claude Code, and OpenCode〉）。</p>
   </div>
 </section>
 
@@ -379,10 +410,68 @@
   </div>
 </section>
 
+<section class="s gutter" id="orch">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">08 · 多 Agent 協作</span>
+      <h2>從 BMAD 到 Projects：一個 AI 怎麼管好幾個 AI</h2>
+      <p class="lead">一個 agent 迴圈做小任務很好用。但大專案要規劃、寫程式、測試、審查，全塞在同一個 context 裡很快就滿，一個角色也很難樣樣顧到。過去兩年，工程師的解法從「自己寫指揮系統」，一路走到「工具直接內建」。</p>
+    </div>
+
+    <div class="grid3">
+      <article class="card"><span class="tag">2024–2025 · 自己搭</span><h3>工程師自製 orchestrator</h3><p>用腳本或 LangGraph、CrewAI、AutoGen 這類框架，把多次模型呼叫串起來：一個拆任務、幾個動手做、最後一個檢查。彈性最大，但狀態怎麼存、失敗怎麼重試、誰能看到什麼，全都要自己寫。</p></article>
+      <article class="card"><span class="tag">2025 · 用文件交接</span><h3>BMAD-METHOD</h3><p>開源方法論（Breakthrough Method for Agile AI-Driven Development）。把 AI 分成 Analyst、PM、Architect、Scrum Master、Dev、QA 等角色，每個角色是一份 Markdown 設定。規劃階段寫出 PRD 和架構文件，Scrum Master 再切成一張張 story 檔，Dev 一次只做一張。交接全靠 Git 裡的檔案，每個角色只載入自己需要的文件。</p></article>
+      <article class="card"><span class="tag">2025–2026 · 工具內建</span><h3>Subagents，然後是 Projects</h3><p>Claude Code 先加入 subagents：主 agent 把子任務交給一個有獨立 context 的小 agent，做完只回傳結果。2026 年 9 月 17 日推出的 Projects（beta）更進一步：直接由一個 Claude 管理好幾個並行的完整 session。</p></article>
+    </div>
+
+    <div class="grid2 mt">
+      <article class="card auto-card">
+        <span class="tag">Projects 怎麼運作</span>
+        <h3>一個總機，加上很多條各做各的 thread</h3>
+        <ol class="flow">
+          <li><b>你只跟專案對話講話</b><span>那裡的 Claude 是協調者。它判斷一則訊息要自己回答，還是開一條新的 thread 去做。</span></li>
+          <li><b>每條 thread 是獨立的 session</b><span>有自己的 context window 和雲端容器，會 clone 專案裡的 repo，在自己的分支上工作，需要時開 PR。五件事同時做，context 也不會互相塞爆。</span></li>
+          <li><b>做完回報</b><span>thread 在自己的串裡回覆你。協調者看得到每條 thread 的回覆，你後來補充的要求，它會把你的原話附上轉交，而不是自己轉述。</span></li>
+          <li><b>需要時回到你的電腦</b><span>thread 可以透過 Remote Control 在你的電腦上跑，用你本機的工具和登入狀態。這個網站推上 GitHub，就是這樣做的。</span></li>
+        </ol>
+      </article>
+      <article class="card auto-card">
+        <span class="tag">怎麼溝通、共享什麼</span>
+        <h3>大部分訊息都經過協調者</h3>
+        <ol class="flow">
+          <li><b>共用的東西</b><span>專案的 repo、檔案區（Library）、專案記憶和指示、連接器。新開的 thread 一開始就帶著這些。</span></li>
+          <li><b>thread 之間很少直接講話</b><span>只有工作彼此相依時才互傳訊息，其餘都透過協調者。這樣可以避免一群 AI 互相聊天、白白燒掉額度。</span></li>
+          <li><b>誰的話算數有標記</b><span>只有你本人寫的訊息能算「同意」。其他 AI 傳來的訊息只當參考，不能替你按下 push、刪檔這類收不回的動作。</span></li>
+          <li><b>有事才醒來</b><span>thread 平常不跑。你的新訊息、PR 上的留言、CI 失敗，這些事件會把它叫醒處理。</span></li>
+        </ol>
+      </article>
+    </div>
+
+    <div class="log-wrap modes mt">
+      <table>
+        <thead><tr><th scope="col">做法</th><th scope="col">誰分派工作</th><th scope="col">怎麼交接</th><th scope="col">context 怎麼隔開</th><th scope="col">你要維護什麼</th></tr></thead>
+        <tbody>
+          <tr><td>自製 orchestrator</td><td>你寫的程式</td><td>程式裡的變數、佇列</td><td>看你怎麼寫</td><td>全部</td></tr>
+          <tr><td>BMAD</td><td>你照流程切換角色（或交給它的 Orchestrator 角色）</td><td>Git 裡的 PRD、架構文件、story 檔</td><td>每個角色只載入需要的文件</td><td>角色設定與模板</td></tr>
+          <tr><td>Claude Code Projects</td><td>協調者 Claude</td><td>thread 回報、附原話轉交、共用檔案與記憶</td><td>每條 thread 是獨立 session</td><td>專案指示、記憶、repo 裡的 spec</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid3 mt">
+      <article class="card"><span class="tag">要注意</span><h3>額度燒得比較快</h3><p>每條 thread 都是完整的 session，協調者本身也在用 token，所以同樣的方案額度會用得比較快。每天新開的 thread 數量也有上限。</p></article>
+      <article class="card"><span class="tag">還是 beta</span><h3>功能可能隨時改</h3><p>2026 年 9 月先開放給部分 Pro、Max 用戶，逐步擴大。Team、Enterprise 方案和終端機版 CLI 還不能用。</p></article>
+      <article class="card"><span class="tag">跟 BMAD 一樣</span><h3>文件還是關鍵</h3><p>接手的 AI 不記得過去，靠的是 repo 裡的 CLAUDE.md、spec 文件和專案記憶。這也是這個網站的 repo 裡有 docs/SPEC.md 的原因。</p></article>
+    </div>
+    <p class="elder mt"><b>白話說</b><span>以前像自己當工頭，排班、傳話、記進度都自己來；BMAD 是一套「交接單」制度，每個師傅只看自己那張單；Projects 則是請了一位總管，你只跟總管說，總管開工單給不同師傅，師傅做完回報，重要的事還是要你點頭。</span></p>
+    <p class="caveat mt">來源：BMAD-METHOD 開源專案與介紹文章；Claude Code Projects 文件（code.claude.com/docs/en/claude-projects）與 2026 年 9 月的發表報導。thread 之間怎麼溝通，部分來自實際用 Projects 做這個網站時的觀察，beta 期間可能調整。</p>
+  </div>
+</section>
+
 <section class="s gutter" id="skills">
   <div class="frame">
     <div class="s-head measure">
-      <span class="eyebrow">08 · 記憶與 Skills</span>
+      <span class="eyebrow">09 · 記憶與 Skills</span>
       <h2>「愈用愈順手」靠的是本地的文字檔</h2>
       <p class="lead">跟 AI 磨合出來的東西，最後都落在你電腦上的幾個檔案裡。下次開工時被讀進 context，所以它看起來「學會了」。</p>
     </div>
@@ -538,19 +627,45 @@
     return "平常 context 裡只放 skill 的名稱和描述。用得到時，AI 才把整份 SKILL.md 讀進來。這就是 AI「學會」新流程的方式：讀一份文字檔，不是改模型。";
   }
   function wait() { S.clock += 6; return "你離開 6 分鐘。看右邊：伺服器上的暫存只保留 5 分鐘，現在已經過期。模型、你電腦上的紀錄都還在，只有暫存沒了。下一步問一句看看會怎樣。"; }
+  var CMODE = "cc";
+  function relabel(b) { return blk("hist", b.label, b.t, b.role, b.chat); }
   function compact() {
     if (S.hist.length < 6) return "對話還很短，不需要壓縮。多問幾句、多呼叫幾次工具再試。";
-    var before = sum(S.hist);
-    request([blk("new", "user：「請摘要到目前為止的對話」", 30, "user", "（自動）請摘要目前的對話")], blk("out", "assistant：前情摘要", 900, "assistant", "（前情摘要）"));
-    S.hist = [blk("hist", "前情摘要（取代 " + fmt(before) + " token 原文）", 900, "user", "📝 前情摘要，取代了 " + fmt(before) + " token 的原文")];
-    S.last.fresh = [S.hist[0].id];
-    return "對話快塞滿時，客戶端會請模型把舊對話寫成摘要，用摘要取代原文。context 一下變小，代價是細節可能遺失。這也是「聊太久會變笨」的原因之一。";
+    var before = sum(S.hist), msg;
+    if (CMODE === "codex") {
+      var users = S.hist.filter(function (b) { return b.role === "user" && b.chat; }).map(relabel);
+      request([blk("new", "（自動）請寫交接摘要", 80, "user", "（自動）請寫一份交接摘要")], blk("out", "assistant：交接摘要", 700, "assistant", "（交接摘要）"));
+      S.hist = users.concat([blk("hist", "交接摘要", 700, "assistant", "📝 交接摘要：寫給接手的自己")]);
+      msg = "Codex：你說過的話全部原文留下，AI 回覆和工具結果拿掉，換成一則「交接摘要」。用 Codex 模型時也能交給伺服器的 compact API，拿回一段加密內容。";
+    } else if (CMODE === "gemini") {
+      var keep = [], acc = 0;
+      for (var i = S.hist.length - 1; i >= 0; i--) {
+        if (keep.length && acc + S.hist[i].t > before * .3) break;
+        acc += S.hist[i].t; keep.unshift(relabel(S.hist[i]));
+      }
+      request([blk("new", "（自動）請摘要較舊的對話", 80, "user", "（自動）請摘要較舊的 70%")], blk("out", "assistant：摘要初稿", 800, "assistant", "（摘要初稿）"));
+      request([blk("new", "（自動）檢查摘要有沒有漏", 60, "user", "（自動）檢查摘要有沒有漏掉重點")], blk("out", "assistant：修正後的摘要", 800, "assistant", "（修正後的摘要）"));
+      S.hist = [blk("hist", "較舊對話的摘要", 800, "user", "📝 較舊對話的摘要（已自我檢查）")].concat(keep);
+      msg = "Gemini CLI：預設用到一半就壓。最近約 30% 保留原文，較舊的寫成摘要，再請模型自我檢查一次（所以多了兩次請求）。";
+    } else {
+      var lastTool = -1, cleared = 0;
+      S.hist.forEach(function (b, i) { if (b.role === "tool") lastTool = i; });
+      S.hist = S.hist.map(function (b, i) {
+        if (b.role === "tool" && i !== lastTool && b.t > 200) { cleared += b.t - 20; return blk("hist", "[舊工具結果已清除]", 20, "tool", "🧹 舊工具結果已清除（原本 " + fmt(b.t) + " token）"); }
+        return b;
+      });
+      request([blk("new", "（自動）請寫結構化摘要", 120, "user", "（自動）請摘要：目標、檔案、錯誤、待辦、我說過的話")], blk("out", "assistant：結構化摘要", 1100, "assistant", "（結構化摘要）"));
+      S.hist = [blk("hist", "結構化前情摘要", 1100, "user", "📝 前情摘要：目標、改過的檔案、錯誤、待辦"), blk("hist", "重新讀回最近改過的檔案", 1500, "tool", "📂 重新讀回最近改過的檔案")];
+      msg = "Claude Code 分兩層：先不用模型，把舊工具結果清成一行「已清除」" + (cleared ? "（省 " + fmt(cleared) + " token）" : "") + "；還不夠才請模型寫結構化摘要，並重新讀回最近改過的檔案。";
+    }
+    S.last.fresh = S.hist.map(function (b) { return b.id; });
+    return msg + " 歷史 " + fmt(before) + " → " + fmt(sum(S.hist)) + " token；代價是細節會掉，cache 也只剩開頭能命中。";
   }
 
   var TOUR = [
     function () { return ask(); }, function () { return ask(); }, tool, skill,
     function () { return wait(); }, function () { return ask(); },
-    function () { tool(); ask(); return compact(); },
+    function () { tool(); ask(); return compact() + " 下面「壓縮方式」可以換成別家的做法比較。"; },
     function () { return "導覽結束。整個過程，模型被改了幾次？右上角寫著：0 次。你覺得 AI「越用越懂你」，其實是你電腦上的紀錄、記憶檔和 skills 越來越多，每次都整包重送。下面的按鈕可以自己再玩。"; }
   ];
   var step = 0;
@@ -614,6 +729,7 @@
   document.getElementById("bSkill").onclick = function () { run(skill); };
   document.getElementById("bWait").onclick = function () { run(wait); };
   document.getElementById("bCompact").onclick = function () { run(compact); };
+  document.getElementById("cMode").onchange = function () { CMODE = this.value; };
 
   reset(); render("按「下一步」開始。我們會模擬你在 Claude Code 裡修一個登入頁的 bug，總共 8 步。");
 })();

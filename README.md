@@ -5,7 +5,7 @@
 - `index.html`：首頁，含給家人的五個提醒與常見問題
 - `history.html`：時間線
 - `bench.html`：模型評比（分數怎麼看、各模型對照、誰擅長什麼、模型名冊）
-- `tech.html`：它怎麼運作（context、prompt cache、agent 迴圈、Auto 模式、同步、skills）
+- `tech.html`：它怎麼運作（context、prompt cache、agent 迴圈、Auto 模式、同步、多 agent 協作、skills）
 - `china.html`：追趕與蒸餾
 - `future.html`：下一個瓶頸（電力、資料中心、記憶體、儲存）
 
