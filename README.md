@@ -11,4 +11,6 @@
 
 沒有建置步驟，純 HTML／CSS／JS，共用樣式在 `assets/site.css`。直接用 GitHub Pages 從 repo 根目錄發布即可。
 
+網站規格與維護方式見 [docs/SPEC.md](docs/SPEC.md) 和 [docs/MAINTAINING.md](docs/MAINTAINING.md)。
+
 內容寫於 2026 年 11 月，數字來源列在各頁底部。

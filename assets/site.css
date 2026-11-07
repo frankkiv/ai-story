@@ -310,3 +310,70 @@ footer { padding-block: 3rem 4rem; border-top: 1px solid var(--line); color: var
 .flow b { font-size: 1rem; }
 .flow span { color: var(--muted); font-size: .95rem; }
 .auto-card .note { font-size: .9rem; color: var(--muted); margin: 0; }
+
+/* ---------- simulator v2: local → wire → model ---------- */
+.sim2 { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); overflow: clip; }
+.sim2-guide { display: grid; gap: .8rem; padding: 1rem 1.1rem; background: var(--sunken); border-bottom: 1px solid var(--line); }
+@media (min-width: 760px) { .sim2-guide { grid-template-columns: minmax(0,1fr) auto; align-items: center; } }
+.guide-step { display: grid; grid-template-columns: auto minmax(0,1fr); gap: .8rem; align-items: start; }
+.gs-n { font-family: var(--mono); font-size: .85rem; background: var(--text); color: var(--bg); border-radius: 8px; padding: .2rem .55rem; margin-top: .2rem; white-space: nowrap; }
+.guide-step p { margin: 0; font-size: 1.02rem; min-height: 3.4em; }
+.guide-btns { display: flex; gap: .5rem; }
+.guide-btns button { border: 1px solid var(--line); background: var(--surface); color: var(--text); border-radius: 10px; padding: .6rem 1rem; font-weight: 600; cursor: pointer; min-height: 44px; }
+.guide-btns button.go { background: var(--text); color: var(--bg); border-color: var(--text); }
+.sim2-stage { display: grid; gap: 1px; background: var(--line); }
+@media (min-width: 1000px) { .sim2-stage { grid-template-columns: minmax(0,.9fr) minmax(0,1.4fr) minmax(0,.85fr); } }
+.zone { background: var(--surface); padding: 1rem 1.1rem; display: grid; gap: .8rem; align-content: start; min-width: 0; }
+.zh { display: flex; justify-content: space-between; align-items: baseline; gap: .5rem; }
+.zt { font-weight: 700; }
+.zs { font-family: var(--mono); font-size: .82rem; color: var(--muted); }
+.chat { list-style: none; margin: 0; padding: 0; display: grid; gap: .4rem; max-height: 17rem; overflow: auto; }
+.chat li { max-width: 92%; padding: .4rem .7rem; border-radius: 12px; font-size: .9rem; line-height: 1.5; background: var(--bg); }
+.chat li.user { justify-self: end; background: color-mix(in srgb, var(--l-new) 16%, var(--surface)); border-bottom-right-radius: 4px; }
+.chat li.assistant { border-bottom-left-radius: 4px; }
+.chat li.tool { font-family: var(--mono); font-size: .82rem; background: var(--sunken); color: var(--muted); }
+.chat li.fresh { animation: pop .5s ease; }
+.chat li.empty { color: var(--muted); }
+.file { display: grid; grid-template-columns: auto minmax(0,1fr); gap: .6rem; align-items: center; border: 1px dashed var(--line); border-radius: 10px; padding: .55rem .7rem; }
+.file .fi { font-size: 1.3rem; }
+.file b { display: block; font-family: var(--mono); font-size: .9rem; }
+.file span { font-size: .85rem; color: var(--muted); }
+.swatch.hatch, .swatch.hatch-g { background: repeating-linear-gradient(135deg, var(--accent) 0 2px, color-mix(in srgb, var(--accent) 35%, transparent) 2px 4px); }
+.gauge { display: grid; grid-template-columns: auto minmax(0,1fr) auto auto; gap: .5rem; align-items: center; font-size: .85rem; color: var(--muted); }
+.gauge b { font-family: var(--mono); color: var(--text); font-weight: 500; }
+.gtrack, .ctrack, .ctrk { height: 8px; border-radius: 4px; background: var(--sunken); overflow: hidden; }
+.gtrack i, .ctrack i, .ctrk i { display: block; height: 100%; border-radius: 4px; transition: width .45s ease; }
+.gtrack i { background: var(--l-hist); }
+.wf-head { font-size: .85rem; color: var(--muted); }
+.wf { width: 100%; height: auto; display: block; }
+.wf .wfl { font-family: var(--mono); font-size: 12px; fill: var(--muted); }
+.weights { display: grid; gap: .2rem; justify-items: center; text-align: center; padding: 1rem; border-radius: 14px; background: var(--model-bg); color: var(--model-fg); }
+.weights > span { font-size: .85rem; opacity: .8; }
+.weights > b { font-size: 1.15rem; }
+.wcount { margin-top: .5rem; display: grid; justify-items: center; }
+.wcount b { font-family: var(--mono); font-size: 2.6rem; line-height: 1; }
+.wcount span { font-size: .85rem; opacity: .8; }
+.cachebox { display: grid; gap: .35rem; font-size: .85rem; color: var(--muted); }
+.cachebox b { font-family: var(--mono); color: var(--text); font-weight: 500; }
+.cachebox .ctrack i { background: var(--accent); }
+.cachebox.gone b { color: var(--warn); }
+.cost { display: grid; gap: .4rem; font-size: .85rem; color: var(--muted); }
+.crow { display: grid; grid-template-columns: 4rem minmax(0,1fr) 3.6rem; gap: .5rem; align-items: center; }
+.crow em { font-style: normal; }
+.crow b { font-family: var(--mono); color: var(--text); font-weight: 500; text-align: right; }
+.crow:first-of-type .ctrk i { background: var(--accent); }
+.cost .crow + .crow .ctrk i { background: var(--warn); }
+.saved { margin: 0; color: var(--accent); font-weight: 600; }
+.sim2 .sim-top { border-bottom: 0; border-top: 1px solid var(--line); align-items: center; }
+.sim2 .free { font-size: .9rem; color: var(--muted); }
+@media (max-width: 999px) {
+  .sim2-guide { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 2.9rem); z-index: 5; box-shadow: 0 6px 16px -10px rgba(0,0,0,.35); }
+}
+@media (max-width: 720px) {
+  .sim2-guide { padding: .7rem .8rem; gap: .5rem; grid-template-columns: minmax(0,1fr) auto; align-items: end; }
+  .guide-step { grid-template-columns: minmax(0,1fr); gap: .25rem; }
+  .gs-n { justify-self: start; margin: 0; }
+  .guide-step p { font-size: .92rem; min-height: 0; line-height: 1.55; }
+  .guide-btns { flex-direction: column; gap: .35rem; }
+  .guide-btns button { padding: .45rem .7rem; min-height: 40px; font-size: .9rem; }
+}

@@ -161,56 +161,64 @@
   <div class="frame">
     <div class="s-head measure">
       <span class="eyebrow">03 · 互動模擬器</span>
-      <h2>看 context 一輪一輪長大</h2>
-      <p class="lead">按下面的按鈕，模擬一段 Claude Code 對話。每次請求都把整份 context 重送；斜線條紋是命中 prompt cache 的前綴。已經先幫你跑了兩輪。</p>
+      <h2>跟著一段對話，看資料怎麼流動</h2>
+      <p class="lead">左邊是你的電腦，中間是每次送出去的那包 context，右邊是模型。按「下一步」跟著導覽走一遍，或用下面的按鈕自己玩。注意右邊那個數字：從頭到尾都是 0。</p>
     </div>
 
-    <div class="sim">
-      <div class="sim-top" role="toolbar" aria-label="模擬操作">
-        <button class="go" id="bAsk" type="button">問一句</button>
-        <button id="bTool" type="button">AI 呼叫工具</button>
-        <button id="bSkill" type="button">載入一個 skill</button>
-        <button id="bWait" type="button">離開 6 分鐘</button>
-        <button id="bCompact" type="button">壓縮對話</button>
-        <span class="sp"></span>
-        <button id="bReset" type="button">重來</button>
+    <div class="sim2">
+      <div class="sim2-guide">
+        <div class="guide-step"><span class="gs-n" id="gN">1 / 8</span><p id="narr" aria-live="polite"></p></div>
+        <div class="guide-btns">
+          <button class="go" id="gNext" type="button">下一步 →</button>
+          <button id="bReset" type="button">重來</button>
+        </div>
       </div>
-      <div class="sim-body two">
-        <div class="sim-col">
-          <div class="meter"><span>context <b id="mUsed">0</b> / <b>200,000</b> tokens</span><span>請求 <b id="mReq">0</b> 次 · 經過 <b id="mClock">0</b> 分鐘</span></div>
-          <div class="ctxbar" id="bar" role="img" aria-label="context 組成"></div>
+
+      <div class="sim2-stage">
+        <div class="zone z-local">
+          <div class="zh"><span class="zt">你的電腦</span><span class="zs">Claude Code 客戶端</span></div>
+          <ol class="chat" id="chat"></ol>
+          <div class="file"><span class="fi">📄</span><div><b>session.jsonl</b><span id="fLines">0 行 · 存在你的硬碟</span></div></div>
+        </div>
+
+        <div class="zone z-wire">
+          <div class="zh"><span class="zt">這次送出的 context</span><span class="zs" id="mReq">第 0 次請求</span></div>
+          <div class="ctxbar" id="bar" role="img" aria-label="這次請求的 context 組成"></div>
           <div class="legend">
             <span><i class="swatch" style="--c:var(--l-tools)"></i>tools</span>
             <span><i class="swatch" style="--c:var(--l-sys)"></i>system</span>
             <span><i class="swatch" style="--c:var(--l-skills)"></i>skills</span>
-            <span><i class="swatch" style="--c:var(--l-mem)"></i>memory</span>
+            <span><i class="swatch" style="--c:var(--l-mem)"></i>記憶</span>
             <span><i class="swatch" style="--c:var(--l-hist)"></i>對話紀錄</span>
             <span><i class="swatch" style="--c:var(--l-new)"></i>新訊息</span>
-            <span><i class="swatch" style="--c:var(--l-out)"></i>模型輸出</span>
+            <span><i class="swatch hatch"></i>命中 cache</span>
           </div>
-          <ul class="blocks" id="blocks"></ul>
+          <div class="gauge"><span>context 用量</span><div class="gtrack"><i id="gFill"></i></div><b id="mUsed">0</b><span class="of">/ 200K</span></div>
+          <div class="wf-head"><span>每一次請求送了多少（愈往右愈新）</span></div>
+          <svg class="wf" id="wf" viewBox="0 0 520 170" role="img" aria-label="每次請求的 token 數，分成命中 cache、新寫入、輸出"></svg>
+          <div class="legend"><span><i class="swatch hatch-g"></i>命中 cache（1 折）</span><span><i class="swatch" style="--c:var(--warn)"></i>新寫入（1.25 倍）</span><span><i class="swatch" style="--c:var(--l-out)"></i>模型輸出（5 倍）</span></div>
         </div>
-        <div class="sim-col">
-          <p class="narr" id="narr" aria-live="polite"></p>
-          <div class="stats">
-            <div class="stat"><span>這次送出的 input</span><b id="sIn">0</b></div>
-            <div class="stat g"><span>命中 cache（約 1 折）</span><b id="sHit">0</b></div>
-            <div class="stat o"><span>新寫入 cache</span><b id="sNew">0</b></div>
-            <div class="stat"><span>累計成本（有／沒 cache）</span><b id="sCost">0</b></div>
-          </div>
-          <div>
-            <div class="codehead"><span>~/.claude/projects/…/session.jsonl</span><span>在你電腦上</span></div>
-            <pre class="jsonl" id="jsonl"><code></code></pre>
+
+        <div class="zone z-model">
+          <div class="zh"><span class="zt">模型</span><span class="zs">在資料中心</span></div>
+          <div class="weights"><span>模型權重</span><b>固定不變</b><div class="wcount"><b id="wChange">0</b><span>被你改過的次數</span></div></div>
+          <div class="cachebox" id="cacheBox"><span>伺服器上的暫存（prompt cache）</span><div class="ctrack"><i id="cFill"></i></div><b id="cLeft">還沒有</b></div>
+          <div class="cost">
+            <span>累計成本（示意單位）</span>
+            <div class="crow"><em>有 cache</em><div class="ctrk"><i id="costC"></i></div><b id="costCn">0</b></div>
+            <div class="crow"><em>沒 cache</em><div class="ctrk"><i id="costN"></i></div><b id="costNn">0</b></div>
+            <p class="saved" id="saved"></p>
           </div>
         </div>
       </div>
-      <div class="sim-body" style="padding-top:0">
-        <div class="log-wrap">
-          <table class="simlog">
-            <thead><tr><th scope="col">請求</th><th scope="col">input</th><th scope="col">cache 命中</th><th scope="col">新寫入</th><th scope="col">output</th><th scope="col">成本（有 cache）</th><th scope="col">成本（沒 cache）</th></tr></thead>
-            <tbody id="log"></tbody>
-          </table>
-        </div>
+
+      <div class="sim-top" role="toolbar" aria-label="自由操作">
+        <span class="free">自己玩：</span>
+        <button id="bAsk" type="button">問一句</button>
+        <button id="bTool" type="button">AI 呼叫工具</button>
+        <button id="bSkill" type="button">載入 skill</button>
+        <button id="bWait" type="button">離開 6 分鐘</button>
+        <button id="bCompact" type="button">壓縮對話</button>
       </div>
     </div>
     <p class="note measure">數字為示意。成本單位：一般 input = 1、cache 讀取 = 0.1、cache 寫入 = 1.25、output = 5，比例參考 Anthropic 公開的 5 分鐘 cache 計價。</p>
@@ -485,118 +493,129 @@
     { id: "mem", k: "mem", label: "CLAUDE.md 記憶檔", t: 1200 }
   ];
   var QUESTIONS = ["登入頁按了沒反應，幫我看", "那幫我修好", "順便補個測試", "commit message 用中文", "整理成 PR 說明", "還有別的地方會壞嗎"];
-  var S, uid;
-  function blk(k, label, t, role) { uid++; return { id: k + uid, k: k, label: label, t: t, role: role || "user" }; }
+  var TTL = 5, LIMIT = 200000, S, uid;
+  function blk(k, label, t, role, chat) { uid++; return { id: k + uid, k: k, label: label, t: t, role: role || "user", chat: chat }; }
   function sum(a) { return a.reduce(function (s, b) { return s + b.t; }, 0); }
+  function fmt(n) { return Math.round(n).toLocaleString("en-US"); }
+  function esc(x) { return String(x).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
 
-  function reset(silent) {
-    S = { hist: [], prev: null, lastAt: -99, clock: 0, req: 0, costC: 0, costN: 0, rows: [], last: null, q: 0 };
-    uid = 0;
-    if (!silent) render("清空了。按「問一句」開始，第一次請求沒有任何 cache，整包都要算。");
-  }
+  function reset() { S = { hist: [], prev: null, lastAt: -99, clock: 0, req: 0, costC: 0, costN: 0, rows: [], last: null, q: 0, lines: 0 }; uid = 0; }
 
-  /* one API call: everything in PRE + hist is sent; prefix identical to the previous call (and within 5 min) is a cache hit */
   function request(newBlocks, out) {
     newBlocks.forEach(function (b) { S.hist.push(b); });
     var blocks = PRE.concat(S.hist), cached = 0, hit = {};
-    if (S.prev && (S.clock - S.lastAt) <= 5) {
+    if (S.prev && (S.clock - S.lastAt) <= TTL) {
       for (var i = 0; i < blocks.length && i < S.prev.length; i++) {
         if (S.prev[i] !== blocks[i].id) break;
         cached += blocks[i].t; hit[blocks[i].id] = 1;
       }
     }
     var input = sum(blocks), write = input - cached;
-    var cC = cached * .1 + write * 1.25 + out.t * 5, cN = input + out.t * 5;
-    S.costC += cC; S.costN += cN; S.req++;
+    S.costC += cached * .1 + write * 1.25 + out.t * 5; S.costN += input + out.t * 5; S.req++;
     S.prev = blocks.map(function (b) { return b.id; });
     S.lastAt = S.clock; S.clock += 1;
-    S.hist.push(out);
+    S.hist.push(out); S.lines += newBlocks.length + 1;
     S.last = { input: input, cached: cached, write: write, hit: hit, fresh: newBlocks.map(function (b) { return b.id; }), outId: out.id };
-    S.rows.push([S.req, input, cached, write, out.t, cC, cN]);
+    S.rows.push({ c: cached, w: write, o: out.t, miss: S.req > 1 && cached === 0 });
   }
 
-  function ask(silent) {
-    var q = QUESTIONS[S.q++ % QUESTIONS.length], first = S.req === 0;
-    request([blk("new", "user：「" + q + "」", 60)], blk("out", "assistant：回覆", 450, "assistant"));
-    if (!silent) render(first
-      ? "第一次請求：system、tools、記憶全都是新的，整包寫進 cache。output 雖然短，單價是 input 的 5 倍。"
-      : "又把整包送了一次。前面一大段跟上次一字不差，所以命中 cache；真正新算的只有上一輪的回覆和你這句話。");
+  /* actions return the narration */
+  function ask() {
+    var q = QUESTIONS[S.q++ % QUESTIONS.length], first = S.req === 0, cold = S.req > 0 && (S.clock - S.lastAt) > TTL;
+    request([blk("new", "user：「" + q + "」", 60, "user", q)], blk("out", "assistant：回覆", 450, "assistant", "（回覆）"));
+    if (first) return "你問了第一句。客戶端把 tools、system、記憶檔和你這句話打包送出。第一次沒有任何 cache，整包都要算，也整包寫進伺服器的暫存。";
+    if (cold) return "超過 5 分鐘，暫存已經過期，所以這次即使內容跟上次一模一樣，也整包重算（看最右邊那根全是橘色）。模型沒有忘記什麼，因為它本來就沒記得；紀錄一直在你電腦上。";
+    return "第二句。注意中間：客戶端又把「整包」送了一次，包括上一輪的問答。前面一大段跟上次一字不差，所以命中 cache（斜線），只有新的部分要全價算。";
   }
   function tool() {
-    request([blk("new", "user：「看一下 server log」", 40)], blk("out", "assistant：tool_use Bash(tail log)", 90, "assistant"));
-    request([blk("new", "tool_result：log 內容", 3200)], blk("out", "assistant：根據 log 回覆", 380, "assistant"));
-    render("一次工具呼叫 = 兩次請求。模型先回 tool_use，客戶端在你電腦上執行，把 3,200 token 的結果塞回 context 再送一次。工具結果是 context 長得最快的原因。");
+    request([blk("new", "user：「看一下 server log」", 40, "user", "看一下 server log")], blk("out", "assistant：tool_use Bash(tail log)", 90, "assistant", "🔧 執行 tail server.log"));
+    request([blk("new", "tool_result：log 內容", 3200, "tool", "📋 log 內容（3,200 token）")], blk("out", "assistant：根據 log 回覆", 380, "assistant", "（根據 log 回覆）"));
+    return "AI 想看 log。模型只會「說」它要執行什麼（tool_use），真正執行的是你電腦上的客戶端。結果塞回 context 再送一次，所以一次工具呼叫 = 兩次請求，而且工具結果是 context 長得最快的原因。";
   }
   function skill() {
-    request([blk("new", "user：「幫我寫這版的 release notes」", 50)], blk("out", "assistant：tool_use 讀取 SKILL.md", 60, "assistant"));
-    request([blk("skills", "skill 全文：release-notes/SKILL.md", 1800)], blk("out", "assistant：照 skill 步驟產出", 600, "assistant"));
-    render("平常 context 裡只有 skill 的名稱和描述（400 token 那一格）。用得到時才把全文讀進來，之後它就成了對話紀錄的一部分。");
+    request([blk("new", "user：「幫我寫這版的 release notes」", 50, "user", "幫我寫這版的 release notes")], blk("out", "assistant：tool_use 讀取 SKILL.md", 60, "assistant", "📖 讀取 release-notes/SKILL.md"));
+    request([blk("skills", "skill 全文：release-notes/SKILL.md", 1800, "tool", "📄 SKILL.md 全文（1,800 token）")], blk("out", "assistant：照 skill 步驟產出", 600, "assistant", "（照 skill 步驟產出）"));
+    return "平常 context 裡只放 skill 的名稱和描述。用得到時，AI 才把整份 SKILL.md 讀進來。這就是 AI「學會」新流程的方式：讀一份文字檔，不是改模型。";
   }
-  function wait() {
-    S.clock += 6;
-    render("過了 6 分鐘，超過 cache 的 5 分鐘時效。下一次請求就算內容完全一樣，也要整包重新寫入。模型還在、紀錄也還在本地，只是伺服器上的暫存沒了。現在按「問一句」看看。");
-  }
+  function wait() { S.clock += 6; return "你離開 6 分鐘。看右邊：伺服器上的暫存只保留 5 分鐘，現在已經過期。模型、你電腦上的紀錄都還在，只有暫存沒了。下一步問一句看看會怎樣。"; }
   function compact() {
-    if (S.hist.length < 6) { render("對話還很短，不需要壓縮。多問幾句、多呼叫幾次工具再試。"); return; }
+    if (S.hist.length < 6) return "對話還很短，不需要壓縮。多問幾句、多呼叫幾次工具再試。";
     var before = sum(S.hist);
-    request([blk("new", "user：「請摘要到目前為止的對話」", 30)], blk("out", "assistant：前情摘要", 900, "assistant"));
-    S.hist = [blk("hist", "前情摘要（取代 " + fmt(before) + " token 原文）", 900)];
+    request([blk("new", "user：「請摘要到目前為止的對話」", 30, "user", "（自動）請摘要目前的對話")], blk("out", "assistant：前情摘要", 900, "assistant", "（前情摘要）"));
+    S.hist = [blk("hist", "前情摘要（取代 " + fmt(before) + " token 原文）", 900, "user", "📝 前情摘要，取代了 " + fmt(before) + " token 的原文")];
     S.last.fresh = [S.hist[0].id];
-    render("壓縮：請模型把舊對話寫成摘要，用摘要取代原文。context 一下變小，代價是細節可能遺失，而且下一輪歷史那段要重建 cache；前面不變的 system、tools 仍會命中。");
+    return "對話快塞滿時，客戶端會請模型把舊對話寫成摘要，用摘要取代原文。context 一下變小，代價是細節可能遺失。這也是「聊太久會變笨」的原因之一。";
   }
 
-  function fmt(n) { return Math.round(n).toLocaleString("en-US"); }
-  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
-  function kindOf(b, L) {
-    if (L && b.id === L.outId) return "out";
-    if (L && L.fresh.indexOf(b.id) >= 0) return b.k === "skills" ? "skills" : "new";
-    if (b.k === "new" || b.k === "out") return "hist";
-    return b.k;
-  }
+  var TOUR = [
+    function () { return ask(); }, function () { return ask(); }, tool, skill,
+    function () { return wait(); }, function () { return ask(); },
+    function () { tool(); ask(); return compact(); },
+    function () { return "導覽結束。整個過程，模型被改了幾次？右上角寫著：0 次。你覺得 AI「越用越懂你」，其實是你電腦上的紀錄、記憶檔和 skills 越來越多，每次都整包重送。下面的按鈕可以自己再玩。"; }
+  ];
+  var step = 0;
 
   function render(msg) {
     var blocks = PRE.concat(S.hist), total = sum(blocks), L = S.last;
-    document.getElementById("mUsed").textContent = fmt(total);
-    document.getElementById("mReq").textContent = S.req;
-    document.getElementById("mClock").textContent = S.clock;
-    document.getElementById("bar").innerHTML = blocks.map(function (b) {
-      return '<i class="' + (L && L.hit[b.id] ? "hit" : "") + '" style="flex:0 0 ' + (b.t / total * 100).toFixed(3) + "%;--c:" + COLORS[kindOf(b, L)] + '" title="' + esc(b.label) + " · " + fmt(b.t) + ' tokens"></i>';
-    }).join("");
-    document.getElementById("blocks").innerHTML = blocks.slice().reverse().map(function (b) {
-      var st = "<span></span>", fresh = "";
-      if (L) {
-        if (L.hit[b.id]) st = '<span class="st hit">cache 命中</span>';
-        else if (b.id === L.outId) { st = '<span class="st out">output</span>'; fresh = "fresh"; }
-        else { st = '<span class="st new">新寫入</span>'; if (L.fresh.indexOf(b.id) >= 0) fresh = "fresh"; }
-      }
-      return '<li class="' + fresh + '" style="--c:' + COLORS[kindOf(b, L)] + '"><span>' + esc(b.label) + '</span><span class="n">' + fmt(b.t) + "</span>" + st + "</li>";
-    }).join("");
-    document.getElementById("sIn").textContent = L ? fmt(L.input) : "0";
-    document.getElementById("sHit").textContent = L ? fmt(L.cached) : "0";
-    document.getElementById("sNew").textContent = L ? fmt(L.write) : "0";
-    document.getElementById("sCost").textContent = fmt(S.costC) + " / " + fmt(S.costN);
     document.getElementById("narr").textContent = msg;
-    document.getElementById("log").innerHTML = S.rows.length ? S.rows.slice().reverse().map(function (r) {
-      return "<tr><td>#" + r[0] + "</td><td>" + fmt(r[1]) + "</td><td>" + fmt(r[2]) + "</td><td>" + fmt(r[3]) + "</td><td>" + fmt(r[4]) + "</td><td>" + fmt(r[5]) + "</td><td>" + fmt(r[6]) + "</td></tr>";
-    }).join("") : '<tr><td colspan="7" style="text-align:left;color:var(--muted);font-family:var(--sans)">還沒有請求</td></tr>';
-    var lines = S.hist.slice(-5).map(function (b) {
-      return '{<span class="k">"role"</span>:<span class="s">"' + b.role + '"</span>,<span class="k">"content"</span>:<span class="s">"' + esc(b.label.replace(/^(user|assistant)：/, "")) + '"</span>}';
-    });
-    document.getElementById("jsonl").innerHTML = "<code>" + (lines.length ? '<span class="c">// 對話紀錄由客戶端存在本地，不在模型裡</span>\n' + lines.join("\n") : '<span class="c">// 對話紀錄由客戶端存在本地，不在模型裡</span>') + "</code>";
+    document.getElementById("gN").textContent = Math.min(step, TOUR.length) + " / " + TOUR.length;
+    document.getElementById("gNext").textContent = step >= TOUR.length ? "再看一次" : "下一步 →";
+    /* local: chat bubbles + file */
+    var chat = S.hist.filter(function (b) { return b.chat; }).slice(-7);
+    document.getElementById("chat").innerHTML = chat.length ? chat.map(function (b) {
+      return '<li class="' + b.role + (L && L.fresh.indexOf(b.id) >= 0 || (L && b.id === L.outId) ? " fresh" : "") + '">' + esc(b.chat) + "</li>";
+    }).join("") : '<li class="empty">還沒開始</li>';
+    var ch = document.getElementById("chat"); ch.scrollTop = ch.scrollHeight;
+    document.getElementById("fLines").textContent = S.lines + " 行 · 存在你的硬碟";
+    /* wire: this request */
+    document.getElementById("mReq").textContent = "第 " + S.req + " 次請求";
+    document.getElementById("bar").innerHTML = blocks.map(function (b) {
+      var k = L && b.id === L.outId ? "out" : (L && L.fresh.indexOf(b.id) >= 0 ? (b.k === "skills" ? "skills" : "new") : (b.k === "new" || b.k === "out" ? "hist" : b.k));
+      return '<i class="' + (L && L.hit[b.id] ? "hit" : "") + '" style="flex:0 0 ' + (b.t / total * 100).toFixed(3) + "%;--c:" + COLORS[k] + '" title="' + esc(b.label) + " · " + fmt(b.t) + ' tokens"></i>';
+    }).join("");
+    document.getElementById("mUsed").textContent = fmt(total);
+    document.getElementById("gFill").style.width = Math.min(100, total / LIMIT * 100) + "%";
+    /* waterfall */
+    var svg = document.getElementById("wf"), rows = S.rows.slice(-14), W = 520, H = 170, pad = 4;
+    var max = Math.max(12000, Math.max.apply(null, rows.map(function (r) { return r.c + r.w + r.o; }).concat([0])));
+    var bw = (W - pad * 2) / 14;
+    svg.innerHTML = '<defs><pattern id="hg" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="var(--accent)" opacity=".35"/><rect width="3" height="6" fill="var(--accent)" opacity=".8"/></pattern></defs>' +
+      '<line x1="0" x2="' + W + '" y1="' + (H - 1) + '" y2="' + (H - 1) + '" stroke="var(--line)"/>' +
+      rows.map(function (r, i) {
+        var x = pad + i * bw + bw * .15, w = bw * .7, y = H - 1, out = "";
+        [["c", "url(#hg)"], ["w", "var(--warn)"], ["o", "var(--l-out)"]].forEach(function (p) {
+          var h = r[p[0]] / max * (H - 18); if (h <= 0) return; y -= h;
+          out += '<rect x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + w.toFixed(1) + '" height="' + h.toFixed(1) + '" fill="' + p[1] + '" rx="2"/>';
+        });
+        if (i === rows.length - 1) out += '<text x="' + (x + w / 2).toFixed(1) + '" y="' + (y - 4).toFixed(1) + '" text-anchor="middle" class="wfl">#' + S.req + '</text>';
+        return out;
+      }).join("");
+    /* model: weights never change; cache timer */
+    var left = TTL - (S.clock - S.lastAt) + 1, box = document.getElementById("cacheBox");
+    if (!S.req) { document.getElementById("cLeft").textContent = "還沒有"; document.getElementById("cFill").style.width = "0%"; box.className = "cachebox"; }
+    else if (left > 0) { document.getElementById("cLeft").textContent = "還有約 " + left + " 分鐘"; document.getElementById("cFill").style.width = (left / TTL * 100) + "%"; box.className = "cachebox ok"; }
+    else { document.getElementById("cLeft").textContent = "已過期"; document.getElementById("cFill").style.width = "0%"; box.className = "cachebox gone"; }
+    var mx = Math.max(S.costN, 1);
+    document.getElementById("costC").style.width = (S.costC / mx * 100) + "%";
+    document.getElementById("costN").style.width = (S.costN / mx * 100) + "%";
+    document.getElementById("costCn").textContent = fmt(S.costC);
+    document.getElementById("costNn").textContent = fmt(S.costN);
+    document.getElementById("saved").textContent = S.costN ? "cache 省下約 " + Math.round((1 - S.costC / S.costN) * 100) + "%" : "";
   }
 
-  document.getElementById("bAsk").onclick = function () { ask(); };
-  document.getElementById("bTool").onclick = tool;
-  document.getElementById("bSkill").onclick = skill;
-  document.getElementById("bWait").onclick = wait;
-  document.getElementById("bCompact").onclick = compact;
-  document.getElementById("bReset").onclick = function () { reset(); };
+  function run(fn) { render(fn()); }
+  document.getElementById("gNext").onclick = function () {
+    if (step >= TOUR.length) { reset(); step = 0; }
+    var msg = TOUR[step](); step++; render(msg);
+  };
+  document.getElementById("bReset").onclick = function () { reset(); step = 0; render("清空了。按「下一步」從頭開始導覽，或用下面的按鈕自己玩。"); };
+  document.getElementById("bAsk").onclick = function () { run(ask); };
+  document.getElementById("bTool").onclick = function () { run(tool); };
+  document.getElementById("bSkill").onclick = function () { run(skill); };
+  document.getElementById("bWait").onclick = function () { run(wait); };
+  document.getElementById("bCompact").onclick = function () { run(compact); };
 
-
-
-
-  /* open in a realistic working state: two turns already played */
-  reset(true); ask(true); ask();
+  reset(); render("按「下一步」開始。我們會模擬你在 Claude Code 裡修一個登入頁的 bug，總共 8 步。");
 })();
 </script>
 </body>
