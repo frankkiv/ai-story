@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>時間線 · AI 長出手了</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700;900&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+/* ---------- timeline ---------- */
+.tl-bar { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 3.5rem); z-index: 15; display: flex; align-items: center; gap: .6rem; padding: .55rem 0; margin-bottom: 1.5rem; background: color-mix(in srgb, var(--bg) 88%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+.tl-filter { display: flex; gap: .35rem; overflow-x: auto; scrollbar-width: none; min-width: 0; flex: 1; }
+.tl-filter::-webkit-scrollbar { display: none; }
+.tl-filter button { display: inline-flex; align-items: center; gap: .4rem; flex: none; border: 1px solid var(--line); background: var(--surface); color: var(--muted); border-radius: 999px; padding: .3rem .8rem; font: inherit; font-size: .86rem; cursor: pointer; min-height: 38px; }
+.tl-filter button[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+.tl-filter i { width: .6rem; height: .6rem; border-radius: 50%; background: var(--c); }
+.tl-now { flex: none; font-family: var(--mono); font-weight: 500; font-size: 1.05rem; padding: .2rem .7rem; border-radius: 10px; background: var(--sunken); min-width: 4.2rem; text-align: center; }
+.tl-now span { display: inline-block; transition: transform .3s; }
+.tl-now.bump span { transform: translateY(-2px) scale(1.08); }
+.tl-now { position: fixed; z-index: 25; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); background: var(--text); color: var(--bg); box-shadow: var(--shadow); padding: .35rem .9rem; opacity: 0; transition: opacity .3s; pointer-events: none; }
+.tl-now.show { opacity: 1; }
+@media (max-width: 720px) {
+  .tl-bar { top: env(safe-area-inset-top, 0px); }
+  .tl-now-x { position: fixed; z-index: 25; right: 16px; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); background: var(--text); color: var(--bg); box-shadow: var(--shadow); padding: .35rem .8rem; opacity: 0; transition: opacity .3s; pointer-events: none; }
+  .tl-now.show { opacity: 1; }
+}
+
+.tl { --rail: .7rem; list-style: none; margin: 0; padding: 0 0 1rem; position: relative; display: grid; gap: 1.1rem; }
+.tl-line { position: absolute; top: 0; bottom: 0; left: var(--rail); width: 2px; margin-left: -1px; background: var(--line); border-radius: 2px; }
+.tl-line i { position: absolute; inset: 0; transform-origin: top; transform: scaleY(var(--p, 0)); background: linear-gradient(var(--l-hist), var(--l-new) 45%, var(--l-mem) 75%, var(--l-skills)); border-radius: 2px; }
+
+.tl-era { position: relative; padding: 1.6rem 0 .4rem calc(var(--rail) * 2 + 1rem); display: grid; gap: .15rem; }
+.tl-era::before { content: ""; position: absolute; left: var(--rail); top: 2.15rem; width: 1.1rem; height: 1.1rem; margin-left: -.55rem; border-radius: 50%; background: var(--bg); border: 3px solid var(--text); }
+.tl-era .en { font-family: var(--mono); font-size: .82rem; color: var(--accent); letter-spacing: .08em; }
+.tl-era b { font-size: clamp(1.6rem, 4vw, 2.2rem); letter-spacing: -.02em; line-height: 1.2; }
+.tl-era .es { color: var(--muted); }
+
+.ev { position: relative; padding-left: calc(var(--rail) * 2 + 1rem); min-width: 0; }
+.ev .dot { position: absolute; left: var(--rail); top: 1.35rem; width: .9rem; height: .9rem; margin-left: -.45rem; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 4px var(--bg); transform: scale(.4); transition: transform .5s cubic-bezier(.3,1.6,.5,1); }
+.ev.small .dot { width: .6rem; height: .6rem; margin-left: -.3rem; top: .95rem; }
+.evc { min-width: 0; display: grid; gap: .45rem; opacity: .4; transform: translateY(28px); transition: opacity .35s, transform .4s cubic-bezier(.2,.8,.2,1); }
+.ev.big .evc { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--c); border-radius: 16px; padding: 1.1rem 1.25rem; box-shadow: var(--shadow); }
+.ev.small .evc { gap: .15rem; padding: .35rem 0; }
+.ev.in .evc { opacity: 1; transform: none; }
+.ev.in .dot { transform: scale(1); }
+.evm { display: flex; align-items: center; gap: .55rem; font-family: var(--mono); font-size: .82rem; color: var(--muted); }
+.evm .cat { color: var(--c); border: 1px solid currentColor; border-radius: 999px; padding: 0 .5rem; font-size: .82rem; }
+.ev h3 { margin: 0; font-size: 1.3rem; line-height: 1.35; }
+.ev p { margin: 0; }
+.ev.small b { font-size: 1.02rem; }
+.ev .sm { color: var(--muted); font-size: .95rem; }
+.tl-elder { display: grid; grid-template-columns: auto 1fr; gap: .6rem; align-items: start; background: var(--accent-soft); border-radius: 10px; padding: .6rem .8rem; font-size: .98rem; }
+.tl-elder b { font-size: .82rem; font-family: var(--mono); color: var(--accent); background: var(--surface); border-radius: 6px; padding: .05rem .4rem; margin-top: .3rem; white-space: nowrap; }
+.ev.off { display: none; }
+.tl-empty { color: var(--muted); }
+
+@media (min-width: 900px) {
+  .tl { --rail: 50%; gap: .6rem; }
+  .tl-era { padding: 3rem 0 1rem; text-align: center; justify-items: center; }
+  .tl-era::before { left: 50%; top: 1.2rem; }
+  .tl-era b, .tl-era .en, .tl-era .es { background: var(--bg); padding: 0 .6rem; position: relative; }
+  .ev { width: 50%; padding-left: 0; }
+  .ev.L { padding-right: 2.4rem; }
+  .ev.R { margin-left: 50%; padding-left: 2.4rem; }
+  .ev.L .dot { left: auto; right: 0; margin-left: 0; margin-right: -.45rem; }
+  .ev.L.small .dot { margin-right: -.3rem; }
+  .ev.R .dot { left: 0; }
+  .ev.L .evc { transform: translateX(-24px); }
+  .ev.R .evc { transform: translateX(24px); }
+  .ev.L.small .evc { text-align: right; justify-items: end; }
+  .ev.in .evc { transform: none; }
+  .ev.small { margin-top: -.2rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .evc, .ev .dot, .tl-now span { transition: none; }
+}
+
+.next { display: grid; gap: 1rem; }
+@media (min-width: 760px) { .next { grid-template-columns: 1fr 1fr; } }
+.next a { text-decoration: none; color: inherit; }
+.next .card:hover { border-color: var(--text); }
+</style>
+</head>
+<body>
+
+<nav class="nav gutter" aria-label="網站">
+  <div class="frame">
+    <a class="brand" href="index.html"><i></i><span>AI 長出手了</span></a>
+    <ul>
+      <li><a class="l site-on" href="history.html"><span class="lg">時間線</span><span class="sh">時間線</span></a></li>
+      <li><a class="l" href="bench.html"><span class="lg">模型評比</span><span class="sh">評比</span></a></li>
+      <li><a class="l" href="tech.html"><span class="lg">它怎麼運作</span><span class="sh">原理</span></a></li>
+      <li><a class="l" href="china.html"><span class="lg">追趕與蒸餾</span><span class="sh">中國追趕</span></a></li>
+      <li><a class="l" href="future.html"><span class="lg">下一個瓶頸</span><span class="sh">瓶頸</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero gutter">
+  <div class="frame" style="display:block">
+    <div class="hero-copy measure">
+      <span class="pill">PART 1 · <b>時間線</b></span>
+      <h1>從會聊天，<br><em>到會做事</em></h1>
+      <p class="sub">2022 年底到現在，AI 走了四大步：顧問 → 師傅 → 管家 → 包工頭。往下滑，沿著時間線看每個大小事件出現。每一步背後換了什麼技術，在<a href="tech.html">它怎麼運作</a>那頁細講。</p>
+      <p class="caveat">各家的重要發表都有收，但 agent 工具的例子多半以作者每天在用的 Claude Code 說明，所以 Anthropic 的事件會稍微多一點。</p>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="s gutter" id="timeline" style="padding-top:2rem">
+  <div class="frame">
+    <div class="tl-bar">
+      <div class="tl-filter" role="group" aria-label="篩選事件">
+        <button type="button" data-f="all" aria-pressed="true">全部</button>
+        <button type="button" data-f="model" aria-pressed="false"><i style="--c:var(--l-hist)"></i>模型</button>
+        <button type="button" data-f="agent" aria-pressed="false"><i style="--c:var(--l-new)"></i>Agent</button>
+        <button type="button" data-f="china" aria-pressed="false"><i style="--c:var(--l-mem)"></i>中國</button>
+        <button type="button" data-f="infra" aria-pressed="false"><i style="--c:var(--l-skills)"></i>基礎設施</button>
+      </div>
+    </div>
+    <span class="tl-now" aria-live="polite"><span id="tlNow">2022</span></span>
+    <ol class="tl" id="tl">
+      <li class="tl-line" aria-hidden="true"><i id="tlFill"></i></li>
+      <li class="tl-era"><span class="en">顧問</span><b>你問，它答</b><span class="es">2022 年底起，AI 很會回答問題，但事情還是你自己做。</span></li>
+      <li class="ev big" data-cat="model" data-year="2022" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2022.11</span><span class="cat">模型</span></span><h3>ChatGPT 推出</h3><p>很多人第一次跟 AI 聊天。它只會「講」：給你一段文字或程式碼，你自己複製、貼上、執行。</p><p class="tl-elder"><b>白話說</b>像打電話問一位博學的顧問，但他不會到你家修水管。</p></div></li>
+      <li class="ev small" data-cat="model" data-year="2023" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2023.03</span><span class="cat">模型</span></span><b>GPT-4 與第一代 Claude 推出</b><span class="sm">大型模型競賽正式開始。</span></div></li>
+      <li class="ev small" data-cat="model" data-year="2023" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2023.12</span><span class="cat">模型</span></span><b>Google 推出 Gemini</b><span class="sm">三強格局成形。</span></div></li>
+      <li class="ev small" data-cat="model" data-year="2024" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2024.05</span><span class="cat">模型</span></span><b>GPT-4o：即時語音與看圖</b><span class="sm">AI 開始能看照片、用講的對話。</span></div></li>
+      <li class="ev big" data-cat="model" data-year="2024" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2024.09</span><span class="cat">模型</span></span><h3>推理模型出現（OpenAI o1）</h3><p>回答前先產生一長串思考再作答。要讓 AI 自己做多步驟的事，這是前提。</p><p class="tl-elder"><b>白話說</b>從搶答的學生，變成先打草稿再寫答案的學生。</p></div></li>
+      <li class="tl-era"><span class="en">師傅</span><b>開始自己動手</b><span class="es">2024 年底起，AI 拿到工具，直接在你電腦裡做事。</span></li>
+      <li class="ev big" data-cat="agent" data-year="2024" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2024.10</span><span class="cat">Agent</span></span><h3>Claude 學會操作電腦（computer use）</h3><p>看螢幕、移動滑鼠、打字。還很慢、常按錯，但 AI 的手第一次伸進了電腦裡。</p></div></li>
+      <li class="ev big" data-cat="agent" data-year="2024" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2024.11</span><span class="cat">Agent</span></span><h3>Anthropic 推出 MCP</h3><p>讓任何工具都能用同一種格式接上 AI，後來 OpenAI、Google 也採用。</p><p class="tl-elder"><b>白話說</b>AI 的 USB-C，什麼工具都插得上。</p></div></li>
+      <li class="ev small" data-cat="china" data-year="2024" style="--c:var(--l-mem)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2024.12</span><span class="cat">中國</span></span><b>DeepSeek V3</b><span class="sm">671B 參數的 MoE 模型，以很低的訓練成本做出接近頂尖的表現。</span></div></li>
+      <li class="ev big" data-cat="china" data-year="2025" style="--c:var(--l-mem)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.01</span><span class="cat">中國</span></span><h3>DeepSeek R1 震撼市場</h3><p>開放權重的推理模型，表現逼近美國旗艦，輝達股價單日重挫。很多人第一次發現中國模型追得這麼近。</p></div></li>
+      <li class="ev small" data-cat="agent" data-year="2025" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.01</span><span class="cat">Agent</span></span><b>OpenAI Operator</b><span class="sm">AI 自己開瀏覽器幫你訂位、填表。網頁版的「動手」。</span></div></li>
+      <li class="ev big" data-cat="agent" data-year="2025" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.02</span><span class="cat">Agent</span></span><h3>Claude Code 預覽版、vibe coding</h3><p>AI 直接在你電腦裡讀檔、改檔、跑測試、修錯。Karpathy 提出「vibe coding」：用講的就能做軟體。</p><p class="tl-elder"><b>白話說</b>顧問變成請到家裡的師傅。</p></div></li>
+      <li class="ev small" data-cat="agent" data-year="2025" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.04</span><span class="cat">Agent</span></span><b>OpenAI Codex CLI</b><span class="sm">終端機裡的 coding agent 變成各家標配。</span></div></li>
+      <li class="ev small" data-cat="agent" data-year="2025" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.05</span><span class="cat">Agent</span></span><b>Claude Code 正式推出</b><span class="sm">同時推出 Claude 4 系列。</span></div></li>
+      <li class="ev small" data-cat="agent" data-year="2025" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.06</span><span class="cat">Agent</span></span><b>Google Gemini CLI</b><span class="sm">三大廠都有了自己的終端機 agent。</span></div></li>
+      <li class="ev small" data-cat="agent" data-year="2025" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.07</span><span class="cat">Agent</span></span><b>ChatGPT agent</b><span class="sm">ChatGPT 裡直接有一台虛擬電腦，能上網、做簡報、整理試算表。</span></div></li>
+      <li class="ev small" data-cat="model" data-year="2025" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.08</span><span class="cat">模型</span></span><b>GPT-5</b><span class="sm">OpenAI 把聊天和推理合成一個模型，自動決定要想多久。</span></div></li>
+      <li class="ev small" data-cat="china" data-year="2025" style="--c:var(--l-mem)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.09</span><span class="cat">中國</span></span><b>Anthropic 停止服務中國控股公司</b><span class="sm">理由之一是防止蒸餾。</span></div></li>
+      <li class="ev small" data-cat="agent" data-year="2025" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.10</span><span class="cat">Agent</span></span><b>Agent Skills</b><span class="sm">把工作流程寫成資料夾、按需載入。「調教 AI」變成管理文字檔。</span></div></li>
+      <li class="tl-era"><span class="en">管家</span><b>傳個訊息就辦事</b><span class="es">2025 年底起，從聊天軟體就能叫 AI 做事。</span></li>
+      <li class="ev small" data-cat="model" data-year="2025" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.11</span><span class="cat">模型</span></span><b>Gemini 3 與 Claude Opus 4.5</b><span class="sm">同一個月，Google 和 Anthropic 的旗艦都把寫程式考試推過八成。</span></div></li>
+      <li class="ev small" data-cat="agent" data-year="2025" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.11</span><span class="cat">Agent</span></span><b>「小龍蝦」誕生</b><span class="sm">工程師 Peter Steinberger 的個人專案，吉祥物是一隻龍蝦：在 WhatsApp 傳訊息，就能叫家裡電腦上的 AI 做事。後來改名 OpenClaw。</span></div></li>
+      <li class="ev big" data-cat="agent" data-year="2026" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.01</span><span class="cat">Agent</span></span><h3>OpenClaw 爆紅</h3><p>Clawdbot → Moltbot → 1/30 改名 OpenClaw，短短幾天十萬顆星。也冒出假擴充套件、詐騙幣和 prompt injection。</p><p class="tl-elder"><b>白話說</b>用 LINE 傳訊息給管家，但太老實的管家也可能被騙。</p></div></li>
+      <li class="ev big" data-cat="agent" data-year="2026" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.02</span><span class="cat">Agent</span></span><h3>Remote Control：手機遙控電腦上的 AI</h3><p>程式和檔案留在電腦上，手機只是遙控器，訊息經 Anthropic 中繼。</p></div></li>
+      <li class="ev big" data-cat="china" data-year="2026" style="--c:var(--l-mem)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.02</span><span class="cat">中國</span></span><h3>蒸餾指控公開化</h3><p>OpenAI 向美國眾議院提交備忘錄；Anthropic 點名 DeepSeek、Moonshot、MiniMax，約 2.4 萬個帳號、1,600 萬次對話。</p></div></li>
+      <li class="ev small" data-cat="agent" data-year="2026" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.03</span><span class="cat">Agent</span></span><b>從手機傳訊息派工作，變成正式功能</b><span class="sm">Anthropic 的 Dispatch、Channels 等功能，讓你不用自己架設，就能從手機或聊天軟體把工作交給電腦上的 AI。</span></div></li>
+      <li class="tl-era"><span class="en">包工頭</span><b>一群 AI 一起做</b><span class="es">2026 年，一個人帶一支 AI 團隊。</span></li>
+      <li class="ev small" data-cat="infra" data-year="2026" style="--c:var(--l-skills)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.04</span><span class="cat">基礎設施</span></span><b>IEA：資料中心用電一年 +17%</b><span class="sm">AI 為主的資料中心用電成長 50%，2030 年預估翻倍。</span></div></li>
+      <li class="ev small" data-cat="model" data-year="2026" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.06</span><span class="cat">模型</span></span><b>Claude Fable 5</b><span class="sm">在 SWE-bench Verified（讓 AI 修 500 個真實軟體問題的考試）拿到 95%，這份考卷快被考滿了。</span></div></li>
+      <li class="ev small" data-cat="model" data-year="2026" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.07</span><span class="cat">模型</span></span><b>GPT-5.6 分三級、Claude Opus 5</b><span class="sm">OpenAI 開始把同一代模型分成 Sol（最強）、Terra（均衡）、Luna（快又便宜）三級；兩週後 Anthropic 推出 Opus 5。</span></div></li>
+      <li class="ev small" data-cat="model" data-year="2026" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.09</span><span class="cat">模型</span></span><b>GPT-6、Claude Opus 5.5、Gemini 4</b><span class="sm">九月三家幾乎同時換代：GPT-6 Astra（9/3）、GPT-6 Sol 和 Luna 與 Opus 5.5 同一天（9/22）、Gemini 4 Argon（9/30）。</span></div></li>
+      <li class="ev big" data-cat="agent" data-year="2026" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026 秋</span><span class="cat">Agent</span></span><h3>多 agent 變成產品功能</h3><p>Claude Code 推出新版 Projects：一個總管 agent 跟你對話，把工作分給各自有 context 的 thread。</p><p class="tl-elder"><b>白話說</b>你只跟包工頭講需求，他找水電、木工分頭做。</p></div></li>
+      <li class="ev small" data-cat="china" data-year="2026" style="--c:var(--l-mem)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.10</span><span class="cat">中國</span></span><b>反蒸餾見效</b><span class="sm">Anthropic 第二份報告：蒸餾者拿到的資料減少約 90–99%。</span></div></li>
+      <li class="ev small" data-cat="infra" data-year="2026" style="--c:var(--l-skills)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026 —</span><span class="cat">基礎設施</span></span><b>記憶體與硬碟缺貨</b><span class="sm">HBM、DRAM、硬碟產能被 AI 資料中心搶光，下一個瓶頸是電和硬體。</span></div></li>
+    </ol>
+  </div>
+</section>
+
+<section class="s gutter" id="bench">
+  <div class="frame">
+    <a class="card linkcard" href="bench.html"><span class="tag">PART 2 · 模型評比 →</span><h3>寫程式的能力，兩年從五成到九成</h3><p>各家模型的能力曲線、44 個模型的名冊、分數為什麼不能全信，以及每個模型擅長什麼，都整理在評比頁。</p></a>
+  </div>
+</section>
+
+<section class="s gutter" id="refs">
+  <div class="frame measure">
+    <div class="s-head"><span class="eyebrow">04 · 資料來源</span><h2>這頁的日期和數字從哪來</h2></div>
+    <ul class="refs">
+      <li>各家發表文章與模型卡：OpenAI（ChatGPT、GPT-4、GPT-4o、o1、o3、Operator、ChatGPT agent、GPT-5 系列、GPT-6）、Anthropic（Claude 3.5–5.5、computer use、MCP、Claude Code、Agent Skills、Remote Control）、Google（Gemini 1–4、Gemini CLI）。</li>
+      <li>DeepSeek V3 技術報告（arXiv 2412.19437）；DeepSeek-R1 論文（Nature, 2025）。</li>
+      <li>Anthropic，〈Detecting and preventing distillation attacks〉（2026/2/23）與 2026/10/12 後續報告；OpenAI 致美國眾議院中國特別委員會備忘錄（2026/2/12）。</li>
+      <li>OpenAI，〈Why we no longer evaluate SWE-bench Verified〉（2026/2/23）。</li>
+      <li>分數彙整：llm-stats.com、benchlm.ai、morphllm.com（2026/11 查詢）。</li>
+      <li>OpenClaw：GitHub 專案頁與 2026 年 1 月相關報導。</li>
+      <li>IEA，《Energy and AI》與 2026 年更新。</li>
+    </ul>
+  </div>
+</section>
+
+<section class="s gutter">
+  <div class="frame">
+    <div class="next">
+      <a href="tech.html"><article class="card"><span class="tag">PART 3 · 它怎麼運作 →</span><h3>AI 沒有在學你，它每次都重讀一遍</h3><p>context、prompt cache、agent 迴圈、skills、裝置同步，附互動模擬器。</p></article></a>
+      <a href="china.html"><article class="card"><span class="tag">PART 4 · 追趕與蒸餾 →</span><h3>中國 AI 怎麼追上來，美國廠商怎麼防</h3><p>中國模型怎麼追上來？「蒸餾」是什麼，各家又怎麼防？</p></article></a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="gutter"><div class="frame">寫於 2026 年 11 月。</div></footer>
+
+<script>
+(function () {
+  "use strict";
+  var tl = document.getElementById("tl"), fill = document.getElementById("tlFill"), now = document.getElementById("tlNow");
+  var evs = [].slice.call(tl.querySelectorAll(".ev"));
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function sides() {
+    var k = 0;
+    evs.forEach(function (e) {
+      e.classList.remove("L", "R");
+      if (e.classList.contains("off")) return;
+      e.classList.add(k++ % 2 ? "R" : "L");
+    });
+  }
+  sides();
+
+  if (reduce || !("IntersectionObserver" in window)) {
+    evs.forEach(function (e) { e.classList.add("in"); });
+  } else {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (x) { if (x.isIntersecting) { x.target.classList.add("in"); io.unobserve(x.target); } });
+    }, { rootMargin: "0px 0px -4% 0px" });
+    evs.forEach(function (e) { io.observe(e); });
+  }
+
+  var last = "", ticking = false;
+  function onScroll() {
+    ticking = false;
+    var r = tl.getBoundingClientRect(), mid = innerHeight * 0.55;
+    var p = Math.min(1, Math.max(0, (mid - r.top) / r.height));
+    fill.style.setProperty("--p", p.toFixed(4));
+    now.parentNode.classList.toggle("show", r.top < innerHeight * 0.5 && r.bottom > innerHeight * 0.5);
+    var vis = evs.filter(function (e) { return !e.classList.contains("off"); });
+    var y = vis.length ? vis[0].dataset.year : "";
+    for (var i = 0; i < evs.length; i++) {
+      if (evs[i].classList.contains("off")) continue;
+      if (evs[i].getBoundingClientRect().top < mid) y = evs[i].dataset.year; else break;
+    }
+    if (y !== last) {
+      last = y; now.textContent = y;
+      var chip = now.parentNode; chip.classList.remove("bump"); void chip.offsetWidth; chip.classList.add("bump");
+      setTimeout(function () { chip.classList.remove("bump"); }, 300);
+    }
+  }
+  addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+  addEventListener("resize", onScroll);
+  onScroll();
+
+  var btns = [].slice.call(document.querySelectorAll(".tl-filter button"));
+  btns.forEach(function (b) {
+    b.addEventListener("click", function () {
+      var f = b.dataset.f;
+      btns.forEach(function (o) { o.setAttribute("aria-pressed", o === b ? "true" : "false"); });
+      evs.forEach(function (e) {
+        var off = f !== "all" && e.dataset.cat !== f;
+        e.classList.toggle("off", off);
+        if (!off) e.classList.add("in");
+      });
+      sides(); onScroll();
+    });
+  });
+})();
+</script>
+</body>
+</html>

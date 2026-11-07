@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>追趕與蒸餾 · AI 長出手了</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700;900&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+.reasons { counter-reset: r; }
+.reasons .card { position: relative; }
+.flowchart { display: grid; gap: .5rem; }
+@media (min-width: 900px) { .flowchart { grid-template-columns: repeat(5, minmax(0,1fr)); align-items: stretch; } }
+.fstep { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: .9rem 1rem; display: grid; gap: .3rem; align-content: start; position: relative; min-width: 0; }
+.fstep .n { font-family: var(--mono); font-size: .82rem; color: var(--warn); }
+.fstep b { font-size: 1rem; }
+.fstep span { font-size: .9rem; color: var(--muted); }
+.fstep.teacher { border-color: color-mix(in srgb, var(--l-skills) 60%, var(--line)); }
+.fstep.student { border-color: color-mix(in srgb, var(--l-mem) 60%, var(--line)); }
+.fstep.pulse { animation: glow 1.2s ease; }
+@keyframes glow { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--warn) 50%, transparent); } 100% { box-shadow: 0 0 0 12px transparent; } }
+
+.duel { display: grid; gap: .6rem; }
+.duel-row { display: grid; gap: .6rem; }
+@media (min-width: 820px) { .duel-row { grid-template-columns: minmax(0,1fr) 2.5rem minmax(0,1fr); align-items: stretch; } }
+.side { border-radius: 14px; padding: 1rem 1.1rem; display: grid; gap: .3rem; align-content: start; border: 1px solid var(--line); min-width: 0; }
+.side .tag { font-family: var(--mono); font-size: .82rem; }
+.side.atk { background: var(--warn-soft); }
+.side.atk .tag { color: var(--warn); }
+.side.def { background: var(--accent-soft); }
+.side.def .tag { color: var(--accent); }
+.side b { font-size: 1.02rem; }
+.side span { font-size: .93rem; color: var(--muted); }
+.vs { display: none; place-items: center; font-family: var(--mono); font-size: .82rem; color: var(--muted); }
+@media (min-width: 820px) { .vs { display: grid; } }
+.duel-head { display: none; }
+@media (min-width: 820px) { .duel-head { display: grid; grid-template-columns: 1fr 2.5rem 1fr; font-family: var(--mono); font-size: .82rem; color: var(--muted); padding: 0 .3rem; } }
+
+.cases { list-style: none; margin: 0; padding: 0; display: grid; gap: .75rem; border-left: 2px solid var(--line); }
+.cases li { position: relative; padding-left: 1.25rem; display: grid; gap: .2rem; }
+.cases li::before { content: ""; position: absolute; left: -7px; top: .55rem; width: 12px; height: 12px; border-radius: 50%; background: var(--surface); border: 2px solid var(--warn); }
+.cases .d { font-family: var(--mono); font-size: .82rem; color: var(--warn); }
+.cases span { color: var(--muted); font-size: .96rem; }
+
+.split-bars { display: grid; gap: .7rem; }
+.sb { display: grid; grid-template-columns: minmax(0, 10rem) 1fr 3.5rem; gap: .75rem; align-items: center; font-size: .92rem; }
+@media (max-width: 520px) { .sb { grid-template-columns: 1fr 3.4rem; } .sb .track { grid-column: 1 / -1; grid-row: 2; } }
+.sb .track { height: .9rem; background: var(--sunken); border-radius: 999px; overflow: hidden; }
+.sb .fill { display: block; height: 100%; border-radius: 999px; background: var(--c); }
+.sb .v { font-family: var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
+
+.lab-grid { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); }
+.lab { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 1rem 1.1rem; display: grid; gap: .3rem; }
+.lab b { font-size: 1.05rem; }
+.lab .who { font-family: var(--mono); font-size: .82rem; color: var(--muted); }
+.lab span { font-size: .92rem; color: var(--muted); }
+.sources { font-size: .88rem; color: var(--muted); display: grid; gap: .3rem; }
+.sources a { color: var(--muted); }
+</style>
+</head>
+<body>
+
+<nav class="nav gutter" aria-label="網站">
+  <div class="frame">
+    <a class="brand" href="index.html"><i></i><span>AI 長出手了</span></a>
+    <ul>
+      <li><a class="l" href="history.html"><span class="lg">時間線</span><span class="sh">時間線</span></a></li>
+      <li><a class="l" href="bench.html"><span class="lg">模型評比</span><span class="sh">評比</span></a></li>
+      <li><a class="l" href="tech.html"><span class="lg">它怎麼運作</span><span class="sh">原理</span></a></li>
+      <li><a class="l site-on" href="china.html"><span class="lg">追趕與蒸餾</span><span class="sh">中國追趕</span></a></li>
+      <li><a class="l" href="future.html"><span class="lg">下一個瓶頸</span><span class="sh">瓶頸</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero gutter">
+  <div class="frame" style="display:block">
+    <div class="hero-copy measure">
+      <span class="pill">PART 4 · <b>追趕與蒸餾</b></span>
+      <h1>中國 AI 怎麼追上來，<br><em>美國廠商怎麼防</em></h1>
+      <p class="sub">2024 年底，中國最好的模型在寫程式考試上還落後美國旗艦一大截；到 2026 年，差距縮到只剩幾分，而且多數是開放權重、價格便宜很多。工程創新是主因之一，「蒸餾」別人的模型則是最有爭議的那一個。</p>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section class="s gutter" id="rise">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">01 · 崛起</span>
+      <h2>幾個關鍵角色</h2>
+      <p class="lead">2025 年 1 月 DeepSeek R1 推出，是很多人第一次發現中國模型已經追到這麼近。之後幾家公司輪流推出開放權重的強模型。分數變化見<a href="history.html#bench">時間線頁的能力曲線</a>。</p>
+    </div>
+    <div class="lab-grid">
+      <div class="lab"><span class="who">DeepSeek · 深度求索</span><b>V3（2024.12）、R1（2025.01）</b><span>V3 是 671B 參數的 MoE 模型，每個 token 只啟用 37B；技術報告寫完整訓練用了 278.8 萬 H800 GPU 小時。R1 展示了用強化學習就能讓模型學會推理，論文後來登上 Nature。</span></div>
+      <div class="lab"><span class="who">Moonshot · 月之暗面</span><b>Kimi K2 系列</b><span>主打 agent 和寫程式，開放權重。K2 Thinking 之後的版本在 SWE-bench 上逼近美國旗艦。</span></div>
+      <div class="lab"><span class="who">Alibaba · 阿里巴巴</span><b>Qwen（通義千問）</b><span>從小模型到旗艦都有，開放權重的版本在全球開發者社群用得很廣，也常被拿來當其他模型的基底。</span></div>
+      <div class="lab"><span class="who">Zhipu · 智譜</span><b>GLM 系列</b><span>GLM-4.5 之後主打 agent 能力，也是開放權重。</span></div>
+      <div class="lab"><span class="who">MiniMax</span><b>M 系列</b><span>主打 agent 與寫程式，價格非常低。</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="why">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">02 · 為什麼追得這麼快</span>
+      <h2>四個原因，只有一個有爭議</h2>
+    </div>
+    <div class="grid2 reasons">
+      <article class="card"><span class="tag">原因 1 · 工程創新</span><h3>在有限算力下把效率榨乾</h3><p>MoE（每次只啟用一小部分參數）、MLA（壓縮注意力需要的記憶體）、低精度訓練、以強化學習訓練推理。很多做法後來被全世界的實驗室參考。</p></article>
+      <article class="card"><span class="tag">原因 2 · 出口管制的反作用</span><h3>買不到最好的晶片，只好更省</h3><p>美國限制先進 AI 晶片出口到中國，逼得中國團隊在演算法和系統上下功夫。這是它們的效率特別突出的原因之一。</p></article>
+      <article class="card"><span class="tag">原因 3 · 開放權重與低價</span><h3>全世界都能下載、拿來改</h3><p>開放權重讓全球開發者一起用、一起回報問題，生態跑得很快；API 價格也常常只有美國旗艦的幾分之一。</p></article>
+      <article class="card hl" style="border-color: color-mix(in srgb, var(--warn) 55%, var(--line))"><span class="tag" style="color:var(--warn)">原因 4 · 有爭議</span><h3>蒸餾別人的模型</h3><p>2026 年初，Anthropic 和 OpenAI 都公開指控部分中國實驗室，用大量帳號向它們的模型提問，把回答拿去訓練自己的模型。下面細講。</p></article>
+    </div>
+    <div class="prose measure mt">
+      <p class="elder"><b>白話說</b><span>一個學生成績進步很快，可能是他很會讀書、很省時間，也可能是他偷偷抄了學霸的筆記。現實裡往往兩者都有，只看其中一面都不公平。</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="what">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">03 · 蒸餾是什麼</span>
+      <h2>讓學生模型模仿老師模型的回答</h2>
+      <p class="lead">蒸餾（distillation）本身是很普通的技術：拿一個大模型（老師）的輸出當教材，訓練一個比較小、比較便宜的模型（學生）。各家都用它把自己的大模型壓成小模型，DeepSeek 也把 R1 的推理能力蒸餾進較小的模型。問題出在「老師是別人家的，而且對方明文禁止」。</p>
+    </div>
+    <div class="flowchart" id="flow">
+      <div class="fstep"><span class="n">STEP 1</span><b>準備題目</b><span>針對想要的能力（寫程式、用工具、推理）大量產生 prompt。</span></div>
+      <div class="fstep teacher"><span class="n">STEP 2</span><b>問老師模型</b><span>透過 API 送出，常常要求它「一步一步寫出推理過程」。</span></div>
+      <div class="fstep"><span class="n">STEP 3</span><b>收集回答</b><span>把題目、答案、推理過程整理成訓練資料。</span></div>
+      <div class="fstep student"><span class="n">STEP 4</span><b>訓練學生</b><span>用這些資料做監督式微調；或拿老師當評分者，做強化學習。</span></div>
+      <div class="fstep student"><span class="n">結果</span><b>學生學到老師的「解題風格」</b><span>不用花老師那麼多錢做資料和訓練，就學到相近的能力。</span></div>
+    </div>
+    <div class="grid2 mt">
+      <div><div class="codehead"><span>蒸餾的訓練資料長這樣（示意）</span><span>jsonl</span></div>
+<pre><code>{<span class="k">"prompt"</span>: <span class="s">"修好這個 race condition…"</span>,
+ <span class="k">"teacher_reasoning"</span>: <span class="p">"先看鎖的範圍…第二步…"</span>,  <span class="c">// 最值錢的部分</span>
+ <span class="k">"teacher_answer"</span>: <span class="s">"把 mutex 移到…"</span>}
+{<span class="k">"prompt"</span>: <span class="s">"用這三個工具查出…"</span>,
+ <span class="k">"teacher_tool_calls"</span>: [ <span class="t">…</span> ],
+ <span class="k">"teacher_answer"</span>: <span class="s">"…"</span>}</code></pre></div>
+      <div class="prose">
+        <p><strong>為什麼推理過程最值錢？</strong>只有答案，學生只能背；有完整的思考步驟，學生才學得到「怎麼想」。所以反蒸餾的重點之一，就是不讓完整推理過程被拿走。</p>
+        <p class="elder"><b>白話說</b><span>蒸餾就像請學霸寫一大疊題目的詳解，拿去給自己的學生練。學霸自己的學校這樣做很正常；別的補習班用假身分大量來要詳解，就是另一回事了。</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="cases">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">04 · 公開的指控</span>
+      <h2>從懷疑到點名</h2>
+      <p class="lead">以下都是提出指控的公司自己的說法。截至寫作時，本頁沒有找到被點名公司的詳細公開回應。</p>
+    </div>
+    <ol class="cases measure">
+      <li><span class="d">2025.01</span><b>DeepSeek R1 推出後</b><span>OpenAI 與 Microsoft 傳出調查是否有人透過 API 蒸餾 OpenAI 的模型。</span></li>
+      <li><span class="d">2025.09</span><b>Anthropic 收緊銷售限制</b><span>不再提供服務給由中國等地區控制的公司（含持股超過 50% 的子公司），理由之一就是它們可能用蒸餾來發展自己的 AI。</span></li>
+      <li><span class="d">2026.02.12</span><b>OpenAI 給美國眾議院中國特別委員會的備忘錄</b><span>指 DeepSeek 相關人員開發繞過存取限制的方法，透過「遮蔽來源的第三方 router」取用美國模型的輸出。</span></li>
+      <li><span class="d">2026.02</span><b>Google</b><span>表示曾有單一行動對 Gemini 送出超過 10 萬個 prompt 試圖複製模型，稱之為智慧財產竊取。</span></li>
+      <li><span class="d">2026.02.23</span><b>Anthropic 發布報告，點名 DeepSeek、Moonshot、MiniMax</b><span>約 2.4 萬個詐欺帳號、超過 1,600 萬次對話。依 Anthropic 統計：MiniMax 超過 1,300 萬次、Moonshot 超過 340 萬次、DeepSeek 超過 15 萬次。目標是 agent 寫程式、工具使用、推理，DeepSeek 還被指拿 Claude 當強化學習的評分者。</span></li>
+      <li><span class="d">2026.10.12</span><b>Anthropic 第二份報告</b><span>說新防線讓蒸餾者拿到的資料減少約 90–99%，封鎖了數萬個帳號，並新增點名智譜蒸餾資安相關能力。</span></li>
+    </ol>
+  </div>
+</section>
+
+<section class="s gutter" id="duel">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">05 · 攻防技術細節</span>
+      <h2>攻方怎麼抄，守方怎麼擋</h2>
+      <p class="lead">把公開報告裡描述的手法兩兩對照。每一招攻擊，後面接著對應的防禦。</p>
+    </div>
+    <div class="duel">
+      <div class="duel-head"><span>攻方：蒸餾者</span><span></span><span>守方：模型公司</span></div>
+      <div class="duel-row">
+        <div class="side atk"><span class="tag">ATTACK · 規模</span><b>大量假帳號 + 代理網路</b><span>用數萬個帳號分散流量，背後是 Anthropic 稱為「hydra cluster」的代理網路，單一網路就同時管理超過 2 萬個帳號，封掉一個馬上換一個。</span></div>
+        <div class="vs">vs</div>
+        <div class="side def"><span class="tag">DEFENSE · 偵測</span><b>行為指紋與分類器</b><span>從 IP 關聯、請求中繼資料、基礎設施特徵把帳號串成同一個行動；用兩階段分類器辨識蒸餾模式，Anthropic 說誤判率低於 0.1%。</span></div>
+      </div>
+      <div class="duel-row">
+        <div class="side atk"><span class="tag">ATTACK · 隱藏來源</span><b>第三方 router 與轉售商</b><span>不直接用自己的帳號，而是透過轉接 API 的第三方服務，讓請求看起來來自別人。</span></div>
+        <div class="vs">vs</div>
+        <div class="side def"><span class="tag">DEFENSE · 身分</span><b>帳號驗證與地區限制</b><span>對教育、資安研究、新創這類容易被冒用的帳號加強驗證；不對中國控制的公司提供服務；和雲端業者、其他實驗室交換情報。</span></div>
+      </div>
+      <div class="duel-row">
+        <div class="side atk"><span class="tag">ATTACK · 套推理</span><b>要求模型寫出完整思考過程</b><span>設計 prompt 讓模型把推理一步步寫出來，或事後重建推理軌跡，因為這是最有教學價值的部分。</span></div>
+        <div class="vs">vs</div>
+        <div class="side def"><span class="tag">DEFENSE · 推理不外流</span><b>只給摘要、限制推理去向</b><span>把推理過程摘要後才顯示，或只讓發出請求的組織看到。Anthropic 的實驗：用完整推理訓練的學生 SWE-bench 80.4%，只用摘要則掉到 71.8%。</span></div>
+      </div>
+      <div class="duel-row">
+        <div class="side atk"><span class="tag">ATTACK · 針對能力</span><b>只抄最貴的那幾項</b><span>大量集中在 agent 寫程式、工具使用、電腦操作、評分這類最難自己做資料的能力。</span></div>
+        <div class="vs">vs</div>
+        <div class="side def"><span class="tag">DEFENSE · 成本</span><b>封禁、限流、照收費</b><span>對重複違規者加嚴限制、直接封號，被擋下的請求也照樣收費，讓抄的成本變高。</span></div>
+      </div>
+      <div class="duel-row">
+        <div class="side atk"><span class="tag">ATTACK · 研究前沿</span><b>任何看得到的輸出都能當教材</b><span>只要 API 回傳文字，理論上就能拿去訓練，這是蒸餾很難完全防住的根本原因。</span></div>
+        <div class="vs">vs</div>
+        <div class="side def"><span class="tag">DEFENSE · 研究前沿</span><b>反蒸餾取樣（antidistillation sampling）</b><span>2025 年的一篇論文提出：稍微調整模型挑下一個 token 的機率，讓推理軌跡拿去訓練別的模型時效果變差，但對一般使用者的品質影響很小。目前還在研究階段。</span></div>
+      </div>
+    </div>
+
+    <div class="card mt">
+      <span class="tag">只給摘要，學生能學到多少？（Anthropic 2026/10 實驗）</span>
+      <div class="split-bars">
+        <div class="sb"><span>用完整推理訓練</span><span class="track"><span class="fill" style="width:80.4%; --c: var(--warn)"></span></span><span class="v">80.4%</span></div>
+        <div class="sb"><span>只用推理摘要訓練</span><span class="track"><span class="fill" style="width:71.8%; --c: var(--accent)"></span></span><span class="v">71.8%</span></div>
+      </div>
+      <p class="caveat">學生模型在 SWE-bench Verified 的分數。刻度 0–100%。</p>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="debate">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">06 · 爭議在哪</span>
+      <h2>這件事沒有表面上那麼黑白分明</h2>
+    </div>
+    <div class="grid3">
+      <article class="card"><span class="tag">合不合法</span><h3>違反使用條款，不等於觸法</h3><p>各家都禁止用輸出訓練競爭模型，用假帳號也違反條款。但「模型輸出能不能受著作權保護」在各國都還沒有定論，所以多半是商業與政策問題。</p></article>
+      <article class="card"><span class="tag">雙重標準？</span><h3>美國模型也用了別人的資料</h3><p>批評者指出，大模型本身就是用網路上大量別人的內容訓練的。支持者則認為，用假帳號系統性地取走競爭對手的成果，性質不同。</p></article>
+      <article class="card"><span class="tag">安全與政策</span><h3>蒸餾也能繞過出口管制</h3><p>Anthropic 認為蒸餾會削弱晶片出口管制的效果，而且蒸餾出來的模型不一定保留原本的安全防護。這讓它從商業糾紛變成地緣政治議題。</p></article>
+    </div>
+    <div class="prose measure mt">
+      <p>比較持平的結論：中國實驗室確實有很多真本事，這從它們公開的論文和開放權重模型就看得出來；同時，被點名的蒸餾行為規模很大，美國廠商也正在用技術和政策反制。兩件事可以同時成立。</p>
+      <p class="elder"><b>白話說</b><span>反蒸餾就像名師上課只寫重點、不發完整詳解，還會認出那些換了一百個假名來旁聽的人。擋得了大部分，但擋不了全部。</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="faq">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">07 · 家人會問</span>
+      <h2>我可以用中國的 AI App 嗎？</h2>
+    </div>
+    <div class="faq measure">
+      <details open><summary>可以用，但要知道三件事</summary><div class="a">
+        <p><b>資料存在哪。</b>用中國公司自己的 App 或網站，對話通常存在中國的伺服器上，受中國法律管轄，依法可能要配合政府調查。台灣的政府機關 2025 年起就禁止公務使用 DeepSeek。</p>
+        <p><b>內容會被審查。</b>問到政治敏感的題目（例如台灣、天安門），回答常會迴避或照官方說法。查資料、學知識時，這類題目別只問它。</p>
+        <p><b>App 和模型是兩回事。</b>很多中國模型是開放權重，可以由其他公司架在別的國家的伺服器上提供。這時資料不會經過原廠，但模型本身訓練出來的審查傾向還在。</p>
+      </div></details>
+      <details><summary>那我該怎麼做？</summary><div class="a"><p>不要放個人資料、工作文件和帳號密碼；政治、歷史議題多看幾個來源；手機 App 安裝時留意它要的權限。這幾點其實對任何 AI App 都適用，只是用中國 App 時更要注意。</p></div></details>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="refs">
+  <div class="frame">
+    <div class="s-head measure"><span class="eyebrow">資料來源</span></div>
+    <div class="sources measure">
+      <a href="https://www.anthropic.com/news/detecting-and-preventing-distillation-attacks">Anthropic · Detecting and preventing distillation attacks（2026/02/23）</a>
+      <a href="https://www.anthropic.com/news/distillation-defenses">Anthropic · Strengthening our defenses against distillation attacks（2026/10/12）</a>
+      <a href="https://www.anthropic.com/news/updating-restrictions-of-sales-to-unsupported-regions">Anthropic · Updating restrictions of sales to unsupported regions（2025/09）</a>
+      <a href="https://restofworld.org/2026/openai-deepseek-distillation-dispute-us-china/">Rest of World · OpenAI–DeepSeek distillation dispute（2026/02）</a>
+      <a href="https://the-decoder.com/google-and-openai-complain-about-distillation-attacks-that-clone-their-ai-models-on-the-cheap/">The Decoder · Google and OpenAI on distillation attacks（2026/02）</a>
+      <a href="https://arxiv.org/abs/2412.19437">DeepSeek-V3 Technical Report（arXiv 2412.19437）</a>
+      <a href="https://arxiv.org/abs/2501.12948">DeepSeek-R1（arXiv 2501.12948）</a>
+      <a href="https://arxiv.org/abs/2504.13146">Antidistillation Sampling（arXiv 2504.13146）</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="gutter"><div class="frame">寫於 2026 年 11 月。指控內容均為提出指控一方的說法。</div></footer>
+
+<script>
+(function () {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) return;
+  var steps = document.querySelectorAll("#flow .fstep"), started = false;
+  new IntersectionObserver(function (es) {
+    if (started || !es[0].isIntersecting) return; started = true;
+    steps.forEach(function (s, i) { setTimeout(function () { s.classList.add("pulse"); }, i * 450); });
+  }, { threshold: .5 }).observe(document.getElementById("flow"));
+})();
+</script>
+</body>
+</html>

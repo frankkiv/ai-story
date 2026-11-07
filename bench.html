@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>模型評比 · AI 長出手了</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700;900&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+.mx-box { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); padding: 1.1rem; display: grid; gap: .8rem; }
+.mx-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.mx { min-width: 640px; }
+.mx th { vertical-align: bottom; }
+.mx th[data-k] { cursor: pointer; user-select: none; }
+.mx th[data-k]::after { content: " ↕"; opacity: .4; }
+.mx th[aria-sort]::after { content: " ↓"; opacity: 1; }
+.mx th small { display: block; font-size: .82rem; color: var(--muted); font-weight: 400; font-family: var(--mono); }
+.mx td:first-child, .mx th:first-child { position: sticky; left: 0; background: var(--surface); z-index: 1; text-align: left; font-family: var(--sans); }
+.mx td:first-child { border-left: 3px solid var(--c, var(--line)); min-width: 9rem; max-width: 12rem; white-space: normal; }
+@media (max-width: 560px) { .mx td:first-child { max-width: 9.5rem; } .mx td:first-child > span { display: none; } .mx .open { display: block; margin: .15rem 0 0; width: max-content; } }
+.mx td:first-child b { display: block; }
+.mx td:first-child span { font-size: .85rem; color: var(--muted); }
+.mx .num { text-align: right; }
+.mx .bar { display: grid; justify-items: end; gap: .2rem; }
+.mx .bar i { display: block; width: 4.5rem; height: 4px; border-radius: 2px; background: linear-gradient(90deg, var(--c) var(--w), var(--line) var(--w)); }
+.mx .top b { color: var(--accent); }
+.mx .open { display: inline-block; margin-left: .3rem; font-size: .82rem; color: var(--accent); background: var(--accent-soft); border-radius: 5px; padding: 0 .35rem; }
+.mx.vt td:first-child { border-left: 0; }
+.mx-key { margin: 0; display: grid; grid-template-columns: auto minmax(0,1fr); gap: .35rem .9rem; font-size: .92rem; }
+.mx-key dt { font-weight: 700; }
+.mx-key dd { margin: 0; color: var(--muted); }
+.good { display: grid; gap: 1rem; }
+@media (min-width: 760px) { .good { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+@media (min-width: 1100px) { .good { grid-template-columns: repeat(3, minmax(0,1fr)); } }
+.good .card { border-top: 3px solid var(--c); }
+.why { display: grid; gap: 1rem; }
+@media (min-width: 760px) { .why { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+@media (min-width: 1100px) { .why { grid-template-columns: repeat(3, minmax(0,1fr)); } }
+.tipcard { background: var(--accent-soft); border-color: transparent; }
+.chart-box { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); padding: 1.25rem; display: grid; gap: 1rem; }
+.chart-scroll { overflow-x: auto; }
+#chart { display: block; width: 100%; min-width: 640px; height: auto; }
+#chart text { font-family: var(--mono); fill: var(--muted); font-size: 15px; }
+#chart .endlabel { font-family: var(--sans); font-weight: 600; font-size: 16px; }
+#chart .event text { font-family: var(--sans); font-size: 14px; fill: var(--muted); }
+.swipe { display: none; font-size: .9rem; color: var(--muted); margin: -.4rem 0 0; }
+@media (max-width: 720px) { .swipe { display: block; } }
+.mt2 { margin-top: 4rem; }
+.h2s { font-size: clamp(1.5rem, 3.4vw, 2rem); letter-spacing: -.02em; line-height: 1.25; margin: 0; }
+.names { display: grid; gap: 1rem; }
+@media (min-width: 760px) { .names { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+@media (min-width: 1100px) { .names { grid-template-columns: repeat(4, minmax(0,1fr)); } }
+.nm { background: var(--surface); border: 1px solid var(--line); border-top: 3px solid var(--c); border-radius: 16px; padding: 1.1rem 1.2rem; box-shadow: var(--shadow); min-width: 0; }
+.nm .who { font-family: var(--mono); font-size: .85rem; color: var(--muted); }
+.nm dl { margin: .6rem 0 0; display: grid; grid-template-columns: auto minmax(0,1fr); gap: .35rem .8rem; }
+.nm dt { font-weight: 700; white-space: nowrap; }
+.nm dd { margin: 0; color: var(--muted); font-size: .95rem; }
+.roster-box { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); padding: 1.1rem; display: grid; gap: .6rem; }
+.roster-top .tabs { display: flex; flex-wrap: wrap; gap: .4rem; }
+.roster-head, .roster li { display: grid; grid-template-columns: minmax(0,1fr) 6.5rem 7.5rem 7.5rem; gap: .6rem; align-items: center; }
+.roster-head { font-family: var(--mono); font-size: .82rem; color: var(--muted); padding: .3rem .7rem; border-bottom: 1px solid var(--line); }
+.roster-head span:nth-child(n+2) { text-align: right; }
+.roster { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.roster li { padding: .55rem .7rem; border-radius: 10px; border-left: 3px solid var(--c); transition: background .3s; }
+.roster li:nth-child(odd) { background: var(--bg); }
+.roster li.hl { background: var(--accent-soft); }
+.rn { display: grid; min-width: 0; line-height: 1.4; }
+.rn b { font-size: 1rem; }
+.rt { font-size: .85rem; color: var(--muted); }
+.rx { font-size: .85rem; color: var(--muted); font-style: italic; }
+.rd { font-family: var(--mono); font-size: .85rem; color: var(--muted); text-align: right; }
+.rs { display: grid; justify-items: end; gap: .2rem; font-family: var(--mono); font-size: .92rem; }
+.rs i { display: block; height: 4px; width: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--c) var(--w), var(--line) var(--w)); }
+.rs.p i { opacity: .7; }
+.rs .na { color: var(--muted); }
+.rdm { display: none; }
+@media (max-width: 560px) {
+  .roster-head, .roster li { grid-template-columns: minmax(0,1fr) 3.9rem 3.9rem; }
+  .roster-head span:nth-child(2), .rd { display: none; }
+  .rdm { display: inline !important; }
+}
+#chart .grid line { stroke: var(--line); }
+#chart .axis-y text { text-anchor: end; }
+#chart .series path { fill: none; stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+#chart .series circle { stroke: var(--surface); stroke-width: 2; cursor: pointer; }
+#chart .series.dim { opacity: .12; }
+#chart .event line { stroke: var(--muted); stroke-dasharray: 2 4; opacity: .6; }
+.series-toggle { display: flex; flex-wrap: wrap; gap: .4rem; }
+.series-toggle button { display: inline-flex; align-items: center; gap: .45rem; border: 1px solid var(--line); background: var(--bg); color: var(--text); border-radius: 999px; padding: .35rem .8rem; font-size: .88rem; cursor: pointer; min-height: 40px; }
+.series-toggle button[aria-pressed="false"] { opacity: .45; }
+.series-toggle i { width: .7rem; height: .7rem; border-radius: 50%; background: var(--c); }
+.tip { min-height: 3.2rem; font-size: .95rem; background: var(--bg); border-radius: 10px; padding: .6rem .85rem; color: var(--muted); }
+.tip b { color: var(--text); }
+.next { display: grid; gap: 1rem; }
+@media (min-width: 760px) { .next { grid-template-columns: 1fr 1fr; } }
+.next a { text-decoration: none; color: inherit; }
+.next .card:hover { border-color: var(--text); }
+</style>
+</head>
+<body>
+
+<nav class="nav gutter" aria-label="網站">
+  <div class="frame">
+    <a class="brand" href="index.html"><i></i><span>AI 長出手了</span></a>
+    <ul>
+      <li><a class="l" href="history.html"><span class="lg">時間線</span><span class="sh">時間線</span></a></li>
+      <li><a class="l site-on" href="bench.html"><span class="lg">模型評比</span><span class="sh">評比</span></a></li>
+      <li><a class="l" href="tech.html"><span class="lg">它怎麼運作</span><span class="sh">原理</span></a></li>
+      <li><a class="l" href="china.html"><span class="lg">追趕與蒸餾</span><span class="sh">中國追趕</span></a></li>
+      <li><a class="l" href="future.html"><span class="lg">下一個瓶頸</span><span class="sh">瓶頸</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero gutter">
+  <div class="frame" style="display:block">
+    <div class="hero-copy measure">
+      <span class="pill">PART 2 · <b>模型評比</b></span>
+      <h1>分數怎麼看，<br><em>誰又擅長什麼</em></h1>
+      <p class="sub">每次新模型發表，都會附一張「我們又第一名」的成績表。這頁先講這些分數為什麼不能全信，再把各家模型放在同一張表上比，最後整理每個模型適合拿來做什麼。</p>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="s gutter" id="why">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">01 · 先打預防針</span>
+      <h2>為什麼這些分數不能全信</h2>
+      <p class="lead">分數有參考價值，但它比看起來更「軟」。下面五個原因，看懂了就知道新聞標題的「第一名」該打幾折。</p>
+    </div>
+    <div class="why">
+      <article class="card"><span class="tag">1 · 自己考自己</span><h3>多數分數是廠商自己報的</h3><p>同一份考卷，思考時間給多少、用哪套 agent 外殼、失敗可以重試幾次，都由廠商自己決定。例如 Anthropic 在 Opus 4.6 的發表文的註腳寫著：改一下提示詞，SWE-bench Verified 可以到 81.42%。第三方用統一設定重測，通常會低幾分。</p></article>
+      <article class="card"><span class="tag">2 · 考古題外流</span><h3>題目可能早就被背過</h3><p>公開的考卷會被爬進網路資料，再被拿去訓練下一代模型。OpenAI 2026 年 2 月宣布不再公布 SWE-bench Verified，理由就是分數愈來愈反映「訓練時看過多少題目」；它抽查一批難題，發現大部分的測試或題目描述本身有問題。</p></article>
+      <article class="card"><span class="tag">3 · 考滿了</span><h3>九成五以後，差一兩分沒有意義</h3><p>Verified 最高已經到 95%，剩下的題目很多是題目本身有瑕疵。第三方 vals.ai 重測時，好幾個模型都在 95% 上下，它在 2026 年 9 月乾脆停止對新模型跑這份考卷。這時候 1–2 分的差距，常常只是誤差。所以業界開始改用更難的 SWE-bench Pro、Terminal-Bench 等新考卷。</p></article>
+      <article class="card"><span class="tag">4 · 各考各的</span><h3>每家挑對自己有利的考試</h3><p>2026 年秋天，Anthropic 的發表表格主打 Terminal-Bench、GDPval；OpenAI 的 GPT-6 主打 DeepSWE；Google 也有自己的組合。考卷不同就很難直接比，而且表格上的對手分數，常常是從對方發表文抄來的。</p></article>
+      <article class="card"><span class="tag">5 · 分數不是體驗</span><h3>考得好，不代表用得順</h3><p>價格、速度、會不會亂改你沒叫它改的地方、講話囉不囉唆，這些考卷都量不到。很多工程師最後是看自己的專案用起來順不順手。</p></article>
+      <article class="card tipcard"><span class="tag">那要怎麼看？</span><h3>三個習慣</h3><p>看趨勢，不看單一分數；優先看第三方用同一套設定重測的榜單（例如 Scale 的 SWE-bench Pro、vals.ai、LMArena 的使用者投票）；最後拿自己的工作試一週。</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="bench">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">02 · 能力曲線</span>
+      <h2>寫程式的能力，兩年從五成到九成</h2>
+      <p class="lead">SWE-bench Verified 是一份 500 題的考卷：每題是真實開源專案的 GitHub issue，AI 要自己改程式，再用專案原本的測試判定有沒有修好。2024 年底最好的模型修得好大約一半，2026 年中最高已到 95%。</p>
+      <p class="elder"><b>白話說</b>像讓學徒去修 500 件客人真的送來的故障品，修好幾件就算幾分。</p>
+    </div>
+    <div class="chart-box">
+      <div class="series-toggle" id="toggles" role="group" aria-label="顯示或隱藏系列"></div>
+      <div class="chart-scroll" id="chartScroll"><svg id="chart" viewBox="0 0 900 460" role="img" aria-label="各家旗艦模型 SWE-bench Verified 分數隨時間變化"></svg></div>
+      <p class="swipe">← 左右滑動看完整曲線</p>
+      <p class="tip" id="tip" aria-live="polite">點圓點，看是哪個模型；下方名冊會同步標出來。</p>
+    </div>
+
+    <div class="grid3 mt">
+      <article class="card"><span class="tag">看什麼</span><h3>線往上的速度</h3><p>2024 年底最好的模型修得好大約一半的題目，到 2026 年各家旗艦都在八成以上。這段時間正好是 agent 工具爆發的時候，兩件事互相推動。</p></article>
+      <article class="card"><span class="tag">看什麼</span><h3>中國那條線的距離</h3><p>中國模型一開始落後一大截，2025 年起差距快速縮小，多數還是開放權重。差距怎麼縮小的，見<a href="china.html">追趕與蒸餾</a>那頁。</p></article>
+      <article class="card"><span class="tag">注意</span><h3>這是廠商自己報的分數</h3><p>各家測的設定不同（思考預算、agent 外殼、重試次數），不能逐點精確比較，看趨勢就好。第三方重測通常會低幾分，而這份考卷已經快被考滿，新的比較改看 Pro。</p></article>
+    </div>
+    <p class="caveat mt" id="chartsrc"></p>
+  </div>
+</section>
+
+<section class="s gutter" id="matrix">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">03 · 同一張表上比</span>
+      <h2>2026 年 11 月，各家主力模型對照</h2>
+      <p class="lead">這張表盡量只用第三方的數字：Artificial Analysis 用同一套設定重測的綜合指數和 Terminal-Bench，加上 LMArena 由使用者匿名投票的排名。點欄位名稱可以排序。</p>
+    </div>
+    <div class="mx-box">
+      <div class="mx-scroll"><table class="mx" id="mx">
+        <thead><tr>
+          <th scope="col" data-k="1">模型</th>
+          <th scope="col" data-k="3" class="num">綜合指數<small>AA v5</small></th>
+          <th scope="col" data-k="4" class="num">終端機任務<small>Terminal-Bench 4.0</small></th>
+          <th scope="col" data-k="5" class="num">使用者投票<small>LMArena 文字</small></th>
+          <th scope="col" data-k="7" class="num">價格<small>每百萬 token 輸入／輸出</small></th>
+        </tr></thead>
+        <tbody></tbody>
+      </table></div>
+      <p class="swipe">← 左右滑動看全部欄位</p>
+      <dl class="mx-key">
+        <dt>綜合指數</dt><dd>Artificial Analysis 把十幾項考試（推理、知識、寫程式、agent）用同一套設定重測後算出的總分，愈高愈好。</dd>
+        <dt>終端機任務</dt><dd>讓 AI 在終端機裡完成真實工作（裝套件、修設定、跑資料），比 SWE-bench 更接近 agent 的日常。這裡用第三方重測的分數。</dd>
+        <dt>使用者投票</dt><dd>LMArena 讓使用者同時看兩個匿名模型的回答，選比較好的，再換算成類似棋賽的積分。量的是「人覺得哪個好」，不是對錯。</dd>
+        <dt>價格</dt><dd>API 定價，美元。訂閱方案（例如每月 20 美元）另計。</dd>
+      </dl>
+      <p class="caveat">2026 年 11 月初的快照。數字取自 Artificial Analysis、LMArena 公開榜單，經 felloai.com、kingy.ai、handicraftm.com 等網站彙整轉載，各站之間有 1–3 分的落差，排名隨時在變。「—」表示查到的資料裡沒有這一項。綠色標記為開放權重模型。</p>
+    </div>
+
+    <div class="s-head measure mt2">
+      <span class="eyebrow">對照 · 廠商自己的表</span>
+      <h3 class="h2s">同一批模型，換成廠商自己出的表</h3>
+      <p class="lead">下面是 Anthropic 在 Opus 5.5 發表文裡放的表。同樣是 Terminal-Bench 4.0，Opus 5.5 自報 66.4%，第三方重測大約 60%；而且表上挑的考試，大多是自家模型領先的項目。</p>
+    </div>
+    <div class="mx-scroll"><table class="mx vt">
+      <thead><tr><th scope="col">考試</th><th scope="col" class="num">Opus 5.5</th><th scope="col" class="num">Fable 5.1</th><th scope="col" class="num">Opus 5</th><th scope="col" class="num">GPT-6 Astra</th><th scope="col" class="num">GPT-5.6 Sol</th></tr></thead>
+      <tbody>
+        <tr><td>Terminal-Bench 4.0</td><td class="num"><b>66.4%</b></td><td class="num">55.8%</td><td class="num">52.3%</td><td class="num">57.9%</td><td class="num">37.3%</td></tr>
+        <tr><td>GDPval-AA（知識工作）</td><td class="num"><b>1846</b></td><td class="num">1735</td><td class="num">1708</td><td class="num">1542</td><td class="num">1588</td></tr>
+        <tr><td>Humanity's Last Exam（可用工具）</td><td class="num"><b>67.7%</b></td><td class="num">65.6%</td><td class="num">63.6%</td><td class="num">57.2%</td><td class="num">—</td></tr>
+        <tr><td>AutomationBench</td><td class="num">40.0%</td><td class="num">31.4%</td><td class="num">26.9%</td><td class="num"><b>41.4%</b></td><td class="num">28.8%</td></tr>
+        <tr><td>Terminal-Bench-Science</td><td class="num">58.7%</td><td class="num">52.6%</td><td class="num">29.0%</td><td class="num"><b>64.6%</b></td><td class="num">22.4%</td></tr>
+      </tbody>
+    </table></div>
+    <p class="caveat">來源：Anthropic〈Claude Opus 5.5〉（2026/9/22）。GPT 欄位是 Anthropic 引用 OpenAI 公布的數字。</p>
+  </div>
+</section>
+
+<section class="s gutter" id="strengths">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">04 · 誰擅長什麼</span>
+      <h2>如果只能挑一個，看你要拿來做什麼</h2>
+      <p class="lead">綜合上面的第三方數字、廠商自己的表，以及多個評測網站的評語（2026 年 11 月）。這是大方向，不是定論。</p>
+    </div>
+    <div class="good">
+      <article class="card" style="--c:var(--l-skills)"><span class="tag">寫程式、長時間的 agent 工作</span><h3>Claude Opus 5.5</h3><p>多個評測網站評為目前綜合最強、寫程式最好的公開模型；第三方綜合指數在公開可用的模型裡最高。比上一代 Opus 5 便宜約四成。<b>想省錢</b>可以先試 Sonnet 5.5，終端機任務分數甚至更高，價格只要一半。</p></article>
+      <article class="card" style="--c:var(--text)"><span class="tag">最難的推理、數學、科學</span><h3>GPT-6 Astra</h3><p>ARC-AGI-2（抽象推理謎題）第三方測到 95%，OpenAI 自報的高難度數學測驗也領先；多個網站評它是「最難的推理題」首選。價格和 Fable 同級，偏貴。日常寫程式可改用 GPT-6.1 Sol，價格五分之一。</p></article>
+      <article class="card" style="--c:var(--l-hist)"><span class="tag">長文件、影片、一般使用者喜好</span><h3>Gemini 4 Argon</h3><p>LMArena 使用者投票在公開模型裡排第一，代表一般人最常覺得它的回答比較好；長文件、長影片、財務法律類文件是它被推薦的強項。目前優惠價很有競爭力。</p></article>
+      <article class="card" style="--c:var(--l-skills)"><span class="tag">寫作</span><h3>Claude Fable 5.1</h3><p>多個網站評為寫作最好的模型，適合長篇、重風格的文字工作。但它是 Anthropic 最貴的一級，第三方綜合指數反而不如 Opus 5.5，寫程式通常不必用到它。</p></article>
+      <article class="card" style="--c:var(--l-new)"><span class="tag">大量、便宜的日常任務</span><h3>GPT-6 Luna、DeepSeek V4.1 Flash、Gemini 3.8 Flash</h3><p>價格只有旗艦的幾十分之一，適合分類、摘要、翻譯這種量大但不難的工作。Cursor 的 Auto 模式就是把簡單請求派給這一級。</p></article>
+      <article class="card" style="--c:var(--l-mem)"><span class="tag">想自己架、要開放權重</span><h3>Kimi K3.1 Pro、GLM-5.3、DeepSeek V4</h3><p>可以下載權重放在自己的伺服器上。Kimi K3.1 Pro 的終端機任務分數甚至排在前段。要注意資料存放和內容審查的問題，見<a href="china.html#faq">追趕與蒸餾</a>那頁。</p></article>
+    </div>
+    <p class="elder mt"><b>白話說</b><span>就像找醫生：沒有一位什麼都最強，先想清楚要看哪一科。一般家用，免費版的 Claude、ChatGPT、Gemini 差距不大，挑一個用得順手的就好。</span></p>
+    <p class="caveat mt">還有兩個更強、但一般人用不到的模型：Google 的 Gemini 4 Carbon 和 Anthropic 的 Mythos，都只開放給特定的資安合作夥伴。</p>
+  </div>
+</section>
+
+
+<section class="s gutter" id="roster-sec">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">05 · 模型名冊</span>
+      <h2>每個模型叫什麼、<br>哪時出、考幾分</h2>
+      <p class="lead">2026 年起各家都把模型分成好幾級，名字也愈來愈不像版本號。先看命名，再看名冊。</p>
+    </div>
+    <div class="names">
+      <article class="nm" style="--c:var(--l-skills)"><span class="who">Anthropic · Claude</span>
+        <dl><dt>Fable</dt><dd>2026 年 6 月新增，目前最高的一級</dd><dt>Opus</dt><dd>大型旗艦，寫程式和 agent 的主力</dd><dt>Sonnet</dt><dd>中型，速度和價格平衡</dd><dt>Haiku</dt><dd>小型，最快最便宜</dd><dt>Mythos</dt><dd>只開放給特定資安合作夥伴</dd></dl></article>
+      <article class="nm" style="--c:var(--text)"><span class="who">OpenAI · GPT</span>
+        <dl><dt>Sol</dt><dd>GPT-5.6 起的三級之首，最強；到 GPT-6 時，上面多了 Astra</dd><dt>Terra</dt><dd>中間一級，日常主力</dd><dt>Luna</dt><dd>快又便宜的一級</dd><dt>Astra</dt><dd>GPT-6 的旗艦（2026 年 9 月）</dd><dt>o 系列</dt><dd>2024–2025 年的推理模型（o1、o3）</dd></dl></article>
+      <article class="nm" style="--c:var(--l-hist)"><span class="who">Google · Gemini</span>
+        <dl><dt>Pro</dt><dd>旗艦</dd><dt>Flash</dt><dd>快又便宜</dd><dt>Gemini 4 Argon</dt><dd>2026 年 9 月的新一代頂級模型</dd></dl></article>
+      <article class="nm" style="--c:var(--l-mem)"><span class="who">中國各家</span>
+        <dl><dt>DeepSeek</dt><dd>V 系列通用、R 系列推理；V4 分 Pro 和 Flash</dd><dt>Kimi</dt><dd>月之暗面，K 系列</dd><dt>Qwen</dt><dd>阿里巴巴，Max 是最大的一級</dd><dt>GLM · MiniMax</dt><dd>智譜、MiniMax，主打 agent</dd></dl></article>
+    </div>
+
+    <div class="roster-box mt">
+      <div class="roster-top">
+        <div class="tabs" id="rosterTabs" role="group" aria-label="篩選廠商">
+          <button type="button" data-v="all" aria-pressed="true">全部</button>
+          <button type="button" data-v="a" aria-pressed="false">Anthropic</button>
+          <button type="button" data-v="o" aria-pressed="false">OpenAI</button>
+          <button type="button" data-v="g" aria-pressed="false">Google</button>
+          <button type="button" data-v="c" aria-pressed="false">中國</button>
+        </div>
+      </div>
+      <div class="roster-head" aria-hidden="true"><span>模型</span><span>發表</span><span>Verified</span><span>Pro</span></div>
+      <ol class="roster" id="roster"></ol>
+      <p class="caveat"><b>Verified</b>：上面那份 500 題考卷。<b>Pro</b>：Scale AI 出的新考卷，題目更長、更難，也比較不會被模型「背過」，同一個模型的分數通常低一二十分。2026 年 2 月 OpenAI 宣布不再公布 Verified 分數，理由是題目已經洩漏進訓練資料、部分測試本身有錯，改報 Pro。所以 OpenAI 2026 年的模型只有 Pro 分數，GPT-6 系列則主要公布其他考試，這兩欄都是「—」。</p>
+    </div>
+
+  </div>
+</section>
+
+<section class="s gutter" id="refs">
+  <div class="frame measure">
+    <div class="s-head"><span class="eyebrow">06 · 資料來源</span><h2>數字從哪來</h2></div>
+    <ul class="refs">
+      <li>各家發表文章與模型卡（OpenAI、Anthropic、Google、DeepSeek、Moonshot、Alibaba、Zhipu、MiniMax），2024–2026。</li>
+      <li>Anthropic〈Claude Opus 4.6〉（2026/2/5）、〈Claude Opus 4.7〉（2026/4/16）、〈Claude Opus 4.8〉（2026/5/28）、〈Claude Opus 5〉（2026/7/24）、〈Claude Opus 5.5〉（2026/9/22）。</li>
+      <li>OpenAI〈Introducing GPT-5.2〉（2025/12/11）、〈Why we no longer evaluate SWE-bench Verified〉（2026/2/23）。</li>
+      <li>vals.ai SWE-bench Verified 第三方重測（2026/9/1 停止更新）；Scale AI SWE-bench Pro。</li>
+      <li>Artificial Analysis 綜合指數與 Terminal-Bench；LMArena 文字排行（2026/11 初，經 felloai.com、kingy.ai、handicraftm.com、onyx.app 彙整）。</li>
+      <li>名冊分數彙整：llm-stats.com、benchlm.ai、morphllm.com（2026/11 查詢）。</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer class="gutter"><div class="frame">寫於 2026 年 11 月。</div></footer>
+
+<script>
+(function () {
+  "use strict";
+  /* SWE-bench Verified at launch, vendor-reported. [label, "YYYY-MM", score, estMonth?] */
+  var SERIES = [
+    {"key": "a", "name": "Anthropic", "color": "var(--l-skills)", "pts": [["Claude 3.5 Sonnet（新版）", "2024-10", 49.0], ["Claude 3.7 Sonnet", "2025-02", 62.3], ["Claude Opus 4", "2025-05", 72.5], ["Claude Opus 4.1", "2025-08", 74.5], ["Claude Sonnet 4.5", "2025-09", 77.2], ["Claude Opus 4.5", "2025-11", 80.9], ["Claude Opus 4.6", "2026-02", 80.8], ["Claude Opus 4.8", "2026-05", 88.6], ["Claude Fable 5", "2026-06", 95.0]]},
+    {"key": "o", "name": "OpenAI", "color": "var(--text)", "dy": -10, "pts": [["o1", "2024-12", 48.9], ["o3", "2025-04", 69.1], ["GPT-5", "2025-08", 74.9], ["GPT-5.1", "2025-11", 76.3], ["GPT-5.2", "2025-12", 80.0]]},
+    {"key": "g", "name": "Google", "color": "var(--l-hist)", "dy": 14, "pts": [["Gemini 2.5 Pro", "2025-03", 63.8], ["Gemini 3 Pro", "2025-11", 76.2], ["Gemini 3.1 Pro", "2026-02", 80.6]]},
+    {"key": "c", "name": "中國最佳", "color": "var(--l-mem)", "dy": -2, "pts": [["DeepSeek V3", "2024-12", 42.0], ["DeepSeek R1", "2025-01", 49.2], ["Kimi K2", "2025-07", 65.8], ["Kimi K2 Thinking", "2025-11", 71.3], ["DeepSeek V4 Pro", "2026-08", 80.6, 1]]}
+  ];
+  var EVENTS = [["2024-11", "MCP"], ["2025-01", "DeepSeek R1"], ["2025-05", "Claude Code 正式版"], ["2026-02", "OpenAI 停報 Verified"]];
+  /* roster: [vendor, name, date label, sortKey, tier, verified|null, pro|null, note] */
+  var ROSTER = [
+    ["a","Claude 3.5 Sonnet（新版）","2024.10","2024-10","中型",49.0,null,""],
+    ["a","Claude 3.7 Sonnet","2025.02","2025-02","中型",62.3,null,""],
+    ["a","Claude Opus 4","2025.05","2025-05","旗艦",72.5,null,"與 Claude Code 正式版同時推出"],
+    ["a","Claude Opus 4.1","2025.08","2025-08","旗艦",74.5,null,""],
+    ["a","Claude Sonnet 4.5","2025.09","2025-09","中型",77.2,null,""],
+    ["a","Claude Haiku 4.5","2025.10","2025-10","小型",73.3,null,""],
+    ["a","Claude Opus 4.5","2025.11","2025-11","旗艦",80.9,null,""],
+    ["a","Claude Opus 4.6","2026.02","2026-02","旗艦",80.8,null,""],
+    ["a","Claude Opus 4.7","2026.04","2026-04","旗艦",87.6,64.3,""],
+    ["a","Claude Opus 4.8","2026.05","2026-05","旗艦",88.6,69.2,""],
+    ["a","Claude Fable 5","2026.06","2026-06","最高一級",95.0,80.0,"6/12 起因出口管制命令暫停，7/1 恢復"],
+    ["a","Claude Sonnet 5","2026.06","2026-06","中型",85.2,63.2,""],
+    ["a","Claude Opus 5","2026.07","2026-07","旗艦",null,79.2,"Verified 各家彙整說法不一，這裡不列"],
+    ["a","Claude Opus 5.5","2026.09","2026-09","旗艦",null,89.9,"與 GPT-6 Sol、Luna 同一天發表"],
+    ["a","Claude Mythos Preview","2026 上半年","2026-04","限合作夥伴",93.9,77.8,"只開放給資安合作夥伴，之後推出 Mythos 5"],
+    ["o","o1","2024.12","2024-12","推理",48.9,null,""],
+    ["o","o3","2025.04","2025-04","推理",69.1,null,""],
+    ["o","GPT-5","2025.08","2025-08","旗艦",74.9,null,""],
+    ["o","GPT-5.1","2025.11","2025-11","旗艦",76.3,null,""],
+    ["o","GPT-5.2","2025.12","2025-12","旗艦",80.0,null,"OpenAI 最後一個公布 Verified 的旗艦"],
+    ["o","GPT-5.5","2026 春","2026-04","旗艦",null,58.6,""],
+    ["o","GPT-5.6 Sol","2026.07","2026-07","最強一級",null,64.6,"GPT-5.6 起分 Sol／Terra／Luna 三級"],
+    ["o","GPT-5.6 Terra","2026.07","2026-07","中間一級",null,63.4,""],
+    ["o","GPT-5.6 Luna","2026.07","2026-07","快又便宜",null,62.7,""],
+    ["o","GPT-6 Astra","2026.09","2026-09","旗艦",null,null,"9/3 發表，主要公布其他考試"],
+    ["o","GPT-6 Sol","2026.09","2026-09","中階",null,null,"9/22 發表"],
+    ["o","GPT-6 Luna","2026.09","2026-09","小型",null,null,"9/22 發表"],
+    ["o","GPT-6.1 Sol","2026.09","2026-09","中階",null,null,"9/29 發表"],
+    ["o","GPT-6.1 Terra","2026.10","2026-10","中間一級",null,null,"10/26 發表"],
+    ["g","Gemini 2.5 Pro","2025.03","2025-03","旗艦",63.8,null,""],
+    ["g","Gemini 3 Pro","2025.11","2025-11","旗艦",76.2,null,""],
+    ["g","Gemini 3 Flash","2025.12","2025-12","快又便宜",78.0,null,""],
+    ["g","Gemini 3.1 Pro","2026.02","2026-02","旗艦",80.6,54.2,""],
+    ["g","Gemini 4 Argon","2026.09","2026-09","頂級",null,null,"9/30 發表，主要公布其他考試"],
+    ["c","DeepSeek V3","2024.12","2024-12","通用",42.0,null,"開放權重"],
+    ["c","DeepSeek R1","2025.01","2025-01","推理",49.2,null,"開放權重"],
+    ["c","Kimi K2","2025.07","2025-07","通用",65.8,null,"開放權重"],
+    ["c","Kimi K2 Thinking","2025.11","2025-11","推理",71.3,null,"開放權重"],
+    ["c","GLM-5","2026","2026-01","旗艦",77.8,null,"開放權重，月份未確認"],
+    ["c","Kimi K2.6","2026","2026-05","旗艦",80.2,58.6,"開放權重，月份未確認"],
+    ["c","Qwen3.7 Max","2026","2026-05","旗艦",80.4,60.6,"開放權重，月份未確認"],
+    ["c","MiniMax M3","2026","2026-05","旗艦",80.5,59.0,"開放權重，月份未確認"],
+    ["c","DeepSeek V4 Pro","2026.08","2026-08","旗艦",80.6,55.4,"開放權重，月份由版本號推估"],
+    ["c","Qwen3.8 Max","2026","2026-09","旗艦",null,67.7,"月份未確認"]
+  ];
+  var VN = { a: "Anthropic", o: "OpenAI", g: "Google", c: "中國" };
+  var SRC = "資料來源：Verified 分數為各家發表時公布（廠商自報，非第三方重測）。2024–2025 年取自各家發表文章與模型卡；2026 年取自 llm-stats.com、benchlm.ai、morphllm.com 彙整，OpenAI〈Why we no longer evaluate SWE-bench Verified〉（2026/2/23），以及 GPT-5.6、GPT-6、Opus 5.5、Gemini 4 Argon 的發表報導（2026/11 查詢）。Pro 分數多為廠商用自家 agent 外殼測的，彼此只能大致比較。曲線只畫發表月份能確認、且有 Verified 分數的旗艦；空心圓表示月份由版本號推估。縱軸從 30% 起。";
+  var svg = document.getElementById("chart"), NS = "http://www.w3.org/2000/svg";
+  var W = 900, H = 460, m = { l: 56, r: 130, t: 24, b: 48 };
+  var t0 = mon("2024-07"), t1 = mon("2026-12"), y0 = 30, y1 = 100;
+  function mon(s) { var p = s.split("-"); return +p[0] * 12 + (+p[1] - 1); }
+  function X(s) { return m.l + (mon(s) - t0) / (t1 - t0) * (W - m.l - m.r); }
+  function Y(v) { return m.t + (1 - (v - y0) / (y1 - y0)) * (H - m.t - m.b); }
+  function el(n, a, parent) { var e = document.createElementNS(NS, n); for (var k in a) e.setAttribute(k, a[k]); (parent || svg).appendChild(e); return e; }
+  var hidden = {};
+
+  function draw() {
+    svg.innerHTML = "";
+    var g = el("g", { "class": "grid" });
+    for (var v = y0; v <= y1; v += 10) {
+      el("line", { x1: m.l, x2: W - m.r, y1: Y(v), y2: Y(v) }, g);
+      el("text", { x: m.l - 10, y: Y(v) + 5, "text-anchor": "end" }).textContent = v + "%";
+    }
+    ["2024-07", "2025-01", "2025-07", "2026-01", "2026-07"].forEach(function (s) {
+      el("text", { x: X(s), y: H - m.b + 28, "text-anchor": "middle" }).textContent = s.replace("-", ".");
+    });
+    var ev = el("g", { "class": "event" });
+    EVENTS.forEach(function (e, i) {
+      el("line", { x1: X(e[0]), x2: X(e[0]), y1: m.t, y2: H - m.b }, ev);
+      el("text", { x: X(e[0]) + 5, y: H - m.b - 10 - (i % 2) * 20 }, ev).textContent = e[1];
+    });
+    SERIES.forEach(function (s) {
+      var gs = el("g", { "class": "series" + (hidden[s.key] ? " dim" : "") });
+      var d = s.pts.map(function (p, i) { return (i ? "L" : "M") + X(p[1]).toFixed(1) + " " + Y(p[2]).toFixed(1); }).join(" ");
+      el("path", { d: d, stroke: s.color }, gs);
+      s.pts.forEach(function (p) {
+        var c = el("circle", { cx: X(p[1]), cy: Y(p[2]), r: 6, fill: p[3] ? "var(--surface)" : s.color, stroke: p[3] ? s.color : "var(--surface)", tabindex: 0 }, gs);
+        var show = function () { mark(p[0]); document.getElementById("tip").innerHTML = "<b>" + p[0] + "</b>　" + s.name + "　" + p[1].replace("-", ".") + "　SWE-bench Verified <b>" + p[2].toFixed(1) + "%</b>" + (p[3] ? "（月份推估）" : ""); };
+        c.addEventListener("mouseenter", show); c.addEventListener("focus", show); c.addEventListener("click", show);
+      });
+      var last = s.pts[s.pts.length - 1];
+      el("text", { x: X(last[1]) + 9, y: Y(last[2]) + 4 + (s.dy || 0), "class": "endlabel", fill: s.color }, gs).textContent = s.name;
+    });
+  }
+  var tg = document.getElementById("toggles");
+  SERIES.forEach(function (s) {
+    var b = document.createElement("button"); b.type = "button"; b.setAttribute("aria-pressed", "true");
+    b.innerHTML = '<i style="--c:' + s.color + '"></i>' + s.name;
+    b.onclick = function () { hidden[s.key] = !hidden[s.key]; b.setAttribute("aria-pressed", hidden[s.key] ? "false" : "true"); draw(); };
+    tg.appendChild(b);
+  });
+  document.getElementById("chartsrc").textContent = SRC;
+  draw();
+
+  /* roster */
+  var list = document.getElementById("roster"), vf = "all";
+  function cell(v, max) { return v == null ? '<span class="na">—</span>' : '<b>' + v.toFixed(1) + '%</b><i style="--w:' + v + '%"></i>'; }
+  function render() {
+    var rows = ROSTER.filter(function (r) { return vf === "all" || r[0] === vf; }).sort(function (x, y) { return x[3] < y[3] ? 1 : x[3] > y[3] ? -1 : 0; });
+    list.innerHTML = rows.map(function (r) {
+      return '<li data-n="' + r[1] + '" style="--c:' + ({a:"var(--l-skills)",o:"var(--text)",g:"var(--l-hist)",c:"var(--l-mem)"})[r[0]] + '">' +
+        '<div class="rn"><b>' + r[1] + '</b><span class="rt">' + VN[r[0]] + ' · ' + r[4] + '<span class="rdm"> · ' + r[2] + '</span></span>' + (r[7] ? '<span class="rx">' + r[7] + '</span>' : '') + '</div>' +
+        '<span class="rd">' + r[2] + '</span><span class="rs v">' + cell(r[5]) + '</span><span class="rs p">' + cell(r[6]) + '</span></li>';
+    }).join("");
+  }
+  function mark(name) {
+    if (vf !== "all") { vf = "all"; setTabs(); render(); }
+    [].forEach.call(list.children, function (li) { li.classList.toggle("hl", li.dataset.n === name); });
+  }
+  var tabs = [].slice.call(document.querySelectorAll("#rosterTabs button"));
+  function setTabs() { tabs.forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.v === vf ? "true" : "false"); }); }
+  tabs.forEach(function (b) { b.addEventListener("click", function () { vf = b.dataset.v; setTabs(); render(); }); });
+  render();
+
+
+  /* matrix */
+  var MX = [["a", "Claude Opus 5.5", "旗艦", 59.1, 59.6, 1509, 4, 20, 0, ""], ["a", "Claude Fable 5.1", "最高一級", 49.7, 55.1, 1501, 10, 50, 0, ""], ["a", "Claude Sonnet 5.5", "中型", null, 63.6, null, 2, 10, 0, ""], ["o", "GPT-6 Astra", "旗艦", 56.9, 59.6, 1476, 10, 50, 0, ""], ["o", "GPT-6.1 Sol", "中階", 54.6, 56.1, null, 2, 10, 0, ""], ["o", "GPT-6.1 Terra", "中間一級", 51.0, 55.6, null, 1, 5, 0, ""], ["o", "GPT-6 Luna", "小型", 27.9, null, null, 0.1, 0.5, 0, ""], ["g", "Gemini 4 Argon", "頂級", 50.4, 57.1, 1520, 2, 10, 0, "優惠價到 11/30，之後 $4／$20"], ["g", "Gemini 4 Carbon", "限量", 60.0, 65.2, 1528, null, null, 0, "尚未公開提供"], ["g", "Gemini 3.8 Flash", "快又便宜", 30.8, 19.7, null, 0.75, 3.75, 0, "優惠價"], ["c", "Kimi K3.1 Pro", "旗艦", 46.5, 67.2, null, 2, 10, 1, ""], ["c", "Qwen3.8 Max", "旗艦", 33.6, null, 1481, 2, 6, 0, ""], ["c", "DeepSeek V4.1 Flash", "快又便宜", 32.6, 33.8, null, 0.3, 1.2, 1, ""], ["c", "GLM-5.3", "旗艦", 31.7, 41.9, null, 1.4, 4.4, 1, ""]];
+  var CC = {a:"var(--l-skills)",o:"var(--text)",g:"var(--l-hist)",c:"var(--l-mem)"};
+  var mxBody = document.querySelector("#mx tbody"), sortK = 3;
+  var best = {}; [3,4,5].forEach(function (k) { best[k] = Math.max.apply(null, MX.map(function (r) { return r[k] || 0; })); });
+  function bar(v, k, max) { if (v == null) return '<span class="na">—</span>'; var w = k === 5 ? (v - 1400) / 1.4 : v / max * 100; return '<span class="bar' + (v === best[k] ? ' top' : '') + '"><b>' + (k === 5 ? v : v.toFixed(1)) + '</b><i style="--w:' + w.toFixed(0) + '%"></i></span>'; }
+  function price(r) { return r[6] == null ? '<span class="na">未公開</span>' : '$' + r[6] + '／$' + r[7]; }
+  function drawMx() {
+    var rows = MX.slice().sort(function (a, b) {
+      if (sortK === 1) return a[1] < b[1] ? -1 : 1;
+      var x = a[sortK], y = b[sortK];
+      if (sortK === 7) { x = x == null ? 1e9 : x; y = y == null ? 1e9 : y; return x - y; }
+      return (y == null ? -1 : y) - (x == null ? -1 : x);
+    });
+    mxBody.innerHTML = rows.map(function (r) {
+      return '<tr style="--c:' + CC[r[0]] + '"><td><b>' + r[1] + (r[8] ? '<span class="open">開放權重</span>' : '') + '</b><span>' + r[2] + (r[9] ? '・' + r[9] : '') + '</span></td>' +
+        '<td class="num">' + bar(r[3], 3, 70) + '</td><td class="num">' + bar(r[4], 4, 80) + '</td><td class="num">' + bar(r[5], 5) + '</td><td class="num">' + price(r) + '</td></tr>';
+    }).join("");
+    document.querySelectorAll("#mx th[data-k]").forEach(function (th) { if (+th.dataset.k === sortK) th.setAttribute("aria-sort", sortK === 1 || sortK === 7 ? "ascending" : "descending"); else th.removeAttribute("aria-sort"); });
+  }
+  document.querySelectorAll("#mx th[data-k]").forEach(function (th) {
+    th.tabIndex = 0;
+    var go = function () { sortK = +th.dataset.k; drawMx(); };
+    th.addEventListener("click", go); th.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+  });
+  drawMx();
+  /* phones: open the chart scrolled to the newest data */
+  var sc = document.getElementById("chartScroll");
+  requestAnimationFrame(function () { sc.scrollLeft = sc.scrollWidth; });
+})();
+</script>
+</body>
+</html>

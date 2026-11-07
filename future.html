@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>下一個瓶頸 · AI 長出手了</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700;900&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+.four { display: grid; gap: .75rem; grid-template-columns: repeat(2, minmax(0,1fr)); }
+@media (min-width: 900px) { .four { grid-template-columns: repeat(4, minmax(0,1fr)); } }
+.four a { text-decoration: none; color: inherit; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 1rem 1.1rem; display: grid; gap: .25rem; box-shadow: var(--shadow); }
+.four a:hover { border-color: var(--text); }
+.four .k { font-family: var(--mono); font-size: .82rem; color: var(--c); }
+.four b { font-size: 1.15rem; }
+.four span { font-size: .9rem; color: var(--muted); }
+
+.vbars { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: .75rem; align-items: end; height: 15rem; padding: 1.8rem .25rem 0; border-bottom: 1px solid var(--line); }
+.vb { position: relative; display: flex; flex-direction: column; justify-content: flex-end; height: 100%; text-align: center; }
+.vb .bar { display: block; flex: none; border-radius: 8px 8px 0 0; background: var(--c); height: var(--h); min-height: 4px; transition: height .8s cubic-bezier(.2,.7,.2,1); }
+.vb .val { position: absolute; left: 0; right: 0; bottom: calc(var(--h) + .3rem); font-family: var(--mono); font-size: .9rem; font-variant-numeric: tabular-nums; }
+.vlabels { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: .75rem; padding: .5rem .25rem 0; text-align: center; font-size: .82rem; color: var(--muted); }
+
+.calc { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); padding: 1.25rem; display: grid; gap: 1rem; }
+.calc label { display: grid; gap: .4rem; font-size: .95rem; }
+.calc label span { display: flex; justify-content: space-between; gap: 1rem; }
+.calc label b { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.calc input[type=range] { width: 100%; accent-color: var(--accent); min-height: 32px; }
+.calc select { font: inherit; padding: .45rem .6rem; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+.outs { display: grid; gap: .6rem; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); }
+.out { background: var(--bg); border-radius: 12px; padding: .8rem .9rem; display: grid; gap: .1rem; min-width: 0; }
+.out span { font-size: .82rem; color: var(--muted); }
+.out b { font-family: var(--mono); font-size: 1.3rem; font-weight: 500; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.out.hl b { color: var(--accent); }
+.gauge { height: .9rem; background: var(--sunken); border-radius: 999px; overflow: hidden; position: relative; }
+.gauge i { position: absolute; inset: 0 auto 0 0; background: var(--c, var(--accent)); border-radius: 999px; transition: width .3s; }
+.gauge-row { display: grid; gap: .3rem; font-size: .85rem; color: var(--muted); }
+
+.facts { list-style: none; margin: 0; padding: 0; display: grid; gap: .7rem; }
+.facts li { display: grid; grid-template-columns: .3rem 1fr; gap: .9rem; }
+.facts li::before { content: ""; border-radius: 3px; background: var(--c, var(--accent)); }
+.facts b { display: block; }
+.facts span { color: var(--muted); font-size: .95rem; }
+.formula { font-family: var(--mono); font-size: .88rem; background: var(--bg); border-radius: 10px; padding: .7rem .9rem; overflow-x: auto; white-space: nowrap; }
+.sources { font-size: .88rem; color: var(--muted); display: grid; gap: .3rem; }
+.sources a { color: var(--muted); }
+</style>
+</head>
+<body>
+
+<nav class="nav gutter" aria-label="網站">
+  <div class="frame">
+    <a class="brand" href="index.html"><i></i><span>AI 長出手了</span></a>
+    <ul>
+      <li><a class="l" href="history.html"><span class="lg">時間線</span><span class="sh">時間線</span></a></li>
+      <li><a class="l" href="bench.html"><span class="lg">模型評比</span><span class="sh">評比</span></a></li>
+      <li><a class="l" href="tech.html"><span class="lg">它怎麼運作</span><span class="sh">原理</span></a></li>
+      <li><a class="l" href="china.html"><span class="lg">追趕與蒸餾</span><span class="sh">中國追趕</span></a></li>
+      <li><a class="l site-on" href="future.html"><span class="lg">下一個瓶頸</span><span class="sh">瓶頸</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero gutter">
+  <div class="frame" style="display:block">
+    <div class="hero-copy measure">
+      <span class="pill">PART 5 · <b>下一個瓶頸</b></span>
+      <h1>下一個瓶頸：<br><em>電、記憶體和硬碟</em></h1>
+      <p class="sub">模型愈來愈強，但要讓更多人、更長時間地用它，現實世界的資源開始跟不上：電網、資料中心、記憶體晶片、儲存空間。這一頁看這四件事，以及它們跟前面講的 context、影音模型有什麼關係。</p>
+    </div>
+    <div class="four mt" style="max-width:72rem">
+      <a href="#power" style="--c: var(--l-skills)"><span class="k">01</span><b>電力</b><span>資料中心用電 2030 年翻倍</span></a>
+      <a href="#dc" style="--c: var(--l-tools)"><span class="k">02</span><b>資料中心</b><span>一年砸超過 6,000 億美元</span></a>
+      <a href="#memory" style="--c: var(--l-hist)"><span class="k">03</span><b>記憶體</b><span>HBM 搶光，手機電腦跟著漲</span></a>
+      <a href="#storage" style="--c: var(--l-mem)"><span class="k">04</span><b>儲存</b><span>影音訓練讓硬碟賣到缺貨</span></a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section class="s gutter" id="power">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">01 · 電力</span>
+      <h2>資料中心用電，五、六年內翻一倍</h2>
+      <p class="lead">國際能源總署（IEA）估計，全球資料中心用電到 2030 年會翻倍，其中 AI 專用資料中心成長最快。</p>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <span class="tag">全球資料中心用電（TWh／年）</span>
+        <div class="vbars" id="vbars">
+          <div class="vb" style="--c: var(--l-sys); --h: 43.7%"><span class="val">415</span><span class="bar"></span></div>
+          <div class="vb" style="--c: var(--l-sys); --h: 51%"><span class="val">485</span><span class="bar"></span></div>
+          <div class="vb" style="--c: var(--l-skills); --h: 99.5%"><span class="val">945</span><span class="bar"></span></div>
+          <div class="vb" style="--c: var(--l-skills); --h: 100%"><span class="val">950</span><span class="bar"></span></div>
+        </div>
+        <div class="vlabels"><span>2024<br>實際</span><span>2025<br>實際</span><span>2030 預估<br>（2025 版）</span><span>2030 預估<br>（2026 版）</span></div>
+        <p class="caveat">IEA《Energy and AI》（2025/4）與 2026 年更新報告。刻度從 0 開始。2030 年約占全球用電 3%。</p>
+      </div>
+      <div class="prose">
+        <ul class="facts">
+          <li style="--c: var(--l-skills)"><div><b>2025 年資料中心用電成長 17%</b><span>AI 為主的資料中心成長 50%，同期全球總用電只成長約 3%。</span></div></li>
+          <li style="--c: var(--l-skills)"><div><b>機櫃愈來愈「燙」</b><span>IEA 指出 AI 伺服器的功率密度從 2020 到 2025 年增加約 11 倍，風扇散熱撐不住，液冷變成標配。</span></div></li>
+          <li style="--c: var(--accent)"><div><b>但每個任務的耗電在快速下降</b><span>IEA 2026 年更新提到，完成同一個 AI 任務的耗電每年至少降一個數量級。總用電還在漲，是因為用的人和任務成長得更快。</span></div></li>
+          <li style="--c: var(--l-tools)"><div><b>科技公司開始自己找電</b><span>Microsoft 與 Constellation 簽約重啟三哩島 1 號機（835 MW）；Google 與 Kairos、Amazon 與 X-energy 投資小型模組化核反應爐（SMR）；Meta 宣布最高 6.6 GW 的核能合作。</span></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="calc mt" id="powerCalc">
+      <span class="tag" style="font-family:var(--mono);font-size: .82rem;color:var(--muted)">換算器 · 一座 AI 資料中心有多耗電？</span>
+      <label for="gw"><span>資料中心規模（滿載功率）<b id="gwv">1.0 GW</b></span><input id="gw" type="range" min="0.1" max="10" step="0.1" value="1"></label>
+      <div class="outs">
+        <div class="out"><span>一年用電</span><b id="twh">8.8 TWh</b></div>
+        <div class="out hl"><span>約等於台灣全年用電的</span><b id="tw">3.1%</b></div>
+        <div class="out"><span>約等於幾戶台灣家庭一年</span><b id="homes">—</b></div>
+      </div>
+      <div class="gauge-row"><span>占台灣全年用電</span><div class="gauge"><i id="twg" style="width:3.1%"></i></div></div>
+      <p class="caveat">估算假設：全年滿載運轉（實際通常較低）；台灣全年用電以約 2,800 億度（280 TWh）、一般家庭一年約 4,000 度計。數字只用來感受規模。現在業界已經在蓋 1–5 GW 等級的園區。</p>
+    </div>
+    <div class="prose measure mt">
+      <p class="elder"><b>白話說</b><span>一座大型 AI 資料中心，用電量可以抵得上一兩百萬戶人家。所以現在蓋 AI 機房，第一個問題常常不是買不買得到晶片，而是電從哪裡來。</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="dc">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">02 · 資料中心與投資</span>
+      <h2>一年超過 6,000 億美元的建設潮</h2>
+      <p class="lead">2026 年初的預估，Amazon、Microsoft、Google、Meta、Oracle 五家的資本支出合計就超過 6,000 億美元，大約四分之三用在 AI 基礎設施。</p>
+    </div>
+    <div class="grid3">
+      <article class="card"><span class="tag">規模</span><h3>從 MW 到 GW</h3><p>傳統資料中心以數十 MW 計，AI 園區開始以 GW 計。2025 年 1 月宣布的 Stargate 計畫，目標投資高達 5,000 億美元。</p></article>
+      <article class="card"><span class="tag">真正的瓶頸</span><h3>變壓器、併網、冷卻</h3><p>晶片買得到，但電網接入要排隊好幾年，大型變壓器、渦輪發電機交期很長。液冷、儲能、自建電廠都成了選址條件。</p></article>
+      <article class="card"><span class="tag">跟技術頁的關係</span><h3>推論會比訓練更吃資源</h3><p>訓練是一次性的，推論是每個使用者、每一輪對話都要跑。agent 一次任務可能跑幾十次請求、每次都重送整份 context，總需求跟著使用量放大。</p></article>
+    </div>
+    <div class="s-head measure mt" style="margin-top:3rem">
+      <h3 style="margin:0;font-size:1.5rem">拉回台灣</h3>
+    </div>
+    <div class="grid3">
+      <article class="card"><span class="tag">晶片</span><h3>AI 晶片幾乎都在台灣做</h3><p>輝達、AMD、Google 的 AI 晶片，最先進的製程和 CoWoS 先進封裝主要都在台積電。這波建設潮，很大一部分訂單最後流到台灣。</p></article>
+      <article class="card"><span class="tag">電</span><h3>台灣自己也在煩惱電</h3><p>經濟部 2024 年表示，桃園以北不再核准 5MW 以上的大型資料中心用電，希望新的資料中心往中南部走。半導體擴廠加上 AI，讓供電成了長期話題。</p></article>
+      <article class="card"><span class="tag">記憶體</span><h3>漲價也是台灣廠的事</h3><p>南亞科、華邦電等台灣記憶體廠的報價，跟著這波 DRAM 漲價走；你買手機、電腦、記憶卡時感受到的價格，也是同一件事。</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="memory">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">03 · 記憶體</span>
+      <h2>context 愈長、人愈多，記憶體就愈不夠</h2>
+      <p class="lead">GPU 算得再快，模型權重和每段對話的 KV cache 都得放在旁邊的高頻寬記憶體（HBM）裡。<a href="tech.html#cache">它怎麼運作</a>那頁講的 prompt cache，存的就是這個。</p>
+    </div>
+    <div class="grid2">
+      <div class="prose">
+        <ul class="facts">
+          <li style="--c: var(--l-hist)"><div><b>HBM 很吃產能</b><span>Micron 主管表示，每 GB 的 HBM 大約要用掉一般 DRAM 三倍的晶圓產能。HBM 做愈多，手機、電腦用的 DRAM 就愈少。</span></div></li>
+          <li style="--c: var(--l-hist)"><div><b>2026 年產能早就賣完</b><span>SK hynix 在 2025 年 10 月的法說會說，2026 年的 HBM、DRAM、NAND 產能「基本上已售罄」。</span></div></li>
+          <li style="--c: var(--warn)"><div><b>一般人也感受得到</b><span>三星主管 2026 年 1 月表示缺貨「會影響所有人」；報導指一條 32GB DDR5 記憶體從 2025 年 9 月的 149 美元漲到 239 美元。電腦、手機漲價或縮規格，跟這有關。</span></div></li>
+        </ul>
+      </div>
+      <div class="col">
+        <div><div class="codehead"><span>KV cache 大小怎麼算</span><span>formula</span></div>
+        <p class="formula">每個 token = 2 (K,V) × 層數 × KV heads × head 維度 × 每數值位元組</p></div>
+        <p style="color:var(--muted);font-size:.95rem">以公開架構的 Llama 3 70B 為例（80 層、8 個 KV head、維度 128、BF16 每數值 2 bytes），每個 token 約 0.31 MB。</p>
+      </div>
+    </div>
+
+    <div class="calc mt" id="kvCalc">
+      <span class="tag" style="font-family:var(--mono);font-size: .82rem;color:var(--muted)">計算器 · 同時服務這些對話，要多少記憶體放 KV cache？</span>
+      <label for="ctx"><span>每段對話的 context 長度<b id="ctxv">128K tokens</b></span><input id="ctx" type="range" min="0" max="5" step="1" value="3"></label>
+      <label for="users"><span>同時在用的對話數<b id="userv">8</b></span><input id="users" type="range" min="1" max="64" step="1" value="8"></label>
+      <div class="outs">
+        <div class="out"><span>一段對話的 KV cache</span><b id="kvOne">—</b></div>
+        <div class="out hl"><span>全部對話合計</span><b id="kvAll">—</b></div>
+        <div class="out"><span>約等於幾張 80GB GPU 的記憶體</span><b id="gpus">—</b></div>
+      </div>
+      <div class="gauge-row"><span>對比：模型權重本身（70B × 2 bytes ≈ 140 GB）</span><div class="gauge"><i id="kvg" style="--c: var(--l-hist)"></i></div></div>
+      <p class="caveat">簡化估算，未計入量化、分頁管理（paged attention）、cache 壓縮等最佳化；實際服務會用這些技術大幅省記憶體。重點是比例：context 拉長 8 倍，記憶體需求也大約 8 倍。</p>
+    </div>
+    <div class="prose measure mt">
+      <p class="elder"><b>白話說</b><span>AI 回答你之前，要把整份筆記攤在桌上看。筆記愈厚、同時看筆記的人愈多，桌子就要愈大。現在全世界都在搶這種「桌子」，連帶手機、電腦的記憶體也變貴了。</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="storage">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">04 · 儲存與下一代模型</span>
+      <h2>文字快用完了，下一步是影音</h2>
+      <p class="lead">網路上品質好的公開文字有限，研究機構 Epoch AI 估計可能在本世紀 20 年代後半就被用完。下一代模型愈來愈依賴影片、聲音、合成資料和強化學習環境，而影音資料的體積比文字大好幾個數量級。</p>
+    </div>
+    <div class="grid3">
+      <article class="card"><span class="tag">影音進 context</span><h3>一小時影片 ≈ 百萬 token</h3><p>以 Gemini 公開的計算方式，一小時影片大約是 100 萬 token 的 context。影音模型要讀、要生成，都比文字耗更多記憶體和算力。</p></article>
+      <article class="card"><span class="tag">訓練資料</span><h3>從 TB 到 EB</h3><p>純文字訓練資料約在數十 TB 等級；影片資料集動輒 PB、EB。資料要存、要清洗、要反覆讀取，硬碟和 SSD 都要。</p></article>
+      <article class="card"><span class="tag">訓練過程</span><h3>checkpoint 一次就好幾 TB</h3><p>訓練中要定期存檔以防當機。估算：1 兆參數的模型連同最佳化器狀態，每個參數約 14 bytes，存一次約 14 TB，一次訓練會存很多次。</p></article>
+    </div>
+    <div class="prose measure mt">
+      <ul class="facts">
+        <li style="--c: var(--l-mem)"><div><b>硬碟賣到缺貨</b><span>Western Digital 執行長在 2026 年初表示，2026 年產能「差不多賣完了」，部分企業合約簽到 2028 年。報導指企業硬碟交期拉長到 12 個月。</span></div></li>
+        <li style="--c: var(--l-mem)"><div><b>大量改用 QLC 快閃</b><span>業界人士指雲端業者一年採購快閃儲存以數十到數百 EB 計，大容量 QLC SSD 開始取代部分硬碟。SSD 也因此跟著漲價。</span></div></li>
+        <li style="--c: var(--accent)"><div><b>模型訓練方向在變</b><span>原生多模態（同時聽、看、說）、能理解物理世界的「世界模型」、用強化學習在模擬環境裡練習做事。共同點是：資料更大、更耗算力，也更耗儲存。</span></div></li>
+      </ul>
+      <p class="elder"><b>白話說</b><span>以前 AI 讀的是書，現在開始看電影、聽廣播。一部電影的檔案，抵得上幾萬本書。所以全世界的硬碟都被買去裝這些影片了。</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="faq">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">05 · 常見問題</span>
+      <h2>這些對一般人有什麼影響？</h2>
+    </div>
+    <div class="faq measure">
+      <details><summary>電費會不會因為 AI 變貴？</summary><div class="a"><p>要看各地電網和法規。資料中心集中的地區，已經在討論新電廠、輸電線的成本該由誰負擔。IEA 也提醒，資料中心常集中在少數地區，對當地電網的壓力比全球數字看起來大。</p></div></details>
+      <details><summary>為什麼手機、電腦好像變貴了？</summary><div class="a"><p>記憶體工廠把產能優先給利潤更高的 HBM 和伺服器記憶體，消費性產品分到的變少，價格就上去了。這波短缺多數業者預期至少延續到 2027 年。</p></div></details>
+      <details><summary>AI 會不會一直這麼耗電？</summary><div class="a"><p>每個任務的耗電正在快速下降，模型也愈做愈有效率（例如前面講的 prompt cache、小模型、蒸餾）。但用的人和任務成長得更快，所以總用電短期內還會上升。長期會怎樣，現在沒有人說得準。</p></div></details>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="refs">
+  <div class="frame">
+    <div class="s-head measure"><span class="eyebrow">資料來源</span></div>
+    <div class="sources measure">
+      <a href="https://www.iea.org/reports/energy-and-ai">IEA · Energy and AI（2025/4）</a>
+      <a href="https://www.enlit.world/library/ai-and-data-centre-electricity-use-continue-to-surge-iea-finds">Enlit · IEA 2026 年更新報導（2026/4）</a>
+      <a href="https://www.networkworld.com/article/4113772/samsung-warns-of-memory-shortages-driving-industry-wide-price-surge-in-2026.html">Network World · Samsung warns of memory shortages（2026/1）</a>
+      <a href="https://www.gadgetreview.com/hard-drives-are-sold-out-for-2026-and-ai-data-centers-are-to-blame">GadgetReview · Hard drives are sold out for 2026（2026/2）</a>
+      <a href="https://www.datacenterdynamics.com/en/analysis/storage-wars-is-this-the-end-for-hard-drives-in-the-data-center/">DCD · Storage wars</a>
+      <a href="https://introl.com/blog/hyperscaler-capex-600b-2026-ai-infrastructure-debt-january-2026">Introl · Hyperscaler capex 2026（預估）</a>
+      <a href="https://epoch.ai/blog/will-we-run-out-of-data-limits-of-llm-scaling-based-on-human-generated-data">Epoch AI · Will we run out of data?</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="gutter"><div class="frame">寫於 2026 年 11 月。標示「預估」的數字都是預測，不是實際值。</div></footer>
+
+<script>
+(function () {
+  "use strict";
+  function fmt(n, d) { return n.toLocaleString("en-US", { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 }); }
+  /* power */
+  var TW = 280, HOME = 4000; /* TWh per year, kWh per household per year (approximations) */
+  var gw = document.getElementById("gw");
+  function power() {
+    var g = +gw.value, twh = g * 8.76;
+    document.getElementById("gwv").textContent = fmt(g, 1) + " GW";
+    document.getElementById("twh").textContent = fmt(twh, 1) + " TWh";
+    var pct = twh / TW * 100;
+    document.getElementById("tw").textContent = fmt(pct, 1) + "%";
+    document.getElementById("twg").style.width = Math.min(100, pct) + "%";
+    var homes = twh * 1e9 / HOME;
+    document.getElementById("homes").textContent = homes >= 1e6 ? fmt(homes / 1e6, 1) + " 百萬戶" : fmt(homes / 1e4, 0) + " 萬戶";
+  }
+  gw.addEventListener("input", power); power();
+
+  /* KV cache: Llama 3 70B — 80 layers, 8 KV heads, head dim 128, bf16 */
+  var PER_TOKEN = 2 * 80 * 8 * 128 * 2; /* bytes */
+  var CTX = [8192, 32768, 65536, 131072, 262144, 1048576], CTXL = ["8K", "32K", "64K", "128K", "256K", "1M"];
+  var ctx = document.getElementById("ctx"), users = document.getElementById("users");
+  function gb(b) { return b / 1e9; }
+  function kv() {
+    var c = CTX[+ctx.value], u = +users.value, one = PER_TOKEN * c, all = one * u;
+    document.getElementById("ctxv").textContent = CTXL[+ctx.value] + " tokens";
+    document.getElementById("userv").textContent = u;
+    document.getElementById("kvOne").textContent = gb(one) >= 100 ? fmt(gb(one), 0) + " GB" : fmt(gb(one), 1) + " GB";
+    document.getElementById("kvAll").textContent = gb(all) >= 1000 ? fmt(gb(all) / 1000, 2) + " TB" : fmt(gb(all), 0) + " GB";
+    document.getElementById("gpus").textContent = fmt(Math.ceil(gb(all) / 80)) + " 張";
+    document.getElementById("kvg").style.width = Math.min(100, gb(all) / 140 * 100 / 10) + "%";
+    document.querySelector("#kvCalc .gauge-row span").textContent = "KV cache 合計是模型權重（約 140 GB）的 " + fmt(gb(all) / 140, 1) + " 倍";
+  }
+  ctx.addEventListener("input", kv); users.addEventListener("input", kv); kv();
+})();
+</script>
+</body>
+</html>

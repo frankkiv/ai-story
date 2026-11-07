@@ -1,0 +1,603 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>它怎麼運作 · AI 長出手了</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="AI 沒有在「學」你：模型權重是固定的，每次對話都是把整份 context 重新送一次。從 context、prompt cache、本地紀錄、agent 迴圈到 skills，一次講清楚。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700;900&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+
+<nav class="nav gutter" aria-label="網站">
+  <div class="frame">
+    <a class="brand" href="index.html"><i></i><span>AI 長出手了</span></a>
+    <ul>
+      <li><a class="l" href="history.html"><span class="lg">時間線</span><span class="sh">時間線</span></a></li>
+      <li><a class="l" href="bench.html"><span class="lg">模型評比</span><span class="sh">評比</span></a></li>
+      <li><a class="l site-on" href="tech.html"><span class="lg">它怎麼運作</span><span class="sh">原理</span></a></li>
+      <li><a class="l" href="china.html"><span class="lg">追趕與蒸餾</span><span class="sh">中國追趕</span></a></li>
+      <li><a class="l" href="future.html"><span class="lg">下一個瓶頸</span><span class="sh">瓶頸</span></a></li>
+    </ul>
+  </div>
+</nav>
+<nav class="toc gutter" aria-label="本頁章節">
+  <div class="frame">
+    <ul>
+      <li><a class="l" href="#myth">誤會</a></li>
+      <li><a class="l" href="#request">一次請求</a></li>
+      <li><a class="l" href="#sim">模擬器</a></li>
+      <li><a class="l" href="#cache">Cache</a></li>
+      <li><a class="l" href="#agent">Agent</a></li>
+      <li><a class="l" href="#auto">Auto</a></li>
+      <li><a class="l" href="#sync">同步</a></li>
+      <li><a class="l" href="#skills">Skills</a></li>
+      <li><a class="l" href="#faq">FAQ</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero gutter" id="top">
+  <div class="frame">
+    <div class="hero-copy">
+      <span class="pill">PART 3 · <b>它怎麼運作</b></span>
+      <h1>AI 沒有在學你。<br><em>它每次都重讀一遍。</em></h1>
+      <p class="sub">跟 AI 聊得愈久，它好像愈懂你。但模型本身一個位元都沒變。變的是每次送進去的那份 context：系統提示、工具、skills、記憶，還有整段對話紀錄。</p>
+      <div class="cta">
+        <a class="btn primary" href="#sim">玩玩看 context 模擬器 →</a>
+        <a class="btn" href="#myth">先看最常見的誤會</a>
+      </div>
+    </div>
+    <div>
+      <div class="stack-wrap" id="stack" aria-hidden="true">
+        <div class="stack" id="stackInner">
+          <div class="layer model" style="--i:0"><span>模型權重（固定不變）</span></div>
+          <div class="layer" style="--i:1; --c: var(--l-tools)"><span>tools · MCP</span></div>
+          <div class="layer" style="--i:2; --c: var(--l-sys)"><span>system prompt</span></div>
+          <div class="layer" style="--i:3; --c: var(--l-skills)"><span>skills</span></div>
+          <div class="layer" style="--i:4; --c: var(--l-mem)"><span>memory · CLAUDE.md</span></div>
+          <div class="layer" style="--i:5; --c: var(--l-hist)"><span>對話紀錄</span></div>
+          <div class="layer" style="--i:6; --c: var(--l-new)"><span>你剛打的這一句</span></div>
+        </div>
+      </div>
+            <ol class="stack-legend" aria-label="一次請求由上到下的內容">
+        <li><i style="--c:var(--l-new)"></i>你剛打的這一句</li>
+        <li><i style="--c:var(--l-hist)"></i>之前的對話紀錄</li>
+        <li><i style="--c:var(--l-mem)"></i>記憶檔（CLAUDE.md）</li>
+        <li><i style="--c:var(--l-skills)"></i>skills 清單</li>
+        <li><i style="--c:var(--l-sys)"></i>system prompt（規則）</li>
+        <li><i style="--c:var(--l-tools)"></i>工具定義（tools · MCP）</li>
+        <li><i style="--c:var(--model-bg)"></i>模型本身（固定不變）</li>
+      </ol>
+      <p class="stack-cap">每一次請求，都是把這幾層疊起來，整份送給同一個固定的模型。</p>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section class="s gutter" id="myth">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">01 · 最常見的誤會</span>
+      <h2>「你一直跟它聊，是在訓練它嗎？」不是。</h2>
+      <p class="lead">「訓練」跟「使用」是兩件完全不同的事，發生在不同的時間、不同的地方，花的錢差好幾個數量級。</p>
+    </div>
+    <div class="grid2">
+      <article class="card">
+        <span class="tag">TRAINING · 訓練</span>
+        <h3>由模型公司做，幾個月一次</h3>
+        <ul class="kv">
+          <li><span>改了什麼</span><span>模型的<strong>權重</strong>（數量極大的參數）</span></li>
+          <li><span>怎麼改</span><span>用海量資料跑梯度下降，大量 GPU 連續跑上好幾週</span></li>
+          <li><span>結果</span><span>產出一個新版本的模型</span></li>
+          <li><span>你能做嗎</span><span>不能。你聊天時不會發生</span></li>
+        </ul>
+      </article>
+      <article class="card hl">
+        <span class="tag">INFERENCE · 使用（推論）</span>
+        <h3>每按一次送出，就發生一次</h3>
+        <ul class="kv">
+          <li><span>改了什麼</span><span><strong>什麼都沒改</strong>，權重是唯讀的</span></li>
+          <li><span>怎麼運作</span><span>整份 context 轉成 token 送進去，模型一個 token 一個 token 往下接</span></li>
+          <li><span>結果</span><span>一段輸出。下一輪把它加進 context 再送</span></li>
+          <li><span>你能做嗎</span><span>能。你能控制的就是 <strong>context 裡放什麼</strong></span></li>
+        </ul>
+      </article>
+    </div>
+    <div class="prose measure mt">
+      <p>模型本身是<strong>無狀態（stateless）</strong>的：API 不會幫你記得上一句。會感覺「它記得」，是因為客戶端（App、Claude Code）把整段對話存起來，下一輪連同新訊息一起再送一次。所謂「讓 AI 愈來愈懂你」，實際上是在<strong>改善每次送進去的 context</strong>：寫更好的 prompt、整理記憶檔、把常做的流程寫成 skill。這是工程，不是訓練。</p>
+      <p class="elder"><b>白話說</b><span>AI 像一位記性只有一頓飯長的專家。每次見面，你都把「之前聊過什麼、家裡的狀況、你習慣怎麼做」整本筆記交給他重看一遍。他沒有變聰明，是你的筆記愈寫愈好。</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="request">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">02 · 一次請求長什麼樣子</span>
+      <h2>你打一句「幫我看這個 bug」，送出去的是一整包</h2>
+      <p class="lead">以 Claude Code 為例，每一輪送到 API 的內容依序是這幾層（Anthropic 的 cache 依 tools → system → messages 的順序比對前綴）。順序很重要，下一節的 cache 會用到。</p>
+    </div>
+    <div class="grid2">
+      <ol class="anatomy">
+        <li style="--c: var(--l-tools)"><div><b>Tools 定義</b><span>每個工具的名稱、說明、JSON schema。MCP server 提供的工具也在這裡，工具一多可以上萬 token。Anthropic 的 cache 前綴就是從這層開始算。</span></div></li>
+        <li style="--c: var(--l-sys)"><div><b>System prompt</b><span>模型是誰、規則、環境資訊。每輪都一樣。</span></div></li>
+        <li style="--c: var(--l-skills)"><div><b>Skills 清單</b><span>放在 system prompt 裡，只有每個 skill 的名稱和一句描述，全文用到時才載入。</span></div></li>
+        <li style="--c: var(--l-mem)"><div><b>記憶檔</b><span>CLAUDE.md、專案規範、你的偏好。Claude Code 開工時把它讀進來，放在對話最前面的訊息裡。</span></div></li>
+        <li style="--c: var(--l-hist)"><div><b>對話紀錄</b><span>之前每一句 user / assistant 訊息、每次工具呼叫和結果，原樣附上。</span></div></li>
+        <li style="--c: var(--l-new)"><div><b>這一輪的新訊息</b><span>你剛打的那句。整包裡常常只有它是新的。</span></div></li>
+      </ol>
+      <div class="col">
+        <div><div class="codehead"><span>POST /v1/messages（簡化）</span><span>JSON</span></div>
+<pre><code>{
+  <span class="k">"model"</span>: <span class="s">"claude-…"</span>,
+  <span class="k">"tools"</span>: [ <span class="c">// 每個工具的 schema（cache 比對從這裡開始）</span>
+    { <span class="k">"name"</span>: <span class="s">"Read"</span>, <span class="k">"input_schema"</span>: { <span class="y">…</span> } },
+    { <span class="k">"name"</span>: <span class="s">"Bash"</span>, <span class="k">"input_schema"</span>: { <span class="y">…</span> } }
+  ],
+  <span class="k">"system"</span>: [ <span class="c">// 規則 + skills 清單</span>
+    { <span class="k">"type"</span>: <span class="s">"text"</span>, <span class="k">"text"</span>: <span class="s">"You are Claude Code…"</span>,
+      <span class="k">"cache_control"</span>: { <span class="k">"type"</span>: <span class="s">"ephemeral"</span> } }
+  ],
+  <span class="k">"messages"</span>: [ <span class="c">// 整段歷史，每輪都重送</span>
+    { <span class="k">"role"</span>: <span class="s">"user"</span>,      <span class="k">"content"</span>: <span class="s">"幫我看這個 bug"</span> },
+    { <span class="k">"role"</span>: <span class="s">"assistant"</span>, <span class="k">"content"</span>: [ <span class="t">tool_use: Read</span> ] },
+    { <span class="k">"role"</span>: <span class="s">"user"</span>,      <span class="k">"content"</span>: [ <span class="t">tool_result: …</span> ] },
+    { <span class="k">"role"</span>: <span class="s">"assistant"</span>, <span class="k">"content"</span>: <span class="s">"問題在第 42 行…"</span> },
+    { <span class="k">"role"</span>: <span class="s">"user"</span>,      <span class="k">"content"</span>: <span class="p">"那幫我修好"</span> }  <span class="c">// ← 新的</span>
+  ]
+}</code></pre></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="sim">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">03 · 互動模擬器</span>
+      <h2>看 context 一輪一輪長大</h2>
+      <p class="lead">按下面的按鈕，模擬一段 Claude Code 對話。每次請求都把整份 context 重送；斜線條紋是命中 prompt cache 的前綴。已經先幫你跑了兩輪。</p>
+    </div>
+
+    <div class="sim">
+      <div class="sim-top" role="toolbar" aria-label="模擬操作">
+        <button class="go" id="bAsk" type="button">問一句</button>
+        <button id="bTool" type="button">AI 呼叫工具</button>
+        <button id="bSkill" type="button">載入一個 skill</button>
+        <button id="bWait" type="button">離開 6 分鐘</button>
+        <button id="bCompact" type="button">壓縮對話</button>
+        <span class="sp"></span>
+        <button id="bReset" type="button">重來</button>
+      </div>
+      <div class="sim-body two">
+        <div class="sim-col">
+          <div class="meter"><span>context <b id="mUsed">0</b> / <b>200,000</b> tokens</span><span>請求 <b id="mReq">0</b> 次 · 經過 <b id="mClock">0</b> 分鐘</span></div>
+          <div class="ctxbar" id="bar" role="img" aria-label="context 組成"></div>
+          <div class="legend">
+            <span><i class="swatch" style="--c:var(--l-tools)"></i>tools</span>
+            <span><i class="swatch" style="--c:var(--l-sys)"></i>system</span>
+            <span><i class="swatch" style="--c:var(--l-skills)"></i>skills</span>
+            <span><i class="swatch" style="--c:var(--l-mem)"></i>memory</span>
+            <span><i class="swatch" style="--c:var(--l-hist)"></i>對話紀錄</span>
+            <span><i class="swatch" style="--c:var(--l-new)"></i>新訊息</span>
+            <span><i class="swatch" style="--c:var(--l-out)"></i>模型輸出</span>
+          </div>
+          <ul class="blocks" id="blocks"></ul>
+        </div>
+        <div class="sim-col">
+          <p class="narr" id="narr" aria-live="polite"></p>
+          <div class="stats">
+            <div class="stat"><span>這次送出的 input</span><b id="sIn">0</b></div>
+            <div class="stat g"><span>命中 cache（約 1 折）</span><b id="sHit">0</b></div>
+            <div class="stat o"><span>新寫入 cache</span><b id="sNew">0</b></div>
+            <div class="stat"><span>累計成本（有／沒 cache）</span><b id="sCost">0</b></div>
+          </div>
+          <div>
+            <div class="codehead"><span>~/.claude/projects/…/session.jsonl</span><span>在你電腦上</span></div>
+            <pre class="jsonl" id="jsonl"><code></code></pre>
+          </div>
+        </div>
+      </div>
+      <div class="sim-body" style="padding-top:0">
+        <div class="log-wrap">
+          <table class="simlog">
+            <thead><tr><th scope="col">請求</th><th scope="col">input</th><th scope="col">cache 命中</th><th scope="col">新寫入</th><th scope="col">output</th><th scope="col">成本（有 cache）</th><th scope="col">成本（沒 cache）</th></tr></thead>
+            <tbody id="log"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <p class="note measure">數字為示意。成本單位：一般 input = 1、cache 讀取 = 0.1、cache 寫入 = 1.25、output = 5，比例參考 Anthropic 公開的 5 分鐘 cache 計價。</p>
+  </div>
+</section>
+
+<section class="s gutter" id="cache">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">04 · Prompt cache</span>
+      <h2>既然每次都重送，為什麼不會慢到不能用？</h2>
+      <p class="lead">因為模型那一端會把「算過的前綴」暫存起來。下次送來的 context 開頭一模一樣，就直接接著算。</p>
+    </div>
+    <div class="grid3">
+      <article class="card">
+        <span class="tag">快取的是什麼</span>
+        <h3>讀到一半的中間狀態</h3>
+        <p>模型讀 context 時，每個 token 都會算出一組內部狀態（KV cache）。Prompt caching 把這組狀態在伺服器上留一段時間。存的是「讀過這段文字之後的狀態」，不是模型學到了什麼。</p>
+      </article>
+      <article class="card">
+        <span class="tag">命中條件</span>
+        <h3>前綴必須逐字相同</h3>
+        <p>從頭開始比對，中間只要有一個字不同，後面全部失效。所以不常變的東西（tools、system、skills 清單）放最前面，每輪都變的對話放最後面。改一個工具定義，整串 cache 就要重建。</p>
+      </article>
+      <article class="card">
+        <span class="tag">時效與價格</span>
+        <h3>預設 5 分鐘，讀取約 1 折</h3>
+        <p>Anthropic 的 cache 預設存活 5 分鐘，每次命中重新計時，也可以選 1 小時。讀取約是一般 input 價格的 10%，寫入稍貴。離開太久再回來，第一輪要整包重算。</p>
+      </article>
+    </div>
+    <div class="prose measure mt">
+      <p class="elder"><b>白話說</b><span>像餐廳記得你是熟客：五分鐘內再點，廚房不用重新備料。記得的只是「備好的料」，廚師的手藝一點都沒變。</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="agent">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">05 · Agent 迴圈</span>
+      <h2>「AI 自己動手」其實是一個 while 迴圈</h2>
+      <p class="lead">模型不會真的執行任何東西。它只會輸出「我想呼叫這個工具，參數是這些」。真正執行的是你電腦上的客戶端，執行完把結果塞回 context，再問模型一次。</p>
+    </div>
+    <div class="loop">
+      <ol class="steps" id="loopSteps">
+        <li><div><span class="who">USER → CLIENT</span><b>你說「修好登入的 bug」</b><span>客戶端把它加到對話紀錄最後面。</span></div></li>
+        <li><div><span class="who">CLIENT → MODEL</span><b>送出整份 context</b><span>system + tools + 歷史 + 新訊息。</span></div></li>
+        <li><div><span class="who">MODEL → CLIENT</span><b>stop_reason: tool_use</b><span>模型回「我要 Read auth.ts」。它沒有讀，只是提出請求。</span></div></li>
+        <li><div><span class="who">CLIENT</span><b>在你電腦上執行工具</b><span>讀檔、跑指令、呼叫 MCP server。需要時先問你同不同意。</span></div></li>
+        <li><div><span class="who">CLIENT → MODEL</span><b>附上 tool_result 再送一次</b><span>context 又變長了。回到第 3 步，直到模型不再要工具。</span></div></li>
+        <li><div><span class="who">MODEL → USER</span><b>stop_reason: end_turn</b><span>最後回覆：「修好了，改了兩個地方，測試都過。」</span></div></li>
+      </ol>
+      <div class="col">
+        <div><div class="codehead"><span>agent loop（虛擬碼）</span><span>python</span></div>
+<pre><code>messages.append(user(<span class="s">"修好登入的 bug"</span>))
+<span class="k">while</span> <span class="y">True</span>:
+    resp = model.create(system, tools, messages)  <span class="c"># 整包重送</span>
+    messages.append(resp)                         <span class="c"># 存回本地紀錄</span>
+    <span class="k">if</span> resp.stop_reason != <span class="s">"tool_use"</span>:
+        <span class="k">break</span>                                     <span class="c"># 做完了</span>
+    result = run_tool_locally(resp.tool_use)      <span class="c"># 客戶端執行</span>
+    messages.append(tool_result(result))</code></pre></div>
+        <div class="card">
+          <span class="tag">這幾年很多進化，都發生在這個迴圈上</span>
+          <ul class="kv">
+            <li><span>MCP</span><span>工具定義的標準格式，任何 server 都能接進 tools 那一層</span></li>
+            <li><span>Subagent</span><span>另開乾淨的 context 跑子任務，只帶摘要回來，主 context 不會被塞爆</span></li>
+            <li><span>Compaction</span><span>context 快滿時，把舊對話摘要成一段換掉原文</span></li>
+            <li><span>Remote</span><span>迴圈跑在你電腦或雲端，手機只是看紀錄、送新訊息</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="auto">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">06 · AI IDE 的 Auto 模式</span>
+      <h2>「Auto」其實有兩種：自動選模型，跟自動按「允許」</h2>
+      <p class="lead">Cursor、Claude Code 這些工具都有個 Auto 開關，但背後是兩件不同的事。它們的共同點是：都另外放了一個比較小、比較快的模型，專門在旁邊做判斷。主模型本身沒有變。</p>
+    </div>
+    <div class="grid2">
+      <article class="card auto-card">
+        <span class="tag">第一種 · 自動選模型</span>
+        <h3>Cursor Auto：每一句話都先分類，再派給合適的模型</h3>
+        <ol class="flow">
+          <li><b>你送出一個請求</b><span>例如「把這個變數改名」或「重構整個登入流程」。</span></li>
+          <li><b>路由分類器先看一眼</b><span>判斷任務類型和難度。Cursor 2026 年 7 月推出的 Cursor Router，就是一個專門做這件事的分類器。</span></li>
+          <li><b>派給對應的模型</b><span>簡單的給便宜快速的模型，難的給 Opus、Fable 這類大模型。可以選偏省錢（Cost）、平衡（Balance）或偏聰明（Intelligence）。</span></li>
+        </ol>
+        <p class="note">Cursor 自己的說法是：比全部都用 Opus 4.8 便宜三到五成。這是廠商數字，沒有第三方驗證。</p>
+      </article>
+      <article class="card auto-card">
+        <span class="tag">第二種 · 自動核准動作</span>
+        <h3>Claude Code auto mode：每個動作執行前，先過一道安檢</h3>
+        <ol class="flow">
+          <li><b>分三級</b><span>只讀檔案的工具直接放行；改專案裡的檔案也放行；其他動作（跑指令、上網、碰專案外的檔案）都要過分類器。</span></li>
+          <li><b>分類器只看兩樣東西</b><span>你說過的話，和 AI 準備執行的那個動作。AI 自己的解釋和工具回傳的內容都不給它看，避免被說服或被網頁裡藏的指令影響。</span></li>
+          <li><b>兩段檢查</b><span>先快速判斷「可不可以」，寧可多擋；被擋下的再仔細推理一次，減少誤擋。</span></li>
+          <li><b>被擋了怎麼辦</b><span>AI 會收到「這個不行」，改找安全的做法。連續被擋 3 次或總共 20 次，就停下來問你。</span></li>
+        </ol>
+        <p class="note">預設擋下的有二十多類，例如強制覆蓋 git 紀錄、大量刪檔、搜集密碼金鑰、把程式碼分享到外部。另外還有一層會先掃描工具讀回來的內容，看有沒有 prompt injection。</p>
+      </article>
+    </div>
+    <div class="grid3 mt">
+      <article class="card"><span class="tag">數字</span><h3>擋得準嗎？</h3><p>Anthropic 公布的測試：真實使用中，正常動作被誤擋的比例約 0.4%；但 AI「太積極」做出的越界動作，仍有約 17% 沒擋到。所以它是減少打擾的工具，不是保險。</p></article>
+      <article class="card"><span class="tag">跟前面的關係</span><h3>還是同一個 agent 迴圈</h3><p>Auto 模式沒有改變迴圈本身：模型一樣輸出 tool_use，只是「要不要問你」這一步，從每次跳視窗變成交給分類器判斷。</p></article>
+      <article class="card"><span class="tag">要注意</span><h3>成本和責任都還在你身上</h3><p>自動選模型可能在你不知道的情況下用了比較貴的模型；自動核准則代表你不會看到每一步。重要的專案，還是先在測試環境跑。</p></article>
+    </div>
+    <p class="elder mt"><b>白話說</b><span>自動選模型像總機，聽完你的問題，轉給最適合的師傅；自動核准像門口的警衛，照清單判斷哪些事可以直接做，可疑的就攔下來問屋主。</span></p>
+    <p class="caveat mt">來源：Anthropic Engineering〈Claude Code auto mode〉（2026/3/25）；Cursor 說明文件〈Available models〉與 Cursor Router 發表報導（2026/7）。</p>
+  </div>
+</section>
+
+<section class="s gutter" id="sync">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">07 · 手機跟電腦怎麼同步</span>
+      <h2>同一個帳號，資料其實放在三個不同的地方</h2>
+      <p class="lead">「在手機上接著做」看起來像魔法，其實要先分清楚：這段對話存在哪？迴圈在哪台機器上跑？手機只是哪一種遙控器？</p>
+    </div>
+    <div class="sync" aria-label="Remote Control 的連線方式">
+      <div class="node">
+        <span class="tag">你的手機 / 網頁</span>
+        <h3>Claude App、claude.ai/code</h3>
+        <ul><li>顯示對話、送出新訊息</li><li>按允許／拒絕工具權限</li><li>不執行任何程式、沒有你的檔案</li></ul>
+      </div>
+      <div class="wire" aria-hidden="true"><i></i><i class="b"></i><span>TLS</span></div>
+      <div class="node mid">
+        <span class="tag">Anthropic API（中繼）</span>
+        <h3>帳號、對話紀錄、訊息轉送</h3>
+        <ul><li>一般聊天的對話紀錄存在這裡，所以每台裝置看到的清單都一樣</li><li>Remote Control 連線期間，transcript 也會存在這裡</li><li>用串流連線把兩端的訊息互相轉送</li></ul>
+      </div>
+      <div class="wire" aria-hidden="true"><i></i><i class="b"></i><span>只往外連</span></div>
+      <div class="node">
+        <span class="tag">你的電腦</span>
+        <h3>本地的 Claude Code</h3>
+        <ul><li>agent 迴圈在這裡跑</li><li>讀檔、跑指令、MCP 工具都在這裡執行</li><li>只發出 HTTPS 連線、不開任何對外 port；關機或程式結束，手機那頭就離線</li></ul>
+      </div>
+    </div>
+    <div class="log-wrap modes">
+      <table>
+        <thead><tr><th scope="col">用法</th><th scope="col">對話紀錄存在</th><th scope="col">程式在哪跑</th><th scope="col">手機能做什麼</th></tr></thead>
+        <tbody>
+          <tr><td>一般聊天（App／網頁）</td><td>Anthropic 伺服器，跟著帳號走</td><td>只有模型推論，沒有你的電腦</td><td>完整使用，換裝置接著聊</td></tr>
+          <tr><td>本地 Claude Code</td><td>你電腦的 <code>~/.claude/projects/</code></td><td>你的電腦</td><td>不能，紀錄沒離開電腦</td></tr>
+          <tr><td>Remote Control</td><td>本地一份；連線期間伺服器也存一份</td><td>你的電腦（要保持開機）</td><td>看進度、下指令、批准權限</td></tr>
+          <tr><td>雲端 session（Claude Code on the web）</td><td>Anthropic 伺服器</td><td>Anthropic 管理的雲端容器</td><td>從手機開工，電腦可以關</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="prose measure mt">
+      <p>不管哪一種，模型本身都不存任何東西。所謂「同步」，同步的是對話紀錄和訊息，下一輪照樣是把整份 context 重送一次。</p>
+      <p class="elder"><b>白話說</b><span>手機像電視遙控器，電腦是電視。遙控器按的訊號先送到 Anthropic 的「轉接站」，再轉給家裡的電腦。所以電腦要開著；檔案也一直留在家裡。</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="skills">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">08 · 記憶與 Skills</span>
+      <h2>「愈用愈順手」靠的是本地的文字檔</h2>
+      <p class="lead">跟 AI 磨合出來的東西，最後都落在你電腦上的幾個檔案裡。下次開工時被讀進 context，所以它看起來「學會了」。</p>
+    </div>
+    <div class="grid2">
+      <div class="col">
+        <div><div class="codehead"><span>你的專案與家目錄</span><span>tree</span></div>
+<pre class="tree"><code>my-project/
+├── <span class="p">CLAUDE.md</span>              <span class="c"># 專案規範，每次開工都讀</span>
+└── .claude/skills/
+    └── <span class="y">release-notes/</span>
+        ├── <span class="y">SKILL.md</span>           <span class="c"># 名稱、描述、步驟</span>
+        └── template.md
+
+~/.claude/
+├── <span class="p">CLAUDE.md</span>              <span class="c"># 你個人的偏好</span>
+└── projects/…/<span class="t">*.jsonl</span>    <span class="c"># 每段對話的完整紀錄</span></code></pre></div>
+      </div>
+      <div class="col">
+        <div><div class="codehead"><span>.claude/skills/release-notes/SKILL.md</span><span>md</span></div>
+<pre><code><span class="c">---</span>
+<span class="k">name</span>: <span class="s">release-notes</span>
+<span class="k">description</span>: <span class="s">從 git log 產生給使用者看的版本說明</span>
+<span class="c">---</span>
+1. 讀上一個 tag 之後的 commit
+2. 依「新功能 / 修正 / 其他」分類
+3. 用 template.md 的格式輸出
+4. <span class="p">不要列出內部重構</span>   <span class="c"># ← 上週聊完補上的</span></code></pre></div>
+      </div>
+    </div>
+    <div class="grid3 mt">
+      <article class="card">
+        <span class="tag">漸進載入</span>
+        <h3>平常只占幾十個 token</h3>
+        <p>context 裡只放每個 skill 的 name 和 description。模型判斷這次用得到，才去讀 SKILL.md 全文和附檔。所以 skill 可以裝很多，不會撐爆 context。</p>
+      </article>
+      <article class="card">
+        <span class="tag">怎麼「精進」</span>
+        <h3>聊天 → 發現問題 → 改檔案</h3>
+        <p>輸出列了不該列的東西，你說「以後不要列內部重構」。把這句寫回 SKILL.md，下次任何對話載入它，都會照新規則做。</p>
+      </article>
+      <article class="card hl">
+        <span class="tag">重點</span>
+        <h3>這是 prompt 工程，不是訓練</h3>
+        <p>改的是文字檔，可以 diff、可以 git commit、可以分享給同事。換一版模型，skill 照樣能用。權重從頭到尾沒動過。</p>
+      </article>
+    </div>
+    <div class="prose measure mt">
+      <p class="elder"><b>白話說</b><span>我們不是在把 AI「教聰明」，是在幫它寫一本愈來愈好的工作手冊。手冊放在我們自己的電腦裡，每次叫它做事，就先把相關的那幾頁翻給它看。</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="faq">
+  <div class="frame measure">
+    <a class="card linkcard" href="index.html#faq"><span class="tag">09 · 爸媽常問 →</span><h3>「它會記得我嗎？」「會被拿去訓練嗎？」</h3><p>這些常見問題，連同五個用 AI 的提醒，整理在首頁最下面，方便直接傳給家人看。</p></a>
+  </div>
+</section>
+
+</main>
+
+<footer class="gutter">
+  <div class="frame">寫於 2026 年 11 月。模擬器數字為示意；cache 時效與價格以各家官方文件為準。</div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* hero 3D stack follows the pointer; on touch screens it fans out when in view */
+  var wrap = document.getElementById("stack"), inner = document.getElementById("stackInner");
+  if (!reduce) {
+    wrap.addEventListener("pointermove", function (e) {
+      if (e.pointerType !== "mouse") return;
+      var r = wrap.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+      inner.style.transform = "rotateX(" + (58 - y * 16) + "deg) rotateZ(" + (-38 + x * 22) + "deg)";
+    });
+    wrap.addEventListener("pointerleave", function () { inner.style.transform = ""; });
+    if ("IntersectionObserver" in window && matchMedia("(hover: none)").matches) {
+      new IntersectionObserver(function (es) { es.forEach(function (e) { wrap.classList.toggle("open", e.isIntersecting); }); }, { threshold: .6 }).observe(wrap);
+    }
+  }
+
+  /* nav highlight */
+  var links = document.querySelectorAll(".toc a.l");
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        links.forEach(function (a) { a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id); });
+      });
+    }, { rootMargin: "-40% 0px -55% 0px" });
+    document.querySelectorAll("section.s").forEach(function (s) { io.observe(s); });
+  }
+
+  /* agent loop stepper: 1 2 3 4 5 → 3 4 5 → 6 */
+  var steps = document.querySelectorAll("#loopSteps li"), seq = [0, 1, 2, 3, 4, 2, 3, 4, 5], k = 0;
+  function show(i) { steps.forEach(function (li, j) { li.classList.toggle("on", j === i); }); }
+  show(0);
+  if (!reduce) setInterval(function () { k = (k + 1) % seq.length; show(seq[k]); }, 1600);
+
+  /* ---------- context simulator ---------- */
+  var COLORS = { sys: "var(--l-sys)", tools: "var(--l-tools)", skills: "var(--l-skills)", mem: "var(--l-mem)", hist: "var(--l-hist)", new: "var(--l-new)", out: "var(--l-out)" };
+  var PRE = [
+    { id: "tools", k: "tools", label: "Tools 定義（含 MCP）", t: 6000 },
+    { id: "sys", k: "sys", label: "System prompt", t: 3000 },
+    { id: "skills", k: "skills", label: "Skills 清單（名稱＋描述）", t: 400 },
+    { id: "mem", k: "mem", label: "CLAUDE.md 記憶檔", t: 1200 }
+  ];
+  var QUESTIONS = ["登入頁按了沒反應，幫我看", "那幫我修好", "順便補個測試", "commit message 用中文", "整理成 PR 說明", "還有別的地方會壞嗎"];
+  var S, uid;
+  function blk(k, label, t, role) { uid++; return { id: k + uid, k: k, label: label, t: t, role: role || "user" }; }
+  function sum(a) { return a.reduce(function (s, b) { return s + b.t; }, 0); }
+
+  function reset(silent) {
+    S = { hist: [], prev: null, lastAt: -99, clock: 0, req: 0, costC: 0, costN: 0, rows: [], last: null, q: 0 };
+    uid = 0;
+    if (!silent) render("清空了。按「問一句」開始，第一次請求沒有任何 cache，整包都要算。");
+  }
+
+  /* one API call: everything in PRE + hist is sent; prefix identical to the previous call (and within 5 min) is a cache hit */
+  function request(newBlocks, out) {
+    newBlocks.forEach(function (b) { S.hist.push(b); });
+    var blocks = PRE.concat(S.hist), cached = 0, hit = {};
+    if (S.prev && (S.clock - S.lastAt) <= 5) {
+      for (var i = 0; i < blocks.length && i < S.prev.length; i++) {
+        if (S.prev[i] !== blocks[i].id) break;
+        cached += blocks[i].t; hit[blocks[i].id] = 1;
+      }
+    }
+    var input = sum(blocks), write = input - cached;
+    var cC = cached * .1 + write * 1.25 + out.t * 5, cN = input + out.t * 5;
+    S.costC += cC; S.costN += cN; S.req++;
+    S.prev = blocks.map(function (b) { return b.id; });
+    S.lastAt = S.clock; S.clock += 1;
+    S.hist.push(out);
+    S.last = { input: input, cached: cached, write: write, hit: hit, fresh: newBlocks.map(function (b) { return b.id; }), outId: out.id };
+    S.rows.push([S.req, input, cached, write, out.t, cC, cN]);
+  }
+
+  function ask(silent) {
+    var q = QUESTIONS[S.q++ % QUESTIONS.length], first = S.req === 0;
+    request([blk("new", "user：「" + q + "」", 60)], blk("out", "assistant：回覆", 450, "assistant"));
+    if (!silent) render(first
+      ? "第一次請求：system、tools、記憶全都是新的，整包寫進 cache。output 雖然短，單價是 input 的 5 倍。"
+      : "又把整包送了一次。前面一大段跟上次一字不差，所以命中 cache；真正新算的只有上一輪的回覆和你這句話。");
+  }
+  function tool() {
+    request([blk("new", "user：「看一下 server log」", 40)], blk("out", "assistant：tool_use Bash(tail log)", 90, "assistant"));
+    request([blk("new", "tool_result：log 內容", 3200)], blk("out", "assistant：根據 log 回覆", 380, "assistant"));
+    render("一次工具呼叫 = 兩次請求。模型先回 tool_use，客戶端在你電腦上執行，把 3,200 token 的結果塞回 context 再送一次。工具結果是 context 長得最快的原因。");
+  }
+  function skill() {
+    request([blk("new", "user：「幫我寫這版的 release notes」", 50)], blk("out", "assistant：tool_use 讀取 SKILL.md", 60, "assistant"));
+    request([blk("skills", "skill 全文：release-notes/SKILL.md", 1800)], blk("out", "assistant：照 skill 步驟產出", 600, "assistant"));
+    render("平常 context 裡只有 skill 的名稱和描述（400 token 那一格）。用得到時才把全文讀進來，之後它就成了對話紀錄的一部分。");
+  }
+  function wait() {
+    S.clock += 6;
+    render("過了 6 分鐘，超過 cache 的 5 分鐘時效。下一次請求就算內容完全一樣，也要整包重新寫入。模型還在、紀錄也還在本地，只是伺服器上的暫存沒了。現在按「問一句」看看。");
+  }
+  function compact() {
+    if (S.hist.length < 6) { render("對話還很短，不需要壓縮。多問幾句、多呼叫幾次工具再試。"); return; }
+    var before = sum(S.hist);
+    request([blk("new", "user：「請摘要到目前為止的對話」", 30)], blk("out", "assistant：前情摘要", 900, "assistant"));
+    S.hist = [blk("hist", "前情摘要（取代 " + fmt(before) + " token 原文）", 900)];
+    S.last.fresh = [S.hist[0].id];
+    render("壓縮：請模型把舊對話寫成摘要，用摘要取代原文。context 一下變小，代價是細節可能遺失，而且下一輪歷史那段要重建 cache；前面不變的 system、tools 仍會命中。");
+  }
+
+  function fmt(n) { return Math.round(n).toLocaleString("en-US"); }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function kindOf(b, L) {
+    if (L && b.id === L.outId) return "out";
+    if (L && L.fresh.indexOf(b.id) >= 0) return b.k === "skills" ? "skills" : "new";
+    if (b.k === "new" || b.k === "out") return "hist";
+    return b.k;
+  }
+
+  function render(msg) {
+    var blocks = PRE.concat(S.hist), total = sum(blocks), L = S.last;
+    document.getElementById("mUsed").textContent = fmt(total);
+    document.getElementById("mReq").textContent = S.req;
+    document.getElementById("mClock").textContent = S.clock;
+    document.getElementById("bar").innerHTML = blocks.map(function (b) {
+      return '<i class="' + (L && L.hit[b.id] ? "hit" : "") + '" style="flex:0 0 ' + (b.t / total * 100).toFixed(3) + "%;--c:" + COLORS[kindOf(b, L)] + '" title="' + esc(b.label) + " · " + fmt(b.t) + ' tokens"></i>';
+    }).join("");
+    document.getElementById("blocks").innerHTML = blocks.slice().reverse().map(function (b) {
+      var st = "<span></span>", fresh = "";
+      if (L) {
+        if (L.hit[b.id]) st = '<span class="st hit">cache 命中</span>';
+        else if (b.id === L.outId) { st = '<span class="st out">output</span>'; fresh = "fresh"; }
+        else { st = '<span class="st new">新寫入</span>'; if (L.fresh.indexOf(b.id) >= 0) fresh = "fresh"; }
+      }
+      return '<li class="' + fresh + '" style="--c:' + COLORS[kindOf(b, L)] + '"><span>' + esc(b.label) + '</span><span class="n">' + fmt(b.t) + "</span>" + st + "</li>";
+    }).join("");
+    document.getElementById("sIn").textContent = L ? fmt(L.input) : "0";
+    document.getElementById("sHit").textContent = L ? fmt(L.cached) : "0";
+    document.getElementById("sNew").textContent = L ? fmt(L.write) : "0";
+    document.getElementById("sCost").textContent = fmt(S.costC) + " / " + fmt(S.costN);
+    document.getElementById("narr").textContent = msg;
+    document.getElementById("log").innerHTML = S.rows.length ? S.rows.slice().reverse().map(function (r) {
+      return "<tr><td>#" + r[0] + "</td><td>" + fmt(r[1]) + "</td><td>" + fmt(r[2]) + "</td><td>" + fmt(r[3]) + "</td><td>" + fmt(r[4]) + "</td><td>" + fmt(r[5]) + "</td><td>" + fmt(r[6]) + "</td></tr>";
+    }).join("") : '<tr><td colspan="7" style="text-align:left;color:var(--muted);font-family:var(--sans)">還沒有請求</td></tr>';
+    var lines = S.hist.slice(-5).map(function (b) {
+      return '{<span class="k">"role"</span>:<span class="s">"' + b.role + '"</span>,<span class="k">"content"</span>:<span class="s">"' + esc(b.label.replace(/^(user|assistant)：/, "")) + '"</span>}';
+    });
+    document.getElementById("jsonl").innerHTML = "<code>" + (lines.length ? '<span class="c">// 對話紀錄由客戶端存在本地，不在模型裡</span>\n' + lines.join("\n") : '<span class="c">// 對話紀錄由客戶端存在本地，不在模型裡</span>') + "</code>";
+  }
+
+  document.getElementById("bAsk").onclick = function () { ask(); };
+  document.getElementById("bTool").onclick = tool;
+  document.getElementById("bSkill").onclick = skill;
+  document.getElementById("bWait").onclick = wait;
+  document.getElementById("bCompact").onclick = compact;
+  document.getElementById("bReset").onclick = function () { reset(); };
+
+
+
+
+  /* open in a realistic working state: two turns already played */
+  reset(true); ask(true); ask();
+})();
+</script>
+</body>
+</html>
