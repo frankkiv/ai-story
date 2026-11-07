@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>After you press Enter · AI Grew Hands</title>
-<meta name="description" content="You type a message to an AI and press Enter. How the data is assembled on your computer, sent to a model on a remote server, sent back, and synced to your phone: four chapters, fifteen steps, one place at a time.">
+<meta name="description" content="You ask an AI "What is AI, really?" and press Enter. How the data is assembled on your computer, sent to a remote server, worked through layer by layer, whether the model searches the web, and how your phone syncs: four chapters, seventeen steps, one place at a time.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
@@ -64,7 +64,6 @@
 .chips { display: flex; flex-wrap: wrap; gap: .28rem; }
 .chip { --c: var(--l-sys); font-size: .7rem; line-height: 1.4; padding: .08rem .42rem; border-radius: 6px; border: 1px solid color-mix(in srgb, var(--c) 70%, transparent); color: color-mix(in srgb, var(--c) 55%, #fff); background: color-mix(in srgb, var(--c) 18%, transparent); position: relative; }
 .chip.mono { font-family: var(--mono); }
-.row2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: .45rem; }
 
 
 .bars { list-style: none; margin: 0; padding: 0; display: grid; gap: .16rem; }
@@ -97,8 +96,8 @@
   .stage.typed .typing span { animation: pop .25s both; animation-delay: calc(var(--i) * .16s); }
 }
 @keyframes pop { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
-.weights { font-size: .72rem; color: #a7b0bd; }
-.weights i { font-style: normal; font-family: var(--mono); color: var(--st-gold); font-weight: 700; }
+.wts { font-size: .72rem; color: #a7b0bd; }
+.wts i { font-style: normal; font-family: var(--mono); color: var(--st-gold); font-weight: 700; }
 .typing { font-size: .74rem; color: #fff; min-height: 2.1em; }
 .typing span { opacity: 0; }
 .stage.typed .typing span { opacity: 1; }
@@ -106,10 +105,39 @@
 .stage.saved-on .svd { opacity: 1; }
 
 
-.perm { position: static; justify-self: start; display: none; font-size: .68rem; background: #fff; color: #0e1116; border-radius: 7px; padding: .2rem .4rem; display: flex; gap: .3rem; align-items: center; opacity: 0; transform: scale(.9); transition: opacity .35s, transform .35s; box-shadow: 0 6px 18px rgba(0,0,0,.4); }
-.perm u { text-decoration: none; font-weight: 700; border-radius: 5px; padding: 0 .3rem; background: var(--l-new); color: #fff; }
-.stage.perm-on .perm { display: flex; opacity: 1; transform: none; }
 
+
+#kv { padding-right: 3.8rem; }
+.kvs { opacity: .55; transition: opacity .45s; }
+.stage.kv-on .kvs { opacity: 1; }
+.kvn { font-size: .7rem; color: #a7b0bd; }
+.kvn b { color: var(--st-gold); font-family: var(--mono); font-weight: 500; }
+.lys { list-style: none; margin: 0; padding: 0; display: grid; gap: .16rem; }
+.lys li { font-size: .68rem; line-height: 1.35; padding: .06rem .45rem; border-radius: 5px; background: rgba(255,255,255,.06); border-left: 4px solid color-mix(in srgb, var(--l-out) 70%, transparent); color: #dfe5ee; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lys li.dots { background: none; border: 0; text-align: center; color: #8b95a5; padding: 0; line-height: .9; }
+@media (prefers-reduced-motion: no-preference) {
+  .stage.layers .lys li:not(.dots) { animation: lyr 2.4s ease-in-out infinite; animation-delay: calc(var(--i) * .45s); }
+}
+.stage.layers.reduce .lys li:not(.dots) { background: color-mix(in srgb, var(--l-out) 30%, transparent); }
+@keyframes lyr { 0%, 35% { background: color-mix(in srgb, var(--l-out) 60%, transparent); } 55%, 100% { background: rgba(255,255,255,.06); } }
+.so { font-family: var(--mono); font-size: .74rem; color: #fff; }
+.so u { text-decoration: none; display: inline-block; min-width: 1.6em; border-bottom: 2px solid var(--st-gold); }
+.cands { list-style: none; margin: 0; padding: 0; display: grid; gap: .18rem; }
+.cands li { display: grid; grid-template-columns: 4.2rem minmax(0, 1fr) 2.2rem; align-items: center; gap: .4rem; font-size: .7rem; color: #dfe5ee; }
+.cands li span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cands li:first-child span { color: var(--st-gold); font-weight: 700; }
+.cands i { position: relative; height: .45rem; border-radius: 3px; background: rgba(255,255,255,.08); overflow: hidden; }
+.cands i::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: var(--p); background: var(--l-out); transform-origin: left; transform: scaleX(0); transition: transform .7s cubic-bezier(.2,.7,.2,1); }
+.stage.cand .cands i::before { transform: none; }
+.cands b { font-family: var(--mono); font-weight: 500; color: #a7b0bd; text-align: right; }
+.ask { list-style: none; margin: 0; padding: 0; display: grid; gap: .22rem; }
+.ask li { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .4rem; font-size: .72rem; color: #dfe5ee; }
+.ask li span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ask b { font-size: .64rem; border-radius: 999px; padding: 0 .45rem; white-space: nowrap; }
+.ask .no { background: rgba(255,255,255,.12); color: #c9d1dc; }
+.ask .yes { background: color-mix(in srgb, var(--l-tools) 45%, transparent); color: #fff; }
+.srch { display: none; }
+.stage.search .srch { display: flex; }
 
 .phone { justify-self: center; width: min(13rem, 70%); border-radius: 22px; border: 2px solid rgba(255,255,255,.3); padding: .55rem .6rem .7rem; display: grid; gap: .3rem; background: rgba(255,255,255,.04); }
 .phone .zl { text-align: center; }
@@ -231,7 +259,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .sheet, .st-cap button,
-  .scene, .packet, .hotable, .bar, .st-term, .recap, .perm, .st-prog i { transition: none !important; }
+  .scene, .packet, .hotable, .bar, .st-term, .recap, .st-prog i, .cands i::before { transition: none !important; }
 }
 </style>
 </head>
@@ -255,7 +283,7 @@
     <div class="hero-copy measure">
       <span class="pill">PART 3 walkthrough · <b>Follow one message</b></span>
       <h1>After you press Enter,<br><em>where do your words go?</em></h1>
-      <p class="sub">It starts with you at your computer, typing "Can you look at this bug?" into Claude Code. That message is packed up on your computer, travels all the way to a model in a remote data center, and the answer comes back. Your phone can see the same conversation too. Four chapters, fifteen steps. Scroll down and look at one place at a time.</p>
+      <p class="sub">It starts with you at your computer, asking Claude Code "What is AI, really?". That question is packed up on your computer and sent across the ocean to a model in a remote data center. The model reads the whole package, works through it layer by layer, guesses the answer one word at a time, and decides whether it needs to search the web. Then the answer comes back, and your phone can see the same conversation. Four chapters, seventeen steps. Scroll down and look at one place at a time.</p>
     </div>
   </div>
 </header>
@@ -279,7 +307,7 @@
               <h4><b>Your computer</b><span class="where">at home</span>client: Claude Code</h4>
               <div class="box hotable" id="input">
                 <div class="zl"><b>Input</b>what you typed</div>
-                <div class="cmd">Can you look at this bug?</div>
+                <div class="cmd">What is AI, really?</div>
               </div>
               <div class="box hotable" id="files">
                 <div class="zl"><b>Local files</b>only on your disk</div>
@@ -293,24 +321,16 @@
               <div class="box hotable" id="pack">
                 <div class="zl"><b>Package</b>POST /v1/messages</div>
                 <ol class="bars">
-                  <li class="bar" style="--c:var(--l-tools)">tools: tool manuals<em class="badge">hit</em></li>
-                  <li class="bar" style="--c:var(--l-sys)">system: rules + skills list<em class="badge">hit</em></li>
+                  <li class="bar" style="--c:var(--l-tools)">tools: tool manuals (incl. web search)<em class="badge">hit</em></li>
+                  <li class="bar" style="--c:var(--l-sys)">system: rules, skills, today's date<em class="badge">hit</em></li>
                   <li class="bar" style="--c:var(--l-mem)">memory: CLAUDE.md<em class="badge">hit</em></li>
                   <li class="bar" style="--c:var(--l-hist)">history<em class="badge">hit</em></li>
-                  <li class="bar" style="--c:var(--l-new)">new: Can you look at this bug?<em class="badge new">new</em></li>
-                  <li class="bar res" style="--c:var(--l-tools)">tool result: contents of app.js<em class="badge new">new</em></li>
+                  <li class="bar" style="--c:var(--l-new)">new: What is AI, really?<em class="badge new">new</em></li>
                 </ol>
               </div>
-              <div class="row2">
-                <div class="box hotable" id="tool">
-                  <div class="zl"><b>Run tool</b></div>
-                  <div class="cmd" style="font-size:.72rem">Read app.js</div>
-                  <div class="perm">Allow?<u>Allow</u></div>
-                </div>
-                <div class="box hotable" id="screen">
-                  <div class="zl"><b>Screen</b></div>
-                  <div class="typing"><span style="--i:0">The bug </span><span style="--i:1">is on </span><span style="--i:2">line 42: </span><span style="--i:3">a </span><span style="--i:4">misspelled </span><span style="--i:5">variable</span></div>
-                </div>
+              <div class="box hotable" id="screen">
+                <div class="zl"><b>Screen</b>the answer you see</div>
+                <div class="typing"><span style="--i:0">AI is </span><span style="--i:1">a kind of </span><span style="--i:2">software </span><span style="--i:3">that learns </span><span style="--i:4">patterns </span><span style="--i:5">from data…</span></div>
               </div>
             </section>
 
@@ -338,8 +358,8 @@
               </div>
               <div class="box hotable" id="tok">
                 <div class="zl"><b>Split into tokens</b>illustrative</div>
-                <div class="chips"><span class="chip" style="--c:var(--l-new)">Can</span><span class="chip" style="--c:var(--l-new)"> you</span><span class="chip" style="--c:var(--l-new)"> look</span><span class="chip" style="--c:var(--l-new)"> at</span><span class="chip" style="--c:var(--l-new)"> this</span><span class="chip" style="--c:var(--l-new)"> bug</span></div>
-                <div class="chips tk"><span class="chip" style="--c:var(--l-out)">6854</span><span class="chip" style="--c:var(--l-out)">499</span><span class="chip" style="--c:var(--l-out)">1427</span><span class="chip" style="--c:var(--l-out)">520</span><span class="chip" style="--c:var(--l-out)">420</span><span class="chip" style="--c:var(--l-out)">10077</span></div>
+                <div class="chips"><span class="chip" style="--c:var(--l-new)">What</span><span class="chip" style="--c:var(--l-new)"> is</span><span class="chip" style="--c:var(--l-new)"> AI</span><span class="chip" style="--c:var(--l-new)">,</span><span class="chip" style="--c:var(--l-new)"> really</span><span class="chip" style="--c:var(--l-new)">?</span></div>
+                <div class="chips tk"><span class="chip" style="--c:var(--l-out)">3923</span><span class="chip" style="--c:var(--l-out)">374</span><span class="chip" style="--c:var(--l-out)">15592</span><span class="chip" style="--c:var(--l-out)">11</span><span class="chip" style="--c:var(--l-out)">2216</span><span class="chip" style="--c:var(--l-out)">30</span></div>
               </div>
               <div class="box hotable" id="cache">
                 <div class="zl"><b>Prompt cache</b>lives about 5 minutes</div>
@@ -348,10 +368,39 @@
                   <span class="chip" style="--c:var(--l-new)">New part: compute now</span>
                 </div>
               </div>
-              <div class="box hotable" id="gpu">
-                <div class="zl"><b>The model on GPUs</b>inference</div>
-                <div class="gen"><i style="--i:0">The</i><i style="--i:1"> bug</i><i style="--i:2"> is</i><i style="--i:3"> on</i><i style="--i:4"> line</i><i style="--i:5"> 42…</i></div>
-                <div class="weights">Weights fixed. Times changed: <i>0</i></div>
+              <div class="box hotable" id="kv">
+                <div class="zl"><b>Read the package</b>model on GPUs · prefill</div>
+                <div class="chips kvs"><span class="chip" style="--c:var(--l-tools)">tools</span><span class="chip" style="--c:var(--l-sys)">system</span><span class="chip" style="--c:var(--l-mem)">memory</span><span class="chip" style="--c:var(--l-hist)">history</span><span class="chip" style="--c:var(--l-new)">new</span></div>
+                <div class="kvn">Each token leaves a note: <b>KV cache</b></div>
+              </div>
+              <div class="box hotable" id="layers">
+                <div class="zl"><b>Layer by layer</b>one model, dozens of layers (illustrative)</div>
+                <ol class="lys">
+                  <li style="--i:3">Layer N: ready to pick the next word</li>
+                  <li class="dots">⋮</li>
+                  <li style="--i:2">Layer 3: this asks for a definition</li>
+                  <li style="--i:1">Layer 2: "AI" goes with "what is"</li>
+                  <li style="--i:0">Layer 1: spot each token</li>
+                </ol>
+              </div>
+              <div class="box hotable" id="cand">
+                <div class="zl"><b>Guess the next word</b>odds are illustrative</div>
+                <div class="so">AI is <u>&nbsp;</u></div>
+                <ul class="cands">
+                  <li style="--p:58%"><span>a</span><i></i><b>58%</b></li>
+                  <li style="--p:17%"><span>the</span><i></i><b>17%</b></li>
+                  <li style="--p:9%"><span>software</span><i></i><b>9%</b></li>
+                </ul>
+                <div class="gen"><i style="--i:0">AI</i><i style="--i:1"> is</i><i style="--i:2"> a</i><i style="--i:3"> kind</i><i style="--i:4"> of</i><i style="--i:5">…</i></div>
+                <div class="wts">Weights fixed. Times changed: <i>0</i></div>
+              </div>
+              <div class="box hotable" id="web">
+                <div class="zl"><b>Web search</b>the model decides whether to use it</div>
+                <ul class="ask">
+                  <li><span>"What is AI, really?"</span><b class="no">no search</b></li>
+                  <li><span>"What's today's AI news?"</span><b class="yes">search</b></li>
+                </ul>
+                <div class="chips srch"><span class="chip" style="--c:var(--l-tools)">search: AI news today</span><span class="chip" style="--c:var(--l-tools)">page excerpts + links</span></div>
               </div>
               <div class="box hotable" id="relay">
                 <div class="zl"><b>Remote Control relay</b>passes messages along</div>
@@ -368,9 +417,9 @@
             <div class="phone hotable" id="phone">
               <div class="cover" aria-hidden="true"><div class="ico" id="ph-ico"><svg viewBox="0 0 64 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="21" y="2" width="22" height="44" rx="4"/><path d="M29 7h6"/><path d="M26 16h12M26 22h8M26 28h12" opacity=".55"/></svg></div><b>Your phone</b><span>Claude app</span></div>
               <div class="zl"><b>Your phone</b></div>
-              <div class="bub me">Can you look at this bug?</div>
-              <div class="bub ai">The bug is on line 42…</div>
-              <div class="bub me late">Please fix it too</div>
+              <div class="bub me">What is AI, really?</div>
+              <div class="bub ai">AI is a kind of software…</div>
+              <div class="bub me late">And today's AI news?</div>
               <span class="ok">Allow</span>
             </div>
 
@@ -379,8 +428,8 @@
         </div>
         <ol class="recap" aria-hidden="true">
           <li>You ask at your computer<span>You press Enter; local files are read and packed into one package</span></li>
-          <li>The second or two you wait<span>Lock it, cross the ocean, then check, tokenize, match the cache, generate on GPUs</span></li>
-          <li>The answer appears<span>Streamed as it is computed; another round for each tool; saved back to your computer</span></li>
+          <li>The second or two you wait<span>Locked, across the ocean, checked, cache matched; the model reads it all, layer by layer, one word at a time</span></li>
+          <li>Search or not, then the answer<span>It searches only when it needs fresh facts; the answer streams back and is saved on your computer</span></li>
           <li>You pick up your phone<span>Computer and phone both connect to a relay; your files stay on your computer</span></li>
           <li class="zero">Times the model was changed, start to finish: <b>0</b></li>
         </ol>
@@ -395,7 +444,7 @@
         <div class="card">
           <span class="eyebrow">Opening</span>
           <h3>You sit at your computer and open Claude Code</h3>
-          <p>You want AI to look at a bug, so in Claude Code you type "Can you look at this bug?". At every step, "Your screen" at the top of the stage tells you what you see at that moment, and the map below shows what is really happening behind it.</p>
+          <p>Everyone keeps talking about AI, and you wonder what it actually is. So in Claude Code you type "What is AI, really?". At every step, "Your screen" at the top of the stage tells you what you see at that moment, and the map below shows what is really happening behind it.</p>
         </div>
       </section>
 
@@ -419,7 +468,7 @@
         <div class="card">
           <span class="eyebrow">Step 3</span>
           <h3>Packed into one package, in a fixed order</h3>
-          <p>The order is tool descriptions, system rules (with the skills list), memory, conversation history, and only then the line you just typed. The whole package is written as one JSON document, ready for the API's <code>/v1/messages</code>. Things that rarely change go first; the cache in the next chapter relies on that order.</p>
+          <p>The order is tool descriptions (web search is one of them), system rules (with the skills list and today's date), memory, conversation history, and only then the line you just typed. The whole package is written as one JSON document, ready for the API's <code>/v1/messages</code>. Things that rarely change go first; the cache in the next chapter relies on that order.</p>
         </div>
       </section>
 
@@ -464,69 +513,89 @@
           <p class="elder"><b>In plain words</b><span>A regular who orders again within five minutes doesn't make the kitchen prep from scratch. What it remembers is the prepped ingredients; the chef's skill hasn't changed.</span></p>
         </div>
       </section>
-      <section class="step" data-step="9">
+      <section class="step" data-step="9" id="j-gpu">
         <div class="card">
           <span class="eyebrow">Step 9</span>
-          <h3>The model writes one token at a time</h3>
-          <p>On the GPUs, the model reads the whole package, works out the most likely next token, appends it, and works out the next one. This is called inference. The model's weights (everything it learned) do not change at all during this.</p>
+          <h3>The model reads the whole package first</h3>
+          <p>The package goes into the model running on GPUs (chips that are good at doing huge numbers of calculations at once). The model first reads every token in one pass; this is called prefill. Each token it reads leaves behind an intermediate result called the KV cache. Every time a new word is written, the model looks back at these notes instead of rereading everything. The prompt cache in the last step stores exactly this kind of note.</p>
+          <p class="elder"><b>In plain words</b><span>Before an exam you read the questions and the reference material once and jot the key points on a card; while answering you just check the card.</span></p>
         </div>
       </section>
-
-      <div class="chap"><span>Chapter 3</span><h2>The answer appears on your screen</h2></div>
       <section class="step" data-step="10">
         <div class="card">
           <span class="eyebrow">Step 10</span>
-          <h3>Sent back while it is being written</h3>
-          <p>The answer is streamed: each small piece is sent as soon as it is computed, back along the same encrypted connection to your computer. That is why the words appear a bit at a time instead of all at once.</p>
+          <h3>One model, worked through layer by layer</h3>
+          <p>The answer is not pieced together by several models. It is one model with dozens of identical layers stacked inside it (most companies don't publish the exact number; the picture is illustrative).</p>
+          <p>Each layer looks back at every token before it, works out which ones matter most right now (this is called attention), and passes its understanding up to the next layer. Higher layers are generally thought to handle more abstract things, like "this asks for a definition". The labels on each layer in the picture are only to help you imagine it; you can't actually read a layer like that.</p>
+          <p class="elder"><b>In plain words</b><span>Like a memo signed off up a chain of managers: each one adds a bit of judgment, and the last one makes the call.</span></p>
         </div>
       </section>
-      <section class="step" data-step="11" id="j-tool">
+      <section class="step" data-step="11">
         <div class="card">
           <span class="eyebrow">Step 11</span>
-          <h3>If the model wants a file, your computer reads it</h3>
-          <p>If the model needs to see the code first, it doesn't send back an answer. It sends a request, "use the Read tool on app.js" (tool_use). The client on your computer is what actually reads the file, and it asks you first before anything risky.</p>
-          <p class="elder"><b>In plain words</b><span>The consultant doesn't come to your home. They write a note asking your assistant to fetch the document, and the assistant checks with you before anything important.</span></p>
+          <h3>The top layer guesses the next word</h3>
+          <p>The top layer gives every possible token a score and turns the scores into odds. After "AI is", "a" might be the most likely, then "the" (the numbers are illustrative). The model picks one, appends it, and uses the whole string to guess the next one. That is how the answer grows, one word at a time. This is called inference.</p>
+          <p>During all of this, the model's weights (everything it learned in training) do not change by a single number.</p>
+          <p class="elder"><b>In plain words</b><span>Like a word chain game: you add one word, read the whole line again, and think of the next.</span></p>
         </div>
       </section>
-      <section class="step" data-step="12">
+
+      <div class="chap"><span>Chapter 3</span><h2>Search or not, then the answer</h2></div>
+      <section class="step" data-step="12" id="j-search">
         <div class="card">
           <span class="eyebrow">Step 12</span>
-          <h3>The result is added, and the package goes through Chapter 2 again</h3>
-          <p>What was read is added to the end of the package, which is encrypted, sent, checked, matched against the cache, and processed again. Everything before it matches the previous round, so almost all of it hits the cache. Going back and forth until the model stops asking for tools is the agent loop.</p>
+          <h3>Search the web? The model decides</h3>
+          <p>The model doesn't go online for every question. Web search is one of the tools described at the start of the package, and the model decides whether to use it. "What is AI, really?" is a stable idea that it read plenty about in training, so it just answers.</p>
+          <p>If you asked "What's today's AI news?", what it learned stops at a certain date, so it would choose to call the search tool. How models keep up with new things in general is covered in <a href="tech.html#fresh">How it works · Where new facts come from</a>.</p>
+          <p class="elder"><b>In plain words</b><span>Ask a teacher what photosynthesis is and they just explain. Ask about today's headlines and they reach for the newspaper.</span></p>
         </div>
       </section>
       <section class="step" data-step="13">
         <div class="card">
           <span class="eyebrow">Step 13</span>
-          <h3>Done, and the whole exchange is saved on your computer</h3>
-          <p>This round's question, tool calls, results and answer are written to the conversation history on your computer (a .jsonl file in <code>~/.claude/projects/</code>). Next time you ask, the client reads all of it again and resends it.</p>
-          <p class="elder"><b>In plain words</b><span>AI "remembers" what you talked about because your computer kept the record and attaches it again next time.</span></p>
+          <h3>If it searches, the results join the package</h3>
+          <p>This question doesn't need it, but it is worth seeing once. Say you asked about today's news: the model first outputs a "search for this" request (tool_use), Anthropic's servers run the search, add page excerpts and links to the end of the package, and the model reads it again (steps 9 to 11) before writing an answer that cites its sources.</p>
+          <p>Tools like reading files or running commands are different: they go back to your computer to run, and the result is added to the package and sent again. Going back and forth until the model stops asking for tools is the agent loop.</p>
         </div>
       </section>
-
-      <div class="chap"><span>Chapter 4</span><h2>You pick up your phone</h2></div>
-      <section class="step" data-step="14" id="j-relay">
+      <section class="step" data-step="14">
         <div class="card">
           <span class="eyebrow">Step 14</span>
-          <h3>You leave your computer and see the same chat on your phone</h3>
-          <p>You head out, open the Claude app on your phone, and see the same conversation. That is because Remote Control is on: your computer connects out to Anthropic's relay service, and the Claude app on your phone connects to it too. The relay only passes messages between the two, and keeps a copy of the conversation during the session so your phone can show it. It doesn't run your programs and can't touch your files.</p>
-          <p class="elder"><b>In plain words</b><span>The phone is the remote, the computer is the TV, and a relay station in between passes the signal along.</span></p>
+          <h3>Sent back while it is being written</h3>
+          <p>The answer is streamed: each small piece is sent as soon as it is computed, back along the same encrypted connection to your computer. That is why the words appear a bit at a time instead of all at once.</p>
         </div>
       </section>
       <section class="step" data-step="15">
         <div class="card">
           <span class="eyebrow">Step 15</span>
-          <h3>What you type on the phone reaches the computer through the relay</h3>
-          <p>You type "Please fix it too" on your phone. The message goes to the relay first, then on to your computer, which adds it to the end of the package and starts again from Chapter 1. The Allow button on your phone sends your decision back to the computer the same way. So the computer has to stay on, and your files never leave home.</p>
+          <h3>Done, and the whole exchange is saved on your computer</h3>
+          <p>This round's question and answer (plus any search results) are written to the conversation history on your computer (a .jsonl file in <code>~/.claude/projects/</code>). Next time you ask, the client reads all of it again and resends it.</p>
+          <p class="elder"><b>In plain words</b><span>AI "remembers" what you talked about because your computer kept the record and attaches it again next time.</span></p>
         </div>
       </section>
 
-      <section class="step" data-step="16">
+      <div class="chap"><span>Chapter 4</span><h2>You pick up your phone</h2></div>
+      <section class="step" data-step="16" id="j-relay">
+        <div class="card">
+          <span class="eyebrow">Step 16</span>
+          <h3>You leave your computer and see the same chat on your phone</h3>
+          <p>You head out, open the Claude app on your phone, and see the same conversation. That is because Remote Control is on: your computer connects out to Anthropic's relay service, and the Claude app on your phone connects to it too. The relay only passes messages between the two, and keeps a copy of the conversation during the session so your phone can show it. It doesn't run your programs and can't touch your files.</p>
+          <p class="elder"><b>In plain words</b><span>The phone is the remote, the computer is the TV, and a relay station in between passes the signal along.</span></p>
+        </div>
+      </section>
+      <section class="step" data-step="17">
+        <div class="card">
+          <span class="eyebrow">Step 17</span>
+          <h3>What you type on the phone reaches the computer through the relay</h3>
+          <p>On your phone you ask a follow-up, "And today's AI news?". The message goes to the relay first, then on to your computer, which adds it to the end of the package and starts again from Chapter 1. This time the model chooses to search. If Claude Code asks for your OK first, the Allow button on your phone sends your decision back to the computer the same way. So the computer has to stay on, and your files never leave home.</p>
+        </div>
+      </section>
+      <section class="step" data-step="18">
         <div class="card">
           <span class="eyebrow">So</span>
           <h3>Four things you saw, one map behind them</h3>
-          <p>Assembled on your computer, sent to a remote model, streamed back, and synced to your phone through a relay. The only thing that grows along the way is the record. The model itself doesn't change by a single bit.</p>
-          <p>To play with each layer yourself, try <a href="tech.html#sim">How it works · the context simulator</a>. The three ways of syncing are compared in <a href="tech.html#sync">phone and computer sync</a>.</p>
+          <p>Assembled on your computer and sent to a remote model, which reads it all, works layer by layer and guesses one word at a time, searching only when it needs to. The answer streams back and syncs to your phone through a relay. The only thing that grows along the way is the record. The model itself doesn't change by a single bit.</p>
+          <p>To play with each layer yourself, try <a href="tech.html#sim">How it works · the context simulator</a>. How models keep up with new things is in <a href="tech.html#fresh">Where new facts come from</a>. The three ways of syncing are compared in <a href="tech.html#sync">phone and computer sync</a>.</p>
         </div>
       </section>
     </div>
@@ -535,8 +604,8 @@
 
 <footer class="gutter">
   <div class="frame sample-note">
-    <p>Claude Code is used as the example. The token split and IDs are illustrative. The distance and delay from Taiwan to the US West Coast are estimates; real routes and data center locations vary. Check the official docs for prompt cache lifetimes. Fuller technical detail is in <a href="tech.html">How it works</a>.</p>
-    <p>Sources: Anthropic "Prompt caching" docs; Claude Code "Remote Control" and data storage docs; TeleGeography submarine cable map.</p>
+    <p>Claude Code is used as the example. The token split and IDs, the number of layers and the word odds are illustrative. The distance and delay from Taiwan to the US West Coast are estimates; real routes and data center locations vary. Check the official docs for prompt cache lifetimes. Fuller technical detail is in <a href="tech.html">How it works</a>.</p>
+    <p>Sources: Anthropic "Prompt caching" and "Web search tool" docs; Claude Code "Remote Control" and data storage docs; TeleGeography submarine cable map.</p>
     <p>Written in November 2026.</p>
   </div>
 </footer>
@@ -565,33 +634,35 @@
   addEventListener("keydown", function (e) { if (e.key === "Escape") closeSheet(); });
   prevB.addEventListener("click", function () { jump(cur - 1); });
   nextB.addEventListener("click", function () { jump(cur + 1); });
-  var CH = ["", "Chapter 1 · You ask at your computer", "Chapter 2 · The second or two you wait", "Chapter 3 · The answer appears", "Chapter 4 · You pick up your phone"];
+  var CH = ["", "Chapter 1 · You ask at your computer", "Chapter 2 · The second or two you wait", "Chapter 3 · Search or not, then the answer", "Chapter 4 · You pick up your phone"];
   var F = "filled";
 
   
   var S = [
-    { ch: 0, name: "Opening", sub: "You sit at your computer with <em>a question</em>", note: "Scroll, or use the arrows on each side", you: "Claude Code prompt, cursor blinking", hot: [], cam: ["#pc-ico"], lit: "z-pc" },
-    { ch: 1, name: "Press Enter", sub: "You press <em>Enter</em>", note: "Claude Code on your computer takes it first", you: "You typed a line and pressed Enter", hot: ["#input"], cam: ["#pipe0", "#files"], beam: ["pipe0"], lit: "z-pc", term: ["Client", "the program on your computer that talks to the server"] },
-    { ch: 1, name: "Read local files", sub: "It reads your <em>memory and history</em>", note: "Before anything shows up, the files are still only on your disk", you: "Nothing yet", wait: true, hot: ["#files"], term: ["CLAUDE.md", "memory file: project rules and your preferences"] },
-    { ch: 1, name: "Pack in order", sub: "Packed into <em>one package</em>", note: "Stable parts first, so the cache can work", you: "Nothing yet", wait: true, hot: ["#files", "#pack"], pk: "#pack", kind: "ctx", st: F, term: ["context", "everything the model reads this time"] },
-    { ch: 2, name: "Lock it", sub: "<em>Locked</em> before it leaves", note: "HTTPS: nobody along the way can read it", you: "“Thinking…”", wait: true, hot: ["#pack"], pk: "#pack", kind: "lock", st: F, term: ["HTTPS", "an encrypted connection nobody on the way can read"] },
-    { ch: 2, name: "Across the ocean", sub: "The package <em>crosses the ocean</em>", note: "About 10,000 km one way, 0.1–0.2 s round trip", you: "Still “Thinking…”", wait: true, hot: ["#pipe"], cam: ["#pipe", "#srv-ico"], tour: ["#wp1", "#wp2", "#wp3", "#wp4", "#srv-ico"], beam: ["pipe"], lit: "z-srv", kind: "lock", st: F, term: ["Data center", "a remote building full of servers and GPUs"] },
-    { ch: 2, name: "Front desk", sub: "The front desk <em>checks who you are</em>", note: "Account and quota, then a free GPU machine", you: "Still “Thinking…”", wait: true, hot: ["#front"], pk: "#front", cam: ["#front", "#tok"], kind: "ctx", st: F, term: ["API", "the agreed intake window between programs"] },
-    { ch: 2, name: "Tokenize", sub: "Text becomes <em>tokens</em>", note: "The split and IDs are illustrative", you: "Still “Thinking…”", wait: true, hot: ["#tok"], pk: "#tok", kind: "ctx", st: F + " tokens", term: ["token", "the smallest unit of text a model handles"] },
-    { ch: 2, name: "Match the cache", sub: "Matching parts <em>come from the cache</em>", note: "The cache lasts about 5 minutes", you: "Still “Thinking…”", wait: true, hot: ["#cache", "#pack"], pk: "#cache", kind: "ctx", st: F + " tokens hit", term: ["prompt cache", "the server keeps a read prefix for about 5 minutes"] },
-    { ch: 2, name: "Generate on GPUs", sub: "The model writes <em>one token at a time</em>", note: "Its weights never change along the way", you: "Almost there", wait: true, hot: ["#gpu"], pk: "#gpu", kind: "ctx", st: F + " tokens gen-on", term: ["Inference", "fixed weights work out the next token"] },
-    { ch: 3, name: "Stream back", sub: "The answer <em>streams back</em>", note: "Over the same encrypted connection", you: "Words appear a bit at a time", hot: ["#gpu", "#pipe", "#screen"], cam: ["#screen", "#pipe"], tour: ["#wp4", "#wp3", "#wp2", "#wp1", "#screen"], beam: ["pipe up"], kind: "reply", st: F + " tokens gen-on typed", term: ["Streaming", "each small piece is sent as soon as it is ready"] },
-    { ch: 3, name: "Run a tool", sub: "<em>Your computer</em> reads the file", note: "It asks you before anything risky", you: "“Allow reading app.js?” You allow", hot: ["#tool"], pk: "#tool", kind: "tool", st: F + " typed perm-on", term: ["tool_use", "a structured request saying which tool to use"] },
-    { ch: 3, name: "Send again", sub: "The result is <em>added</em>, then sent again", note: "Repeat until no more tools: the agent loop", you: "“Reading app.js…”", wait: true, hot: ["#pack", "#pipe", "#front", "#tok", "#cache"], pk: "#cache", beam: ["pipe"], kind: "ctx", st: F + " typed result hit", term: ["agent loop", "send, act, add back, repeat until done"] },
-    { ch: 3, name: "Save locally", sub: "The exchange is <em>saved on your computer</em>", note: "A .jsonl file in ~/.claude/projects/", you: "Done. Ask the next thing", hot: ["#files", "#screen"], pk: "#files", kind: "save", st: F + " typed result saved-on", term: [".jsonl history", "stored in ~/.claude/projects/"] },
-    { ch: 4, name: "Connect to relay", sub: "Computer and phone meet at a <em>relay</em>", note: "The relay passes messages, never your files", you: "The same chat, in the Claude app", dev: "Your phone", hot: ["#relay", "#pipe", "#pipe2", "#phone"], cam: ["#relay", "#phone"], beam: ["pipe2"], lit: "phone", st: F + " typed result saved-on", term: ["Remote Control", "steer Claude Code on your computer from your phone"] },
-    { ch: 4, name: "Phone sends a message", sub: "Your phone's words go <em>through the relay</em>", note: "So the computer stays on, files stay home", you: "You type and tap Allow", dev: "Your phone", hot: ["#phone", "#pipe2", "#relay", "#pipe", "#input"], pk: "#input", kind: "msg", cam: ["#pipe", "#phone"], beam: ["pipe2 up", "pipe up"], st: F + " typed result saved-on phone-msg", term: ["Sync", "messages and history sync, not the model"] },
-    { ch: 0, name: "So", sub: "Behind what you saw: <em>this map</em>", note: "Only the record grows. Times the model changed: 0", you: "Everything you saw", hot: [], fit: true, st: "end" }
+    {"ch": 0, "name": "Opening", "sub": "You want to ask: <em>what is AI, really?</em>", "note": "Scroll, or use the arrows on each side", "you": "Claude Code prompt, cursor blinking", "hot": [], "cam": ["#pc-ico"], "lit": "z-pc"},
+    {"ch": 1, "name": "Press Enter", "sub": "You press <em>Enter</em>", "note": "Claude Code on your computer takes it first", "you": "You type the question, press Enter", "hot": ["#input"], "cam": ["#pipe0", "#files"], "beam": ["pipe0"], "lit": "z-pc", "term": ["Client", "the program on your computer that talks to the server"]},
+    {"ch": 1, "name": "Read local files", "sub": "It reads your <em>memory and history</em>", "note": "Before anything shows up, the files are still only on your disk", "you": "Nothing yet", "wait": true, "hot": ["#files"], "term": ["CLAUDE.md", "memory file: project rules and your preferences"]},
+    {"ch": 1, "name": "Pack in order", "sub": "Packed into <em>one package</em>", "note": "Stable parts first, so the cache can work", "you": "Nothing yet", "wait": true, "hot": ["#files", "#pack"], "pk": "#pack", "kind": "ctx", "st": F, "term": ["context", "everything the model reads this time"]},
+    {"ch": 2, "name": "Lock it", "sub": "<em>Locked</em> before it leaves", "note": "HTTPS: nobody along the way can read it", "you": "“Thinking…”", "wait": true, "hot": ["#pack"], "pk": "#pack", "kind": "lock", "st": F, "term": ["HTTPS", "an encrypted connection nobody on the way can read"]},
+    {"ch": 2, "name": "Across the ocean", "sub": "The package <em>crosses the ocean</em>", "note": "About 10,000 km one way, 0.1–0.2 s round trip", "you": "Still “Thinking…”", "wait": true, "hot": ["#pipe"], "cam": ["#pipe", "#srv-ico"], "tour": ["#wp1", "#wp2", "#wp3", "#wp4", "#srv-ico"], "beam": ["pipe"], "lit": "z-srv", "kind": "lock", "st": F, "term": ["Data center", "a remote building full of servers and GPUs"]},
+    {"ch": 2, "name": "Front desk", "sub": "The front desk <em>checks who you are</em>", "note": "Account and quota, then a free GPU machine", "you": "Still “Thinking…”", "wait": true, "hot": ["#front"], "pk": "#front", "cam": ["#front", "#tok"], "kind": "ctx", "st": F, "term": ["API", "the agreed intake window between programs"]},
+    {"ch": 2, "name": "Tokenize", "sub": "Text becomes <em>tokens</em>", "note": "The split and IDs are illustrative", "you": "Still “Thinking…”", "wait": true, "hot": ["#tok"], "pk": "#tok", "kind": "ctx", "st": F + " tokens", "term": ["token", "the smallest unit of text a model handles"]},
+    {"ch": 2, "name": "Match the cache", "sub": "Matching parts <em>come from the cache</em>", "note": "The cache lasts about 5 minutes", "you": "Still “Thinking…”", "wait": true, "hot": ["#cache", "#pack"], "pk": "#cache", "kind": "ctx", "st": F + " tokens hit", "term": ["prompt cache", "the server keeps a read prefix for about 5 minutes"]},
+    {"ch": 2, "name": "Read it all", "sub": "The model <em>reads the whole package</em>", "note": "What each token leaves behind is the KV cache", "you": "Still “Thinking…”", "wait": true, "hot": ["#kv"], "pk": "#kv", "kind": "ctx", "st": F + " tokens kv-on", "term": ["KV cache", "notes left by every token, checked again while writing"]},
+    {"ch": 2, "name": "Layer by layer", "sub": "One model, <em>layer by layer</em>", "note": "Dozens of layers in one model, not several models", "you": "Still “Thinking…”", "wait": true, "hot": ["#layers"], "st": F + " tokens kv-on layers", "term": ["attention", "each layer looks back and picks what matters most"]},
+    {"ch": 2, "name": "Next word", "sub": "It <em>guesses the next word</em>, again and again", "note": "Odds are illustrative; the weights never change", "you": "Still “Thinking…”, almost there", "wait": true, "hot": ["#cand"], "st": F + " tokens kv-on cand gen-on", "term": ["Inference", "fixed weights work out one token at a time"]},
+    {"ch": 3, "name": "Search or not", "sub": "Search the web? <em>The model decides</em>", "note": "Training covers this; today's news would need a search", "you": "Still “Thinking…”, almost there", "wait": true, "hot": ["#web"], "cam": ["#cand", "#web"], "st": F + " tokens kv-on cand gen-on", "term": ["Tool call", "the model asks to use a tool"]},
+    {"ch": 3, "name": "If it searches", "sub": "If it searches, <em>results join the package</em>", "note": "Not needed here; this is the extra loop for news", "you": "For news you'd see “Searching…”", "wait": true, "hot": ["#web", "#kv"], "pk": "#kv", "kind": "search", "st": F + " tokens kv-on cand gen-on search", "term": ["Web search tool", "the server searches and adds excerpts to context"]},
+    {"ch": 3, "name": "Stream back", "sub": "The answer <em>streams back</em>", "note": "Over the same encrypted connection", "you": "Words appear a bit at a time", "hot": ["#cand", "#pipe", "#screen"], "cam": ["#screen", "#pipe"], "tour": ["#wp4", "#wp3", "#wp2", "#wp1", "#screen"], "beam": ["pipe up"], "kind": "reply", "st": F + " tokens kv-on cand gen-on typed", "term": ["Streaming", "each small piece is sent as soon as it is ready"]},
+    {"ch": 3, "name": "Save locally", "sub": "The exchange is <em>saved on your computer</em>", "note": "A .jsonl file in ~/.claude/projects/", "you": "Done. Ask the next thing", "hot": ["#files", "#screen"], "pk": "#files", "kind": "save", "st": F + " cand gen-on typed saved-on", "term": [".jsonl history", "stored in ~/.claude/projects/"]},
+    {"ch": 4, "name": "Connect to relay", "sub": "Computer and phone meet at a <em>relay</em>", "note": "The relay passes messages, never your files", "you": "The same chat, in the Claude app", "dev": "Your phone", "hot": ["#relay", "#pipe", "#pipe2", "#phone"], "cam": ["#relay", "#phone"], "beam": ["pipe2"], "lit": "phone", "st": F + " cand gen-on typed saved-on", "term": ["Remote Control", "steer Claude Code on your computer from your phone"]},
+    {"ch": 4, "name": "Phone sends a message", "sub": "Your phone's words go <em>through the relay</em>", "note": "So the computer stays on, files stay home", "you": "You ask about the news, tap Allow", "dev": "Your phone", "hot": ["#phone", "#pipe2", "#relay", "#pipe", "#input"], "pk": "#input", "kind": "msg", "cam": ["#relay", "#phone"], "beam": ["pipe2 up", "pipe up"], "st": F + " cand gen-on typed saved-on phone-msg", "term": ["Sync", "messages and history sync, not the model"]},
+    {"ch": 0, "name": "So", "sub": "Behind what you saw: <em>this map</em>", "note": "Only the record grows. Times the model changed: 0", "you": "Everything you saw", "hot": [], "fit": true, "st": "end"}
   ];
   var KIND = {
     ctx: '<i style="--c:var(--l-tools)"></i><i style="--c:var(--l-sys)"></i><i style="--c:var(--l-mem)"></i><i style="--c:var(--l-hist)"></i><i style="--c:var(--l-new)"></i><b>package</b>',
     reply: '<i style="--c:var(--l-out)"></i><b>answer</b>',
-    tool: '<i style="--c:var(--l-out)"></i><b>tool_use</b>',
+    search: '<i style="--c:var(--l-tools)"></i><i style="--c:var(--l-tools)"></i><b>results</b>',
     save: '<i style="--c:var(--l-hist)"></i><b>saved</b>',
     lock: '<span class="lk"></span><b>locked</b>',
     msg: '<i style="--c:var(--l-new)"></i><b>message</b>'
@@ -612,19 +683,19 @@
     if (n === cur && !force) return;
     cur = n;
     var s = S[n];
-    stage.className = "stage " + (s.st || "");
+    stage.className = "stage " + (s.st || "") + (reduce ? " reduce" : "");
     youK.textContent = s.dev || DEVPC; you.textContent = s.you || ""; youBar.classList.toggle("wait", !!s.wait);
     
     document.getElementById("z-pc").classList.toggle("open", n >= 1);
     document.getElementById("z-srv").classList.toggle("open", n >= 6);
-    document.getElementById("phone").classList.toggle("open", n >= 14);
+    document.getElementById("phone").classList.toggle("open", n >= 16);
     scene.querySelectorAll(".beam").forEach(function (el) { el.classList.remove("beam", "up"); });
     (s.beam || []).forEach(function (b) { var p = b.split(" "), el = document.getElementById(p[0]); el.classList.add("beam"); if (p[1]) el.classList.add("up"); });
     scene.querySelectorAll(".cover.lit").forEach(function (el) { el.classList.remove("lit"); });
     if (s.lit) document.querySelector("#" + s.lit + " > .cover").classList.add("lit");
-    tag.innerHTML = (s.ch ? "<small>" + CH[s.ch] + "</small>" : "") + (n && n < 16 ? "Step " + n + ": " : "") + s.name;
+    tag.innerHTML = (s.ch ? "<small>" + CH[s.ch] + "</small>" : "") + (n && n < 18 ? "Step " + n + ": " : "") + s.name;
     sub.innerHTML = "<span>" + s.sub + "</span>";
-    prog.style.width = (Math.min(n, 15) / 15 * 100) + "%";
+    prog.style.width = (Math.min(n, 17) / 17 * 100) + "%";
     steps.forEach(function (el) { el.classList.toggle("on", +el.dataset.step === n); });
     var card = steps[n].querySelector(".card");
     var ps = card.querySelectorAll(":scope > p");

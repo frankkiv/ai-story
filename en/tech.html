@@ -33,6 +33,7 @@
   <div class="frame">
     <ul>
       <li><a class="l" href="#myth">Myth</a></li>
+      <li><a class="l" href="#fresh">New facts</a></li>
       <li><a class="l" href="#request">A request</a></li>
       <li><a class="l" href="#sim">Simulator</a></li>
       <li><a class="l" href="#cache">Cache</a></li>
@@ -122,10 +123,44 @@
   </div>
 </section>
 
+<section class="s gutter" id="fresh">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">02 · Where new facts come from</span>
+      <h2>It doesn't go online by itself, so how does it know what's new?</h2>
+      <p class="lead">The model itself doesn't. What it learned stops on a certain day. Anything newer is put into the context from outside, at the moment you ask, for it to read.</p>
+      <p class="jlink"><a href="journey.html#j-search">Watch it: how the model decides whether to search →</a></p>
+    </div>
+    <div class="grid3">
+      <article class="card">
+        <span class="tag">CUTOFF · Learned up to a date</span>
+        <h3>Its knowledge stops on a certain day</h3>
+        <p>Training data is collected up to a certain date, called the knowledge cutoff. Whatever happened after that, the model never read. Companies usually state this date in their model documentation.</p>
+      </article>
+      <article class="card">
+        <span class="tag">NEW VERSION · Retrained</span>
+        <h3>Updating means training a new version</h3>
+        <p>A model doesn't update itself every day. To teach it more, the company has to gather data and train again, releasing a new version every few months to a year or so. The cutoff only moves forward when the version you use changes.</p>
+      </article>
+      <article class="card hl">
+        <span class="tag">CONTEXT · Added right now</span>
+        <h3>Fresh information is read to it on the spot</h3>
+        <p>In each conversation, the app puts new information into the context: today's date in the system prompt, page excerpts from a search the model chose to run, an article or file you pasted, or data read through a connector (MCP). The model uses it and moves on; none of it stays in the weights.</p>
+      </article>
+    </div>
+    <div class="prose measure mt">
+      <p>So you will see two cases. When the app has search on and the model decides it needs to look something up, the answer usually comes with source links, and it is telling you what it just found. When it doesn't search, it can only answer from what it learned before the cutoff. Ask about something recent and it may say it doesn't know, or give an outdated or even wrong answer in the same confident tone.</p>
+      <p>An easy check: when you ask about something recent, look for source links. If there are none, treat the answer as "what it remembered before the cutoff" and verify it yourself, or simply tell it to search the web.</p>
+      <p class="elder"><b>In plain words</b><span>The model is an encyclopedia printed on a certain day. It never grows new pages by itself; the publisher brings out a new edition now and then. To know about today, someone has to clip today's newspaper and slip it in. Once read, the clipping doesn't become part of the encyclopedia.</span></p>
+      <p><small>Sources: Anthropic model documentation (training data cutoff for each model); Anthropic "Web search tool" docs.</small></p>
+    </div>
+  </div>
+</section>
+
 <section class="s gutter" id="request">
   <div class="frame">
     <div class="s-head measure">
-      <span class="eyebrow">02 · What one request looks like</span>
+      <span class="eyebrow">03 · What one request looks like</span>
       <h2>You type "look at this bug", and a whole bundle goes out</h2>
       <p class="lead">Taking Claude Code as the example, each round sends these layers to the API, in this order (Anthropic's cache matches prefixes in tools → system → messages order). The order matters; the cache section uses it.</p>
       <p class="jlink"><a href="journey.html#j-pack">Watch it: how this package is assembled on your computer and sent out →</a></p>
@@ -167,7 +202,7 @@
 <section class="s gutter" id="sim">
   <div class="frame">
     <div class="s-head measure">
-      <span class="eyebrow">03 · Interactive simulator</span>
+      <span class="eyebrow">04 · Interactive simulator</span>
       <h2>Follow a conversation and watch the data flow</h2>
       <p class="lead">On the left is your computer, in the middle the context bundle sent each time, on the right the model. Press "Next" for the guided tour, or play with the buttons below. Watch the number on the right: it stays at 0 the whole time.</p>
     </div>
@@ -265,7 +300,7 @@
 <section class="s gutter" id="cache">
   <div class="frame">
     <div class="s-head measure">
-      <span class="eyebrow">04 · Prompt cache</span>
+      <span class="eyebrow">05 · Prompt cache</span>
       <h2>If everything is resent each time, why isn't it unbearably slow?</h2>
       <p class="lead">Because the model's side keeps the "already computed prefix" for a while. If the next context starts exactly the same, it picks up from there.</p>
       <p class="jlink"><a href="journey.html#j-cache">Watch it: where the cache kicks in on the server →</a></p>
@@ -296,10 +331,10 @@
 <section class="s gutter" id="agent">
   <div class="frame">
     <div class="s-head measure">
-      <span class="eyebrow">05 · The agent loop</span>
+      <span class="eyebrow">06 · The agent loop</span>
       <h2>"AI doing things itself" is really a while loop</h2>
       <p class="lead">The model never actually runs anything. It only outputs "I want to call this tool with these arguments". The client on your computer runs it, puts the result back into the context, and asks the model again.</p>
-      <p class="jlink"><a href="journey.html#j-tool">Watch it: whose computer actually runs the tool →</a></p>
+      <p class="jlink"><a href="journey.html#j-search">Watch it: when the model searches, and where tools run →</a></p>
     </div>
     <div class="loop">
       <ol class="steps" id="loopSteps">
@@ -337,7 +372,7 @@
 <section class="s gutter" id="auto">
   <div class="frame">
     <div class="s-head measure">
-      <span class="eyebrow">06 · Auto modes in AI IDEs</span>
+      <span class="eyebrow">07 · Auto modes in AI IDEs</span>
       <h2>"Auto" means two things: picking the model, and pressing "Allow" for you</h2>
       <p class="lead">Tools like Cursor and Claude Code have an Auto switch, but behind it are two different things. What they share: both add a smaller, faster model on the side just to make judgment calls. The main model itself is unchanged.</p>
     </div>
@@ -377,7 +412,7 @@
 <section class="s gutter" id="sync">
   <div class="frame">
     <div class="s-head measure">
-      <span class="eyebrow">07 · How phone and computer stay in sync</span>
+      <span class="eyebrow">08 · How phone and computer stay in sync</span>
       <h2>One account, but the data lives in three different places</h2>
       <p class="lead">"Picking up on your phone" looks like magic, but first sort out: where is this conversation stored? Which machine runs the loop? What kind of remote is the phone?</p>
       <p class="jlink"><a href="journey.html#j-relay">Watch it: how a phone message travels through the relay to your computer →</a></p>
@@ -422,7 +457,7 @@
 <section class="s gutter" id="orch">
   <div class="frame">
     <div class="s-head measure">
-      <span class="eyebrow">08 · Multi-agent teamwork</span>
+      <span class="eyebrow">09 · Multi-agent teamwork</span>
       <h2>From BMAD to Projects: how one AI manages several AIs</h2>
       <p class="lead">One agent loop is great for small tasks. But a big project needs planning, coding, testing and review, and cramming it all into one context fills it fast; one role also can't cover everything well. Over the past two years, engineers' answer went from "build your own orchestration system" to "it's built into the tool".</p>
     </div>
@@ -480,7 +515,7 @@
 <section class="s gutter" id="skills">
   <div class="frame">
     <div class="s-head measure">
-      <span class="eyebrow">09 · Memory and Skills</span>
+      <span class="eyebrow">10 · Memory and Skills</span>
       <h2>"It gets easier the more I use it" comes from local text files</h2>
       <p class="lead">Everything you and the AI work out together ends up in a few files on your computer. They're read into the context the next time you start, so it looks like it "learned".</p>
     </div>
@@ -535,7 +570,7 @@
 
 <section class="s gutter" id="faq">
   <div class="frame measure">
-    <a class="card linkcard" href="index.html#faq"><span class="tag">10 · What parents ask →</span><h3>"Does it remember me?" "Will my chats be used for training?"</h3><p>These common questions, along with five tips for using AI, are collected at the bottom of the home page, ready to send to your family.</p></a>
+    <a class="card linkcard" href="index.html#faq"><span class="tag">11 · What parents ask →</span><h3>"Does it remember me?" "Will my chats be used for training?"</h3><p>These common questions, along with five tips for using AI, are collected at the bottom of the home page, ready to send to your family.</p></a>
   </div>
 </section>
 
