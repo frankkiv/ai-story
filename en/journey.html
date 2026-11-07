@@ -161,22 +161,24 @@
 
 
 
-.st-cap { z-index: 4; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: .5rem; padding: .5rem .7rem .2rem; background: var(--code-bg); border-top: 1px solid rgba(255,255,255,.08); }
-.st-sub { margin: 0; font-size: 1.08rem; font-weight: 700; line-height: 1.4; color: #fff; text-align: center; text-wrap: balance; min-height: 2.8em; display: flex; align-items: center; justify-content: center; }
+.st-cap { z-index: 4; height: 4.4rem; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: .5rem; padding: .35rem .7rem .1rem; background: var(--code-bg); border-top: 1px solid rgba(255,255,255,.08); }
+.st-sub { margin: 0; font-size: 1.06rem; font-weight: 700; line-height: 1.35; color: #fff; text-align: center; text-wrap: balance; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
 .st-sub em { font-style: normal; color: var(--st-gold); }
 .st-cap button { width: 2.5rem; height: 2.5rem; border-radius: 50%; border: 1px solid rgba(255,255,255,.22); background: transparent; color: #fff; font-size: 1.2rem; line-height: 1; cursor: pointer; display: grid; place-items: center; transition: border-color .2s, color .2s, opacity .2s; }
 .st-cap button:hover:not(:disabled) { border-color: var(--st-gold); color: var(--st-gold); }
 .st-cap button:disabled { opacity: .25; cursor: default; }
-@media (max-width: 720px) { .st-sub { font-size: .98rem; } .st-cap { padding-inline: .5rem; gap: .35rem; } }
+@media (max-width: 720px) { .st-sub { font-size: 1rem; } .st-cap { padding-inline: .5rem; gap: .35rem; } }
 
 
-.st-narr { z-index: 4; background: var(--code-bg); padding: .15rem 1.1rem .8rem; display: grid; justify-items: center; gap: .35rem; }
-.st-narr .txt { max-width: 34rem; font-size: .86rem; line-height: 1.6; color: #a7b0bd; text-align: center; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }
+.st-narr { z-index: 4; height: 3.4rem; background: var(--code-bg); padding: 0 .8rem .55rem 1.1rem; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .6rem; }
+.st-narr .txt { font-size: .84rem; line-height: 1.35; color: #a7b0bd; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
+@media (max-width: 720px) { .st-narr .txt { font-size: .8rem; } }
 .st-narr .txt.swap, .sheet-txt.swap { animation: narrIn .35s both; }
 @keyframes narrIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 .st-narr code, .sheet code { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.16); color: #fff; }
-.more { font: inherit; font-size: .78rem; font-weight: 600; color: var(--st-gold); background: transparent; border: 0; padding: .35rem .6rem; min-height: 40px; cursor: pointer; border-radius: 8px; }
+.more { font: inherit; font-size: .78rem; font-weight: 600; color: var(--st-gold); background: transparent; border: 1px solid color-mix(in srgb, var(--st-gold) 45%, transparent); padding: 0 .8rem; height: 2.5rem; cursor: pointer; border-radius: 999px; white-space: nowrap; }
 .more:hover { background: rgba(255,255,255,.06); }
+.st-narr .txt:empty + .more { grid-column: 1 / -1; justify-self: center; }
 .more[hidden] { display: none; }
 
 
@@ -374,7 +376,7 @@
           <li class="zero">Times the model was changed, start to finish: <b>0</b></li>
         </ol>
         <div class="st-cap"><button type="button" id="prev" aria-label="Previous step">&#8249;</button><p class="st-sub" id="sub" aria-hidden="true"></p><button type="button" id="next" aria-label="Next step">&#8250;</button></div>
-        <div class="st-narr"><div class="txt" id="narr" aria-hidden="true"></div><button type="button" class="more" id="more" aria-hidden="true" tabindex="-1">Full explanation ↑</button></div>
+        <div class="st-narr"><div class="txt" id="narr" aria-hidden="true"></div><button type="button" class="more" id="more" aria-hidden="true" tabindex="-1">More ↑</button></div>
         <div class="sheet" id="sheet" aria-hidden="true"><div class="sheet-head"><b id="sheetTitle"></b><button type="button" id="close" aria-label="Close" tabindex="-1">&#215;</button></div><div class="sheet-txt" id="sheetTxt"></div></div>
       </div>
     </div>
@@ -558,23 +560,23 @@
 
   
   var S = [
-    { ch: 0, name: "Opening", sub: "From pressing Enter to an answer on your phone, data visits <em>three places</em>", hot: [], fit: true, beam: ["pipe0", "pipe", "pipe2"] },
-    { ch: 1, name: "Press Enter", sub: "First, <em>a program on your computer</em> takes over", hot: ["#input"], cam: ["#pipe0", "#files"], beam: ["pipe0"], lit: "z-pc", term: ["Client", "the program on your computer that talks to the server"] },
-    { ch: 1, name: "Read local files", sub: "It reads your <em>memory, skills, tools and history</em>", hot: ["#files"], term: ["CLAUDE.md", "memory file: project rules and your preferences"] },
-    { ch: 1, name: "Pack in order", sub: "In a fixed order, packed into <em>one package</em>", hot: ["#files", "#pack"], pk: "#pack", kind: "ctx", st: F, term: ["context", "everything the model reads this time"] },
-    { ch: 2, name: "Lock it", sub: "Before it leaves, it gets <em>locked</em>: HTTPS encryption", hot: ["#pack"], pk: "#pack", kind: "lock", st: F, term: ["HTTPS", "an encrypted connection nobody on the way can read"] },
-    { ch: 2, name: "Across the ocean", sub: "The package <em>leaves your home</em> and crosses to the data center", hot: ["#pipe"], cam: ["#pipe", "#srv-ico"], tour: ["#wp1", "#wp2", "#wp3", "#wp4", "#srv-ico"], beam: ["pipe"], lit: "z-srv", kind: "lock", st: F, term: ["Data center", "a remote building full of servers and GPUs"] },
-    { ch: 2, name: "Front desk", sub: "The front desk <em>checks who you are</em> and your quota, then picks a machine", hot: ["#front"], pk: "#front", cam: ["#front", "#tok"], kind: "ctx", st: F, term: ["API", "the agreed intake window between programs"] },
-    { ch: 2, name: "Tokenize", sub: "The text is split into <em>tokens</em>, a string of numbers", hot: ["#tok"], pk: "#tok", kind: "ctx", st: F + " tokens", term: ["token", "the smallest unit of text a model handles"] },
-    { ch: 2, name: "Match the cache", sub: "Whatever matches last time uses <em>stored results</em>", hot: ["#cache", "#pack"], pk: "#cache", kind: "ctx", st: F + " tokens hit", term: ["prompt cache", "the server keeps a read prefix for about 5 minutes"] },
-    { ch: 2, name: "Generate on GPUs", sub: "The model writes <em>one token at a time</em>", hot: ["#gpu"], pk: "#gpu", kind: "ctx", st: F + " tokens gen-on", term: ["Inference", "fixed weights work out the next token"] },
-    { ch: 3, name: "Stream back", sub: "The answer is <em>sent as it is computed</em>, a bit at a time", hot: ["#gpu", "#pipe", "#screen"], cam: ["#screen", "#pipe"], tour: ["#wp4", "#wp3", "#wp2", "#wp1", "#screen"], beam: ["pipe up"], kind: "reply", st: F + " tokens gen-on typed", term: ["Streaming", "each small piece is sent as soon as it is ready"] },
-    { ch: 3, name: "Run a tool", sub: "When the model wants a file, <em>your computer</em> reads it, asking you first if needed", hot: ["#tool"], pk: "#tool", kind: "tool", st: F + " typed perm-on", term: ["tool_use", "a structured request saying which tool to use"] },
-    { ch: 3, name: "Send again", sub: "The result is <em>added</em>, and Chapter 2 runs again", hot: ["#pack", "#pipe", "#front", "#tok", "#cache"], pk: "#cache", beam: ["pipe"], kind: "ctx", st: F + " typed result hit", term: ["agent loop", "send, act, add back, repeat until done"] },
-    { ch: 3, name: "Save locally", sub: "The exchange is <em>saved on your computer</em>; the model remembers nothing", hot: ["#files", "#screen"], pk: "#files", kind: "save", st: F + " typed result saved-on", term: [".jsonl history", "stored in ~/.claude/projects/"] },
-    { ch: 4, name: "Connect to relay", sub: "Computer and phone both connect to Anthropic's <em>relay</em>", hot: ["#relay", "#pipe", "#pipe2", "#phone"], cam: ["#relay", "#phone"], beam: ["pipe2"], lit: "phone", st: F + " typed result saved-on", term: ["Remote Control", "steer Claude Code on your computer from your phone"] },
-    { ch: 4, name: "Phone sends a message", sub: "Your phone's message goes <em>through the relay</em> to the computer; files stay home", hot: ["#phone", "#pipe2", "#relay", "#pipe", "#input"], pk: "#input", kind: "msg", cam: ["#pipe", "#phone"], beam: ["pipe2 up", "pipe up"], st: F + " typed result saved-on phone-msg", term: ["Sync", "messages and history sync, not the model"] },
-    { ch: 0, name: "So", sub: "Only the record grows. Times the model changed: <em>0</em>", hot: [], fit: true, st: "end" }
+    { ch: 0, name: "Opening", sub: "From Enter to your phone: <em>three places</em>", note: "Scroll, or use the arrows on each side", hot: [], fit: true, beam: ["pipe0", "pipe", "pipe2"] },
+    { ch: 1, name: "Press Enter", sub: "<em>A program on your computer</em> takes over", note: "Nothing has left your computer yet", hot: ["#input"], cam: ["#pipe0", "#files"], beam: ["pipe0"], lit: "z-pc", term: ["Client", "the program on your computer that talks to the server"] },
+    { ch: 1, name: "Read local files", sub: "It reads your <em>memory and history</em>", note: "These files live only on your disk", hot: ["#files"], term: ["CLAUDE.md", "memory file: project rules and your preferences"] },
+    { ch: 1, name: "Pack in order", sub: "Packed into <em>one package</em>", note: "Stable parts first, so the cache can work", hot: ["#files", "#pack"], pk: "#pack", kind: "ctx", st: F, term: ["context", "everything the model reads this time"] },
+    { ch: 2, name: "Lock it", sub: "<em>Locked</em> before it leaves", note: "HTTPS: nobody along the way can read it", hot: ["#pack"], pk: "#pack", kind: "lock", st: F, term: ["HTTPS", "an encrypted connection nobody on the way can read"] },
+    { ch: 2, name: "Across the ocean", sub: "The package <em>crosses the ocean</em>", note: "About 10,000 km one way, 0.1–0.2 s round trip", hot: ["#pipe"], cam: ["#pipe", "#srv-ico"], tour: ["#wp1", "#wp2", "#wp3", "#wp4", "#srv-ico"], beam: ["pipe"], lit: "z-srv", kind: "lock", st: F, term: ["Data center", "a remote building full of servers and GPUs"] },
+    { ch: 2, name: "Front desk", sub: "The front desk <em>checks who you are</em>", note: "Account and quota, then a free GPU machine", hot: ["#front"], pk: "#front", cam: ["#front", "#tok"], kind: "ctx", st: F, term: ["API", "the agreed intake window between programs"] },
+    { ch: 2, name: "Tokenize", sub: "Text becomes <em>tokens</em>", note: "The split and IDs are illustrative", hot: ["#tok"], pk: "#tok", kind: "ctx", st: F + " tokens", term: ["token", "the smallest unit of text a model handles"] },
+    { ch: 2, name: "Match the cache", sub: "Matching parts <em>come from the cache</em>", note: "The cache lasts about 5 minutes", hot: ["#cache", "#pack"], pk: "#cache", kind: "ctx", st: F + " tokens hit", term: ["prompt cache", "the server keeps a read prefix for about 5 minutes"] },
+    { ch: 2, name: "Generate on GPUs", sub: "The model writes <em>one token at a time</em>", note: "Its weights never change along the way", hot: ["#gpu"], pk: "#gpu", kind: "ctx", st: F + " tokens gen-on", term: ["Inference", "fixed weights work out the next token"] },
+    { ch: 3, name: "Stream back", sub: "The answer <em>streams back</em>", note: "Over the same encrypted connection", hot: ["#gpu", "#pipe", "#screen"], cam: ["#screen", "#pipe"], tour: ["#wp4", "#wp3", "#wp2", "#wp1", "#screen"], beam: ["pipe up"], kind: "reply", st: F + " tokens gen-on typed", term: ["Streaming", "each small piece is sent as soon as it is ready"] },
+    { ch: 3, name: "Run a tool", sub: "<em>Your computer</em> reads the file", note: "It asks you before anything risky", hot: ["#tool"], pk: "#tool", kind: "tool", st: F + " typed perm-on", term: ["tool_use", "a structured request saying which tool to use"] },
+    { ch: 3, name: "Send again", sub: "The result is <em>added</em>, then sent again", note: "Repeat until no more tools: the agent loop", hot: ["#pack", "#pipe", "#front", "#tok", "#cache"], pk: "#cache", beam: ["pipe"], kind: "ctx", st: F + " typed result hit", term: ["agent loop", "send, act, add back, repeat until done"] },
+    { ch: 3, name: "Save locally", sub: "The exchange is <em>saved on your computer</em>", note: "A .jsonl file in ~/.claude/projects/", hot: ["#files", "#screen"], pk: "#files", kind: "save", st: F + " typed result saved-on", term: [".jsonl history", "stored in ~/.claude/projects/"] },
+    { ch: 4, name: "Connect to relay", sub: "Computer and phone meet at a <em>relay</em>", note: "The relay passes messages, never your files", hot: ["#relay", "#pipe", "#pipe2", "#phone"], cam: ["#relay", "#phone"], beam: ["pipe2"], lit: "phone", st: F + " typed result saved-on", term: ["Remote Control", "steer Claude Code on your computer from your phone"] },
+    { ch: 4, name: "Phone sends a message", sub: "Your phone's words go <em>through the relay</em>", note: "So the computer stays on, files stay home", hot: ["#phone", "#pipe2", "#relay", "#pipe", "#input"], pk: "#input", kind: "msg", cam: ["#pipe", "#phone"], beam: ["pipe2 up", "pipe up"], st: F + " typed result saved-on phone-msg", term: ["Sync", "messages and history sync, not the model"] },
+    { ch: 0, name: "So", sub: "Times the model changed: <em>0</em>", note: "Only the record grows", hot: [], fit: true, st: "end" }
   ];
   var KIND = {
     ctx: '<i style="--c:var(--l-tools)"></i><i style="--c:var(--l-sys)"></i><i style="--c:var(--l-mem)"></i><i style="--c:var(--l-hist)"></i><i style="--c:var(--l-new)"></i><b>package</b>',
@@ -615,13 +617,12 @@
     steps.forEach(function (el) { el.classList.toggle("on", +el.dataset.step === n); });
     var card = steps[n].querySelector(".card");
     var ps = card.querySelectorAll(":scope > p");
-    narr.innerHTML = ps.length ? ps[0].innerHTML : "";
+    narr.textContent = s.note || "";
     narr.classList.remove("swap"); void narr.offsetWidth; if (!reduce) narr.classList.add("swap");
     sheetTitle.textContent = card.querySelector("h3").textContent;
     sheetTxt.innerHTML = "";
     ps.forEach(function (q) { sheetTxt.appendChild(q.cloneNode(true)); });
     closeSheet();
-    requestAnimationFrame(function () { more.hidden = ps.length < 2 && narr.scrollHeight <= narr.clientHeight + 1; });
     count.textContent = n > 0 && n < S.length - 1 ? n + " / " + (S.length - 2) : "";
     prevB.disabled = n === 0; nextB.disabled = n === S.length - 1;
     if (s.term) { term.firstChild.textContent = s.term[0]; term.lastChild.textContent = s.term[1]; term.classList.add("on"); }

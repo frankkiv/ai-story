@@ -160,22 +160,24 @@
 
 
 /* 字幕列：上一步／字幕／下一步 */
-.st-cap { z-index: 4; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: .5rem; padding: .5rem .7rem .2rem; background: var(--code-bg); border-top: 1px solid rgba(255,255,255,.08); }
-.st-sub { margin: 0; font-size: 1.08rem; font-weight: 700; line-height: 1.4; color: #fff; text-align: center; text-wrap: balance; min-height: 2.8em; display: flex; align-items: center; justify-content: center; }
+.st-cap { z-index: 4; height: 4.4rem; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: .5rem; padding: .35rem .7rem .1rem; background: var(--code-bg); border-top: 1px solid rgba(255,255,255,.08); }
+.st-sub { margin: 0; font-size: 1.06rem; font-weight: 700; line-height: 1.35; color: #fff; text-align: center; text-wrap: balance; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
 .st-sub em { font-style: normal; color: var(--st-gold); }
 .st-cap button { width: 2.5rem; height: 2.5rem; border-radius: 50%; border: 1px solid rgba(255,255,255,.22); background: transparent; color: #fff; font-size: 1.2rem; line-height: 1; cursor: pointer; display: grid; place-items: center; transition: border-color .2s, color .2s, opacity .2s; }
 .st-cap button:hover:not(:disabled) { border-color: var(--st-gold); color: var(--st-gold); }
 .st-cap button:disabled { opacity: .25; cursor: default; }
-@media (max-width: 720px) { .st-sub { font-size: .98rem; } .st-cap { padding-inline: .5rem; gap: .35rem; } }
+@media (max-width: 720px) { .st-sub { font-size: 1rem; } .st-cap { padding-inline: .5rem; gap: .35rem; } }
 
 /* 摘要：只放第一段，最多三行；其餘收進「完整說明」 */
-.st-narr { z-index: 4; background: var(--code-bg); padding: .15rem 1.1rem .8rem; display: grid; justify-items: center; gap: .35rem; }
-.st-narr .txt { max-width: 34rem; font-size: .86rem; line-height: 1.6; color: #a7b0bd; text-align: center; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }
+.st-narr { z-index: 4; height: 3.4rem; background: var(--code-bg); padding: 0 .8rem .55rem 1.1rem; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .6rem; }
+.st-narr .txt { font-size: .84rem; line-height: 1.35; color: #a7b0bd; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
+@media (max-width: 720px) { .st-narr .txt { font-size: .8rem; } }
 .st-narr .txt.swap, .sheet-txt.swap { animation: narrIn .35s both; }
 @keyframes narrIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 .st-narr code, .sheet code { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.16); color: #fff; }
-.more { font: inherit; font-size: .78rem; font-weight: 600; color: var(--st-gold); background: transparent; border: 0; padding: .35rem .6rem; min-height: 40px; cursor: pointer; border-radius: 8px; }
+.more { font: inherit; font-size: .78rem; font-weight: 600; color: var(--st-gold); background: transparent; border: 1px solid color-mix(in srgb, var(--st-gold) 45%, transparent); padding: 0 .8rem; height: 2.5rem; cursor: pointer; border-radius: 999px; white-space: nowrap; }
 .more:hover { background: rgba(255,255,255,.06); }
+.st-narr .txt:empty + .more { grid-column: 1 / -1; justify-self: center; }
 .more[hidden] { display: none; }
 
 /* 完整說明：從下方滑出，蓋在地圖上，不擠壓地圖 */
@@ -373,7 +375,7 @@
           <li class="zero">從頭到尾，模型被改的次數：<b>0</b></li>
         </ol>
         <div class="st-cap"><button type="button" id="prev" aria-label="上一步">&#8249;</button><p class="st-sub" id="sub" aria-hidden="true"></p><button type="button" id="next" aria-label="下一步">&#8250;</button></div>
-        <div class="st-narr"><div class="txt" id="narr" aria-hidden="true"></div><button type="button" class="more" id="more" aria-hidden="true" tabindex="-1">完整說明 ↑</button></div>
+        <div class="st-narr"><div class="txt" id="narr" aria-hidden="true"></div><button type="button" class="more" id="more" aria-hidden="true" tabindex="-1">詳細 ↑</button></div>
         <div class="sheet" id="sheet" aria-hidden="true"><div class="sheet-head"><b id="sheetTitle"></b><button type="button" id="close" aria-label="關閉" tabindex="-1">&#215;</button></div><div class="sheet-txt" id="sheetTxt"></div></div>
       </div>
     </div>
@@ -557,23 +559,23 @@
 
   /* 每一步：章、步名、字幕、名詞卡、亮哪裡、那一包在哪、舞台狀態 */
   var S = [
-    { ch: 0, name: "開場", sub: "從按下 Enter 到手機上看到答案，資料走過<em>三個地方</em>", hot: [], fit: true, beam: ["pipe0", "pipe", "pipe2"] },
-    { ch: 1, name: "按下 Enter", sub: "先接手的是<em>你電腦上的程式</em>", hot: ["#input"], cam: ["#pipe0", "#files"], beam: ["pipe0"], lit: "z-pc", term: ["客戶端", "裝在你電腦上、負責跟伺服器講話的程式"] },
-    { ch: 1, name: "讀本地檔案", sub: "它先翻你電腦上的<em>記憶、skills、工具、舊紀錄</em>", hot: ["#files"], term: ["CLAUDE.md", "記憶檔：專案規範和你的偏好"] },
-    { ch: 1, name: "照順序打包", sub: "照固定順序，打包成<em>一整包</em>", hot: ["#files", "#pack"], pk: "#pack", kind: "ctx", st: F, term: ["context", "模型這次要讀的全部內容"] },
-    { ch: 2, name: "先上鎖", sub: "出門前先<em>上鎖</em>：整包用 HTTPS 加密", hot: ["#pack"], pk: "#pack", kind: "lock", st: F, term: ["HTTPS", "加密的連線，路上的人看不懂內容"] },
-    { ch: 2, name: "跨海到機房", sub: "整包<em>離開你家</em>，一路跨海到遠端機房", hot: ["#pipe"], cam: ["#pipe", "#srv-ico"], tour: ["#wp1", "#wp2", "#wp3", "#wp4", "#srv-ico"], beam: ["pipe"], lit: "z-srv", kind: "lock", st: F, term: ["資料中心", "放滿伺服器和 GPU 的遠端機房"] },
-    { ch: 2, name: "前台驗證", sub: "前台先<em>驗明正身</em>、查額度，再分給一台機器", hot: ["#front"], pk: "#front", cam: ["#front", "#tok"], kind: "ctx", st: F, term: ["API", "程式之間講好的收件窗口"] },
-    { ch: 2, name: "切成 token", sub: "文字被切成 <em>token</em>，變成一串數字", hot: ["#tok"], pk: "#tok", kind: "ctx", st: F + " tokens", term: ["token", "模型處理文字的最小單位"] },
-    { ch: 2, name: "比對快取", sub: "跟上次一樣的部分，直接用<em>存好的結果</em>", hot: ["#cache", "#pack"], pk: "#cache", kind: "ctx", st: F + " tokens hit", term: ["prompt cache", "伺服器暫存讀過的前綴，約 5 分鐘"] },
-    { ch: 2, name: "GPU 生成", sub: "模型<em>一個 token 一個 token</em> 往下接", hot: ["#gpu"], pk: "#gpu", kind: "ctx", st: F + " tokens gen-on", term: ["推論", "用固定的權重算出下一個字"] },
-    { ch: 3, name: "串流回傳", sub: "答案<em>邊算邊傳</em>，字一段段跳出來", hot: ["#gpu", "#pipe", "#screen"], cam: ["#screen", "#pipe"], tour: ["#wp4", "#wp3", "#wp2", "#wp1", "#screen"], beam: ["pipe up"], kind: "reply", st: F + " tokens gen-on typed", term: ["串流", "算出一小段就先傳一小段"] },
-    { ch: 3, name: "執行工具", sub: "模型要看檔案，是<em>你的電腦</em>去讀，必要時先問你", hot: ["#tool"], pk: "#tool", kind: "tool", st: F + " typed perm-on", term: ["tool_use", "「我要用哪個工具」的固定格式請求"] },
-    { ch: 3, name: "再送一次", sub: "結果<em>加回</em>整包，再走一次第二章", hot: ["#pack", "#pipe", "#front", "#tok", "#cache"], pk: "#cache", beam: ["pipe"], kind: "ctx", st: F + " typed result hit", term: ["agent 迴圈", "送出、動手、放回，重複到做完"] },
-    { ch: 3, name: "存回本地", sub: "整段對話<em>存回你的電腦</em>，模型什麼都沒記住", hot: ["#files", "#screen"], pk: "#files", kind: "save", st: F + " typed result saved-on", term: [".jsonl 對話紀錄", "存在 ~/.claude/projects/ 裡"] },
-    { ch: 4, name: "連到中繼", sub: "電腦和手機都連到 Anthropic 的<em>中繼站</em>", hot: ["#relay", "#pipe", "#pipe2", "#phone"], cam: ["#relay", "#phone"], beam: ["pipe2"], lit: "phone", st: F + " typed result saved-on", term: ["Remote Control", "用手機遙控電腦上的 Claude Code"] },
-    { ch: 4, name: "手機下指令", sub: "手機打的字<em>經過中繼</em>交給電腦，檔案一直在家", hot: ["#phone", "#pipe2", "#relay", "#pipe", "#input"], pk: "#input", kind: "msg", cam: ["#pipe", "#phone"], beam: ["pipe2 up", "pipe up"], st: F + " typed result saved-on phone-msg", term: ["同步", "同步的是訊息和紀錄，不是模型"] },
-    { ch: 0, name: "所以", sub: "一路上變多的只有紀錄，模型被改的次數 <em>0</em>", hot: [], fit: true, st: "end" }
+    { ch: 0, name: "開場", sub: "從 Enter 到手機，資料走過<em>三個地方</em>", note: "往下捲，或按兩側的箭頭一步步看", hot: [], fit: true, beam: ["pipe0", "pipe", "pipe2"] },
+    { ch: 1, name: "按下 Enter", sub: "先接手的是<em>你電腦上的程式</em>", note: "這時還沒有任何東西離開你的電腦", hot: ["#input"], cam: ["#pipe0", "#files"], beam: ["pipe0"], lit: "z-pc", term: ["客戶端", "裝在你電腦上、負責跟伺服器講話的程式"] },
+    { ch: 1, name: "讀本地檔案", sub: "先讀你電腦上的<em>記憶與紀錄</em>", note: "這些檔案都只在你的硬碟上", hot: ["#files"], term: ["CLAUDE.md", "記憶檔：專案規範和你的偏好"] },
+    { ch: 1, name: "照順序打包", sub: "照順序打包成<em>一整包</em>", note: "不常變的放前面，快取才用得上", hot: ["#files", "#pack"], pk: "#pack", kind: "ctx", st: F, term: ["context", "模型這次要讀的全部內容"] },
+    { ch: 2, name: "先上鎖", sub: "出門前先<em>上鎖</em>", note: "HTTPS 加密，路上的人看不懂", hot: ["#pack"], pk: "#pack", kind: "lock", st: F, term: ["HTTPS", "加密的連線，路上的人看不懂內容"] },
+    { ch: 2, name: "跨海到機房", sub: "整包<em>跨海</em>到遠端機房", note: "單程約 1 萬公里，來回約 0.1–0.2 秒", hot: ["#pipe"], cam: ["#pipe", "#srv-ico"], tour: ["#wp1", "#wp2", "#wp3", "#wp4", "#srv-ico"], beam: ["pipe"], lit: "z-srv", kind: "lock", st: F, term: ["資料中心", "放滿伺服器和 GPU 的遠端機房"] },
+    { ch: 2, name: "前台驗證", sub: "前台先<em>驗明正身</em>", note: "確認帳號和額度，再分一台 GPU 機器", hot: ["#front"], pk: "#front", cam: ["#front", "#tok"], kind: "ctx", st: F, term: ["API", "程式之間講好的收件窗口"] },
+    { ch: 2, name: "切成 token", sub: "文字切成 <em>token</em>", note: "切法與編號為示意", hot: ["#tok"], pk: "#tok", kind: "ctx", st: F + " tokens", term: ["token", "模型處理文字的最小單位"] },
+    { ch: 2, name: "比對快取", sub: "一樣的部分<em>直接用快取</em>", note: "快取約存 5 分鐘，太久要整包重算", hot: ["#cache", "#pack"], pk: "#cache", kind: "ctx", st: F + " tokens hit", term: ["prompt cache", "伺服器暫存讀過的前綴，約 5 分鐘"] },
+    { ch: 2, name: "GPU 生成", sub: "模型<em>一個 token 一個 token</em> 往下接", note: "模型的權重全程不會改變", hot: ["#gpu"], pk: "#gpu", kind: "ctx", st: F + " tokens gen-on", term: ["推論", "用固定的權重算出下一個字"] },
+    { ch: 3, name: "串流回傳", sub: "答案<em>邊算邊傳</em>回來", note: "沿同一條加密連線回到你的電腦", hot: ["#gpu", "#pipe", "#screen"], cam: ["#screen", "#pipe"], tour: ["#wp4", "#wp3", "#wp2", "#wp1", "#screen"], beam: ["pipe up"], kind: "reply", st: F + " tokens gen-on typed", term: ["串流", "算出一小段就先傳一小段"] },
+    { ch: 3, name: "執行工具", sub: "要看檔案，是<em>你的電腦</em>去讀", note: "危險的動作會先問你", hot: ["#tool"], pk: "#tool", kind: "tool", st: F + " typed perm-on", term: ["tool_use", "「我要用哪個工具」的固定格式請求"] },
+    { ch: 3, name: "再送一次", sub: "結果<em>加回</em>，再送一次", note: "來回到模型不再要工具，就是 agent 迴圈", hot: ["#pack", "#pipe", "#front", "#tok", "#cache"], pk: "#cache", beam: ["pipe"], kind: "ctx", st: F + " typed result hit", term: ["agent 迴圈", "送出、動手、放回，重複到做完"] },
+    { ch: 3, name: "存回本地", sub: "整段對話<em>存回你的電腦</em>", note: "存在 ~/.claude/projects/ 的 .jsonl 檔", hot: ["#files", "#screen"], pk: "#files", kind: "save", st: F + " typed result saved-on", term: [".jsonl 對話紀錄", "存在 ~/.claude/projects/ 裡"] },
+    { ch: 4, name: "連到中繼", sub: "電腦和手機都連到<em>中繼站</em>", note: "中繼只轉送訊息，碰不到你的檔案", hot: ["#relay", "#pipe", "#pipe2", "#phone"], cam: ["#relay", "#phone"], beam: ["pipe2"], lit: "phone", st: F + " typed result saved-on", term: ["Remote Control", "用手機遙控電腦上的 Claude Code"] },
+    { ch: 4, name: "手機下指令", sub: "手機的話<em>經過中繼</em>交給電腦", note: "所以電腦要開著，檔案一直在家", hot: ["#phone", "#pipe2", "#relay", "#pipe", "#input"], pk: "#input", kind: "msg", cam: ["#pipe", "#phone"], beam: ["pipe2 up", "pipe up"], st: F + " typed result saved-on phone-msg", term: ["同步", "同步的是訊息和紀錄，不是模型"] },
+    { ch: 0, name: "所以", sub: "模型被改的次數：<em>0</em>", note: "一路上變多的只有紀錄", hot: [], fit: true, st: "end" }
   ];
   var KIND = {
     ctx: '<i style="--c:var(--l-tools)"></i><i style="--c:var(--l-sys)"></i><i style="--c:var(--l-mem)"></i><i style="--c:var(--l-hist)"></i><i style="--c:var(--l-new)"></i><b>整包</b>',
@@ -614,13 +616,12 @@
     steps.forEach(function (el) { el.classList.toggle("on", +el.dataset.step === n); });
     var card = steps[n].querySelector(".card");
     var ps = card.querySelectorAll(":scope > p");
-    narr.innerHTML = ps.length ? ps[0].innerHTML : "";
+    narr.textContent = s.note || "";
     narr.classList.remove("swap"); void narr.offsetWidth; if (!reduce) narr.classList.add("swap");
     sheetTitle.textContent = card.querySelector("h3").textContent;
     sheetTxt.innerHTML = "";
     ps.forEach(function (q) { sheetTxt.appendChild(q.cloneNode(true)); });
     closeSheet();
-    requestAnimationFrame(function () { more.hidden = ps.length < 2 && narr.scrollHeight <= narr.clientHeight + 1; });
     count.textContent = n > 0 && n < S.length - 1 ? n + " / " + (S.length - 2) : "";
     prevB.disabled = n === 0; nextB.disabled = n === S.length - 1;
     if (s.term) { term.firstChild.textContent = s.term[0]; term.lastChild.textContent = s.term[1]; term.classList.add("on"); }
