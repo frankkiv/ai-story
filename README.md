@@ -8,6 +8,7 @@
 - `history.html`：時間線
 - `bench.html`：模型評比（分數怎麼看、各模型對照、誰擅長什麼、模型名冊）
 - `tech.html`：它怎麼運作（context、prompt cache、agent 迴圈、Auto 模式、同步、多 agent 協作、skills）
+- `journey.html`：按下 Enter 之後（捲動敘事導覽，從本地組合、送到遠端、傳回來到手機同步）
 - `china.html`：追趕與蒸餾
 - `future.html`：下一個瓶頸（電力、資料中心、記憶體、儲存）
 

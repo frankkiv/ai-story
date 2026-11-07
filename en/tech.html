@@ -55,6 +55,7 @@
       <div class="cta">
         <a class="btn primary" href="#sim">Try the context simulator →</a>
         <a class="btn" href="#myth">Start with the most common myth</a>
+        <a class="btn" href="journey.html">Follow one message end to end →</a>
       </div>
     </div>
     <div>
@@ -127,6 +128,7 @@
       <span class="eyebrow">02 · What one request looks like</span>
       <h2>You type "look at this bug", and a whole bundle goes out</h2>
       <p class="lead">Taking Claude Code as the example, each round sends these layers to the API, in this order (Anthropic's cache matches prefixes in tools → system → messages order). The order matters; the cache section uses it.</p>
+      <p class="jlink"><a href="journey.html#j-pack">Watch it: how this package is assembled on your computer and sent out →</a></p>
     </div>
     <div class="grid2">
       <ol class="anatomy">
@@ -266,6 +268,7 @@
       <span class="eyebrow">04 · Prompt cache</span>
       <h2>If everything is resent each time, why isn't it unbearably slow?</h2>
       <p class="lead">Because the model's side keeps the "already computed prefix" for a while. If the next context starts exactly the same, it picks up from there.</p>
+      <p class="jlink"><a href="journey.html#j-cache">Watch it: where the cache kicks in on the server →</a></p>
     </div>
     <div class="grid3">
       <article class="card">
@@ -296,6 +299,7 @@
       <span class="eyebrow">05 · The agent loop</span>
       <h2>"AI doing things itself" is really a while loop</h2>
       <p class="lead">The model never actually runs anything. It only outputs "I want to call this tool with these arguments". The client on your computer runs it, puts the result back into the context, and asks the model again.</p>
+      <p class="jlink"><a href="journey.html#j-tool">Watch it: whose computer actually runs the tool →</a></p>
     </div>
     <div class="loop">
       <ol class="steps" id="loopSteps">
@@ -376,6 +380,7 @@
       <span class="eyebrow">07 · How phone and computer stay in sync</span>
       <h2>One account, but the data lives in three different places</h2>
       <p class="lead">"Picking up on your phone" looks like magic, but first sort out: where is this conversation stored? Which machine runs the loop? What kind of remote is the phone?</p>
+      <p class="jlink"><a href="journey.html#j-relay">Watch it: how a phone message travels through the relay to your computer →</a></p>
     </div>
     <div class="sync" aria-label="How Remote Control connects">
       <div class="node">

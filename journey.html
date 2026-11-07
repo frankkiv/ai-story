@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>按下 Enter 之後 · AI 長出手了</title>
+<meta name="description" content="你對 AI 打一句話、按下 Enter，資料在你的電腦怎麼組合、怎麼送到遠端伺服器的模型、怎麼回來，手機又怎麼同步。四章十五步，一次只看一個地方。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700;900&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="alternate" hreflang="zh-Hant" href="journey.html">
+<link rel="alternate" hreflang="en" href="en/journey.html">
+<script src="assets/i18n.js"></script>
+<style>
+/* 捲動敘事：一張「資料走過的地圖」固定在舞台裡，捲一段，鏡頭就移到下一個地方 */
+.story { display: grid; gap: 2rem; padding-block: 1rem 4rem; }
+@media (min-width: 900px) { .story { grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 3rem; } }
+.stage-col { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 4.5rem); height: calc(100svh - 6rem); max-height: 48rem; z-index: 3; width: 100%; max-width: 28rem; justify-self: center; }
+@media (max-width: 899px) {
+  .story { display: block; }
+  .stage-col { top: env(safe-area-inset-top, 0px); height: 68svh; min-height: 27rem; max-height: none; max-width: none; background: var(--bg); padding-block: .5rem; margin-inline: -16px; padding-inline: 16px; }
+}
+:root { --st-gold: var(--l-skills); }
+
+.stage { position: relative; height: 100%; border-radius: 22px; overflow: hidden; background: var(--code-bg); color: var(--code-text); display: grid; grid-template-rows: auto auto minmax(0, 1fr) auto; box-shadow: var(--shadow); isolation: isolate; }
+
+/* 標籤：章 + 步，右邊是進度條 */
+.st-top { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: .75rem; padding: .85rem 1rem .4rem; z-index: 4; }
+.st-tag { border-left: 3px solid var(--st-gold); padding-left: .55rem; line-height: 1.3; color: #fff; font-weight: 700; font-size: .98rem; }
+.st-tag small { display: block; font-weight: 500; font-size: .74rem; color: var(--st-gold); letter-spacing: .04em; }
+.st-prog { width: 4.5rem; height: 4px; border-radius: 4px; background: rgba(255,255,255,.15); overflow: hidden; margin-bottom: .35rem; }
+.st-prog i { display: block; height: 100%; width: 0; background: var(--st-gold); transition: width .5s; }
+
+/* 名詞卡 */
+.st-term { position: relative; z-index: 5; margin: 0 1rem; justify-self: start; min-height: 2.4rem; background: rgba(10,12,16,.82); border: 1px solid color-mix(in srgb, var(--st-gold) 70%, transparent); border-radius: 10px; padding: .3rem .7rem; font-size: .82rem; line-height: 1.45; display: flex; flex-wrap: wrap; align-items: baseline; column-gap: .6rem; opacity: 0; transition: opacity .35s; }
+.st-term.on { opacity: 1; }
+.st-term:not(.on) { visibility: hidden; }
+.st-term b { color: var(--st-gold); font-size: .95rem; }
+.st-term span { color: #c9d1dc; }
+
+/* 鏡頭 */
+.st-view { position: relative; overflow: hidden; min-height: 0; }
+.scene { position: absolute; left: 0; top: 0; width: 100%; transform-origin: 0 0; transition: transform .9s cubic-bezier(.2,.7,.2,1); padding: .8rem; display: grid; gap: .5rem; line-height: 1.35; }
+.hotable { transition: opacity .45s, box-shadow .45s; }
+.scene.focus .hotable:not(.hot) { opacity: .25; }
+.hot { box-shadow: 0 0 0 2px var(--st-gold), 0 0 24px 2px color-mix(in srgb, var(--st-gold) 50%, transparent); }
+
+.zn { border-radius: 14px; border: 1px dashed rgba(255,255,255,.2); padding: .55rem; display: grid; gap: .45rem; }
+.zn > h4 { margin: 0; font-family: var(--mono); font-weight: 500; font-size: .74rem; letter-spacing: .04em; color: #8b95a5; }
+.zn > h4 b { color: #fff; font-family: var(--sans); font-weight: 700; font-size: .86rem; margin-right: .4rem; letter-spacing: 0; }
+.srv { background: rgba(122, 79, 209, .09); }
+.box { position: relative; border-radius: 10px; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.045); padding: .45rem .6rem; display: grid; gap: .3rem; }
+.zl { font-family: var(--mono); font-size: .7rem; letter-spacing: .03em; color: #8b95a5; }
+.zl b { color: #dfe5ee; font-family: var(--sans); font-weight: 600; font-size: .78rem; margin-right: .3rem; letter-spacing: 0; }
+.cmd { font-family: var(--mono); font-size: .8rem; color: #fff; }
+.cmd::before { content: "> "; color: var(--l-new); }
+.chips { display: flex; flex-wrap: wrap; gap: .28rem; }
+.chip { --c: var(--l-sys); font-size: .7rem; line-height: 1.4; padding: .08rem .42rem; border-radius: 6px; border: 1px solid color-mix(in srgb, var(--c) 70%, transparent); color: color-mix(in srgb, var(--c) 55%, #fff); background: color-mix(in srgb, var(--c) 18%, transparent); position: relative; }
+.chip.mono { font-family: var(--mono); }
+.row2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: .45rem; }
+
+/* 打包的那一疊 */
+.bars { list-style: none; margin: 0; padding: 0; display: grid; gap: .16rem; }
+.bar { --c: var(--l-sys); position: relative; font-size: .7rem; line-height: 1.3; padding: .08rem .45rem; border-radius: 5px; border-left: 4px solid var(--c); background: color-mix(in srgb, var(--c) 22%, transparent); color: #e7ecf2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: .18; transition: opacity .45s; }
+.stage.filled .bar { opacity: 1; }
+.bar.res { display: none; }
+.stage.result .bar.res { display: block; }
+.badge { font-style: normal; position: absolute; right: .35rem; top: 50%; transform: translateY(-50%); font-family: var(--mono); font-size: .6rem; padding: 0 .3rem; border-radius: 4px; background: var(--st-gold); color: #0e1116; opacity: 0; transition: opacity .35s; }
+.badge.new { background: var(--l-new); color: #fff; }
+.stage.hit .badge { opacity: 1; }
+
+/* 管線 */
+.pipe { position: relative; height: 3.2rem; display: grid; place-items: center; }
+.pipe::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 6px; margin-left: -3px; border-radius: 3px; background: repeating-linear-gradient(to bottom, rgba(255,255,255,.28) 0 6px, transparent 6px 11px); }
+.pipe span { position: relative; font-family: var(--mono); font-size: .66rem; color: #c9d1dc; background: var(--code-bg); padding: .05rem .45rem; border-radius: 999px; border: 1px solid rgba(255,255,255,.2); }
+.pipe.short { height: 2.4rem; }
+.pipe.hot { box-shadow: none; }
+.pipe.hot::before { background: repeating-linear-gradient(to bottom, var(--st-gold) 0 6px, transparent 6px 11px); }
+.pipe.hot span { border-color: var(--st-gold); color: var(--st-gold); }
+
+/* token 與生成 */
+.tk { display: none; }
+.stage.tokens .tk { display: flex; }
+.tk .chip { font-family: var(--mono); }
+.gen { display: flex; flex-wrap: wrap; gap: .2rem; min-height: 1.2rem; }
+.gen i { font-style: normal; font-size: .72rem; padding: 0 .3rem; border-radius: 4px; background: color-mix(in srgb, var(--l-out) 35%, transparent); color: #fff; opacity: 0; }
+.stage.gen-on .gen i { opacity: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  .stage.gen-on .gen i { animation: pop .3s both; animation-delay: calc(var(--i) * .22s); }
+  .stage.typed .typing span { animation: pop .25s both; animation-delay: calc(var(--i) * .16s); }
+}
+@keyframes pop { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
+.weights { font-size: .72rem; color: #a7b0bd; }
+.weights i { font-style: normal; font-family: var(--mono); color: var(--st-gold); font-weight: 700; }
+.typing { font-size: .74rem; color: #fff; min-height: 2.1em; }
+.typing span { opacity: 0; }
+.stage.typed .typing span { opacity: 1; }
+.svd { position: absolute; right: -.3rem; top: -.55rem; font-style: normal; font-family: var(--mono); font-size: .58rem; background: var(--l-new); color: #fff; border-radius: 4px; padding: 0 .25rem; opacity: 0; transition: opacity .35s; }
+.stage.saved-on .svd { opacity: 1; }
+
+/* 權限 */
+.perm { position: absolute; right: .35rem; bottom: .35rem; font-size: .68rem; background: #fff; color: #0e1116; border-radius: 7px; padding: .2rem .4rem; display: flex; gap: .3rem; align-items: center; opacity: 0; transform: scale(.9); transition: opacity .35s, transform .35s; box-shadow: 0 6px 18px rgba(0,0,0,.4); }
+.perm u { text-decoration: none; font-weight: 700; border-radius: 5px; padding: 0 .3rem; background: var(--l-new); color: #fff; }
+.stage.perm-on .perm { opacity: 1; transform: none; }
+
+/* 手機 */
+.phone { justify-self: center; width: min(13rem, 70%); border-radius: 22px; border: 2px solid rgba(255,255,255,.3); padding: .55rem .6rem .7rem; display: grid; gap: .3rem; background: rgba(255,255,255,.04); }
+.phone .zl { text-align: center; }
+.bub { font-size: .7rem; padding: .2rem .5rem; border-radius: 10px; max-width: 85%; }
+.bub.me { justify-self: end; background: color-mix(in srgb, var(--l-new) 40%, transparent); color: #fff; }
+.bub.ai { justify-self: start; background: rgba(255,255,255,.1); color: #e7ecf2; }
+.bub.late { display: none; }
+.stage.phone-msg .bub.late { display: block; }
+.phone .ok { justify-self: center; font-size: .68rem; font-weight: 700; background: var(--l-new); color: #fff; border-radius: 6px; padding: .05rem .6rem; }
+
+
+/* 網路那一段：路線圖 */
+.route { position: relative; border-radius: 12px; border: 1px dashed rgba(255,255,255,.22); padding: .5rem .7rem .55rem 2rem; display: grid; gap: .35rem; background: repeating-linear-gradient(135deg, rgba(255,255,255,.025) 0 8px, transparent 8px 16px); }
+.route::before { content: ""; position: absolute; left: .95rem; top: .6rem; bottom: .6rem; width: 3px; margin-left: -1.5px; background: repeating-linear-gradient(to bottom, rgba(255,255,255,.3) 0 5px, transparent 5px 9px); }
+.rt-head { font-family: var(--mono); font-size: .68rem; color: #8b95a5; }
+.rt-head b { font-family: var(--sans); color: #fff; font-size: .8rem; margin-right: .4rem; }
+.wps { list-style: none; margin: 0; padding: 0; display: grid; gap: .45rem; }
+.wps li { position: relative; font-size: .74rem; color: #dfe5ee; }
+.wps li::before { content: ""; position: absolute; left: -1.33rem; top: .32em; width: .55rem; height: .55rem; border-radius: 50%; background: var(--code-bg); border: 2px solid rgba(255,255,255,.45); }
+.rt-foot { font-size: .68rem; color: #a7b0bd; }
+.rt-foot b { color: #fff; font-weight: 600; }
+.route.hot { box-shadow: 0 0 0 2px var(--st-gold), 0 0 24px 2px color-mix(in srgb, var(--st-gold) 50%, transparent); }
+.route.hot::before { background: repeating-linear-gradient(to bottom, var(--st-gold) 0 5px, transparent 5px 9px); }
+.route.hot .wps li::before { border-color: var(--st-gold); }
+.route.hot .rt-foot b { color: var(--st-gold); }
+.where { font-family: var(--sans); font-size: .66rem; letter-spacing: 0; border-radius: 999px; padding: .02rem .45rem; margin-right: .45rem; background: color-mix(in srgb, var(--l-new) 30%, transparent); color: #fff; }
+.where.far { background: color-mix(in srgb, var(--l-out) 45%, transparent); }
+.srv { border: 1px solid color-mix(in srgb, var(--l-out) 55%, transparent); }
+.lk { position: relative; display: block; width: .8rem; height: .6rem; margin: .4rem auto 0; border-radius: 2px; background: #0e1116; }
+.lk::before { content: ""; position: absolute; left: .14rem; top: -.38rem; width: .38rem; height: .32rem; border: 2px solid #0e1116; border-bottom: 0; border-radius: .3rem .3rem 0 0; }
+
+
+/* 封面：還沒「進去」之前，每個地方先是一個大圖示；光線帶進去以後，封面放大淡出，露出裡面 */
+.zn, .phone { position: relative; }
+.cover { position: absolute; inset: -1px; z-index: 4; border-radius: inherit; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: .35rem; padding-top: 2.2rem; text-align: center; background: radial-gradient(120% 70% at 50% 18%, #1b2130, var(--code-bg) 70%); border: 1px solid rgba(255,255,255,.18); transition: opacity .6s, transform .7s cubic-bezier(.2,.7,.2,1), box-shadow .4s; }
+.phone .cover { padding-top: 1rem; }
+.cover .ico { width: min(9rem, 46%); color: #dfe5ee; transition: color .4s, filter .4s; }
+.phone .cover .ico { width: 62%; }
+.cover svg { display: block; width: 100%; height: auto; }
+.cover b { font-size: 1.5rem; color: #fff; letter-spacing: -.01em; }
+.cover span { font-size: .85rem; color: #a7b0bd; }
+.phone .cover b { font-size: 1.1rem; }
+.cover.lit { box-shadow: 0 0 0 2px var(--st-gold), 0 0 36px 4px color-mix(in srgb, var(--st-gold) 55%, transparent); }
+.cover.lit .ico { color: var(--st-gold); filter: drop-shadow(0 0 10px var(--st-gold)); }
+.open > .cover { opacity: 0; transform: scale(1.18); pointer-events: none; transition-delay: .7s; }
+.scene.focus .zn > .cover, .scene.focus .phone > .cover { opacity: 1; }
+.scene.focus .open > .cover { opacity: 0; }
+
+/* 光的線條：沿著管線跑 */
+.pipe::after, .route::after { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 5px; margin-left: -2.5px; opacity: 0; background: linear-gradient(to bottom, transparent 0, var(--st-gold) 35%, #fff 50%, var(--st-gold) 65%, transparent 100%) no-repeat; background-size: 100% 50%; filter: drop-shadow(0 0 6px var(--st-gold)); }
+.route::after { left: .95rem; top: .6rem; bottom: .6rem; }
+.beam::after { opacity: 1; animation: beam 1.1s linear infinite; }
+.beam.up::after { animation-direction: reverse; }
+@keyframes beam { from { background-position: 0 -100%; } to { background-position: 0 200%; } }
+@media (prefers-reduced-motion: reduce) { .beam::after { animation: none; background-position: 0 50%; } .cover { transition: none !important; } }
+
+/* 會移動的那一包 */
+.packet { position: absolute; z-index: 6; left: 0; top: 0; width: 3rem; border-radius: 7px; padding: .2rem; display: grid; gap: 2px; background: #fff; box-shadow: 0 6px 18px rgba(0,0,0,.5), 0 0 0 2px var(--st-gold); transition: transform .7s cubic-bezier(.2,.7,.2,1), opacity .3s; opacity: 0; pointer-events: none; }
+.packet.on { opacity: 1; }
+.packet i { display: block; height: 4px; border-radius: 2px; background: var(--c); }
+.packet b { font-size: .62rem; text-align: center; color: #0e1116; line-height: 1.2; }
+
+/* 收尾 */
+.recap { position: absolute; inset: 0; z-index: 6; list-style: none; margin: 0; padding: 1rem 1.3rem; background: var(--code-bg); display: grid; align-content: center; gap: .7rem; opacity: 0; pointer-events: none; transition: opacity .5s; }
+.recap li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .15rem .7rem; color: #fff; font-size: .98rem; font-weight: 700; }
+.recap li::before { content: ""; grid-row: span 2; width: .7rem; height: .7rem; margin-top: .45rem; border-radius: 50%; background: var(--st-gold); box-shadow: 0 0 12px var(--st-gold); }
+.recap li span { font-weight: 400; font-size: .84rem; color: #a7b0bd; }
+.recap .zero { display: block; margin-top: .4rem; font-size: .9rem; font-weight: 400; color: #a7b0bd; }
+.recap .zero::before { display: none; }
+.recap .zero b { color: var(--st-gold); font-family: var(--mono); font-size: 1.1rem; }
+.stage.end .recap { opacity: 1; }
+
+/* 大字幕 */
+.st-sub { z-index: 4; padding: .55rem 1rem .9rem; font-size: 1.08rem; font-weight: 700; line-height: 1.45; color: #fff; text-align: center; min-height: 3.9rem; display: flex; align-items: center; justify-content: center; text-wrap: balance; background: var(--code-bg); border-top: 1px solid rgba(255,255,255,.08); }
+.st-sub em { font-style: normal; color: var(--st-gold); }
+@media (max-width: 899px) { .st-sub { font-size: 1rem; min-height: 3.4rem; } }
+
+/* 旁白段落 */
+.steps { display: grid; }
+.step { min-height: 72svh; display: grid; align-content: center; padding-block: 2rem; }
+.step:first-child { min-height: 50svh; }
+.step:last-child { min-height: 70svh; }
+.step .card { gap: .8rem; transition: border-color .3s; }
+.step.on .card { border-color: var(--l-skills); }
+.step .eyebrow { color: var(--l-skills); }
+.chap { padding-block: 2.5rem .5rem; }
+.chap span { font-family: var(--mono); font-size: .82rem; color: var(--muted); letter-spacing: .04em; }
+.chap h2 { font-size: clamp(1.4rem, 3.5vw, 1.9rem); }
+@media (max-width: 899px) { .step { min-height: 58svh; align-content: end; padding-block: 1rem; } .step:first-child { min-height: 28svh; } .chap { padding-block: 2rem 0; } }
+.sample-note { font-size: .9rem; color: var(--muted); display: grid; gap: .5rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .scene, .packet, .hotable, .bar, .st-term, .recap, .perm, .st-prog i { transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav gutter" aria-label="網站">
+  <div class="frame">
+    <a class="brand" href="index.html"><i></i><span>AI 長出手了</span></a>
+    <ul>
+      <li><a class="l" href="history.html"><span class="lg">時間線</span><span class="sh">時間線</span></a></li>
+      <li><a class="l" href="bench.html"><span class="lg">模型評比</span><span class="sh">評比</span></a></li>
+      <li><a class="l site-on" href="tech.html"><span class="lg">它怎麼運作</span><span class="sh">原理</span></a></li>
+      <li><a class="l" href="china.html"><span class="lg">追趕與蒸餾</span><span class="sh">中國</span></a></li>
+      <li><a class="l" href="future.html"><span class="lg">下一個瓶頸</span><span class="sh">瓶頸</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero gutter" style="padding-block: 3.5rem 1.5rem">
+  <div class="frame" style="display:block">
+    <div class="hero-copy measure">
+      <span class="pill">PART 3 導覽 · <b>跟著一句話走一趟</b></span>
+      <h1>按下 Enter 之後，<br><em>你的話去了哪裡？</em></h1>
+      <p class="sub">你在電腦上的 Claude Code 打一句「幫我看這個 bug」。這句話會先在你的電腦上被打包，一路送到遠端機房的模型，答案再傳回來；你的手機也能看到同一段對話。四章、十五步，往下捲，一次只看一個地方。</p>
+    </div>
+  </div>
+</header>
+
+<main class="gutter">
+  <div class="frame story">
+    <div class="stage-col">
+      <div class="stage" id="stage" aria-hidden="true">
+        <div class="st-top">
+          <div class="st-tag" id="tag"></div>
+          <div class="st-prog"><i id="prog"></i></div>
+        </div>
+        <div class="st-term" id="term"><b></b><span></span></div>
+        <div class="st-view" id="view">
+          <div class="scene" id="scene">
+
+            <div class="pipe short hotable" id="pipe0"><span>你按下 Enter</span></div>
+            <section class="zn" id="z-pc">
+              <div class="cover" aria-hidden="true"><div class="ico" id="pc-ico"><svg viewBox="0 0 64 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="52" height="32" rx="3"/><path d="M24 44h16M32 36v8"/><path d="M14 14h14M14 21h22M14 28h10" opacity=".55"/></svg></div><b>你的電腦</b><span>在你家，客戶端：Claude Code</span></div>
+              <h4><b>你的電腦</b><span class="where">在你家</span>客戶端：Claude Code</h4>
+              <div class="box hotable" id="input">
+                <div class="zl"><b>輸入</b>你打的字</div>
+                <div class="cmd">幫我看這個 bug</div>
+              </div>
+              <div class="box hotable" id="files">
+                <div class="zl"><b>本地檔案</b>只在你的硬碟上</div>
+                <div class="chips">
+                  <span class="chip mono" style="--c:var(--l-mem)">CLAUDE.md</span>
+                  <span class="chip mono" style="--c:var(--l-skills)">skills/</span>
+                  <span class="chip" style="--c:var(--l-tools)">MCP 工具</span>
+                  <span class="chip mono" style="--c:var(--l-hist)">對話紀錄.jsonl<em class="svd">已存</em></span>
+                </div>
+              </div>
+              <div class="box hotable" id="pack">
+                <div class="zl"><b>打包</b>POST /v1/messages</div>
+                <ol class="bars">
+                  <li class="bar" style="--c:var(--l-tools)">tools：工具說明書<em class="badge">命中</em></li>
+                  <li class="bar" style="--c:var(--l-sys)">system：規則與 skills 清單<em class="badge">命中</em></li>
+                  <li class="bar" style="--c:var(--l-mem)">記憶：CLAUDE.md<em class="badge">命中</em></li>
+                  <li class="bar" style="--c:var(--l-hist)">對話紀錄<em class="badge">命中</em></li>
+                  <li class="bar" style="--c:var(--l-new)">新訊息：幫我看這個 bug<em class="badge new">新算</em></li>
+                  <li class="bar res" style="--c:var(--l-tools)">工具結果：app.js 的內容<em class="badge new">新算</em></li>
+                </ol>
+              </div>
+              <div class="row2">
+                <div class="box hotable" id="tool">
+                  <div class="zl"><b>執行工具</b></div>
+                  <div class="cmd" style="font-size:.72rem">Read app.js</div>
+                  <div class="perm">允許？<u>允許</u></div>
+                </div>
+                <div class="box hotable" id="screen">
+                  <div class="zl"><b>畫面</b></div>
+                  <div class="typing"><span style="--i:0">問題</span><span style="--i:1">在</span><span style="--i:2">第 42 行</span><span style="--i:3">，</span><span style="--i:4">變數</span><span style="--i:5">拼錯了</span></div>
+                </div>
+              </div>
+            </section>
+
+            <div class="route hotable" id="pipe">
+              <div class="rt-head"><b>網路</b>HTTPS 加密 · 只往外連</div>
+              <ol class="wps">
+                <li id="wp1">家裡的 Wi-Fi 路由器</li>
+                <li id="wp2">電信業者的網路</li>
+                <li id="wp3">海底電纜</li>
+                <li id="wp4">雲端資料中心</li>
+              </ol>
+              <div class="rt-foot">以美國西岸機房為例：單程約 <b>1 萬公里</b>，來回約 <b>0.1–0.2 秒</b></div>
+            </div>
+
+            <section class="zn srv" id="z-srv">
+              <div class="cover" aria-hidden="true"><div class="ico" id="srv-ico"><svg viewBox="0 0 64 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 30a10 10 0 0 1 1-20 14 14 0 0 1 26 3 9 9 0 0 1 1 17z"/><rect x="20" y="33" width="24" height="5" rx="1.5"/><rect x="20" y="40" width="24" height="5" rx="1.5"/><path d="M24 35.5h.01M24 42.5h.01"/></svg></div><b>Anthropic 伺服器</b><span>遠端的雲端資料中心</span></div>
+              <h4><b>Anthropic 伺服器</b><span class="where far">遠端機房</span>雲端資料中心</h4>
+              <div class="box hotable" id="front">
+                <div class="zl"><b>API 前台</b>收件窗口</div>
+                <div class="chips">
+                  <span class="chip" style="--c:var(--l-sys)">驗證金鑰</span>
+                  <span class="chip" style="--c:var(--l-sys)">檢查額度</span>
+                  <span class="chip" style="--c:var(--l-sys)">分配機器</span>
+                </div>
+              </div>
+              <div class="box hotable" id="tok">
+                <div class="zl"><b>切成 token</b>示意</div>
+                <div class="chips"><span class="chip" style="--c:var(--l-new)">幫我</span><span class="chip" style="--c:var(--l-new)">看</span><span class="chip" style="--c:var(--l-new)">這個</span><span class="chip" style="--c:var(--l-new)">bug</span></div>
+                <div class="chips tk"><span class="chip" style="--c:var(--l-out)">48213</span><span class="chip" style="--c:var(--l-out)">1902</span><span class="chip" style="--c:var(--l-out)">30577</span><span class="chip" style="--c:var(--l-out)">9184</span></div>
+              </div>
+              <div class="box hotable" id="cache">
+                <div class="zl"><b>Prompt cache</b>存活約 5 分鐘</div>
+                <div class="chips">
+                  <span class="chip" style="--c:var(--l-skills)">前綴跟上次一樣：直接用</span>
+                  <span class="chip" style="--c:var(--l-new)">新的部分：現算</span>
+                </div>
+              </div>
+              <div class="box hotable" id="gpu">
+                <div class="zl"><b>GPU 上的模型</b>推論</div>
+                <div class="gen"><i style="--i:0">問題</i><i style="--i:1">在</i><i style="--i:2">第</i><i style="--i:3">42</i><i style="--i:4">行</i><i style="--i:5">…</i></div>
+                <div class="weights">權重固定，被改的次數 <i>0</i></div>
+              </div>
+              <div class="box hotable" id="relay">
+                <div class="zl"><b>Remote Control 中繼</b>轉送訊息</div>
+                <div class="chips">
+                  <span class="chip" style="--c:var(--l-hist)">電腦連進來</span>
+                  <span class="chip" style="--c:var(--l-new)">手機連進來</span>
+                  <span class="chip" style="--c:var(--l-sys)">不跑程式</span>
+                </div>
+              </div>
+            </section>
+
+            <div class="pipe short hotable" id="pipe2"><span>手機只連到中繼</span></div>
+
+            <div class="phone hotable" id="phone">
+              <div class="cover" aria-hidden="true"><div class="ico" id="ph-ico"><svg viewBox="0 0 64 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="21" y="2" width="22" height="44" rx="4"/><path d="M29 7h6"/><path d="M26 16h12M26 22h8M26 28h12" opacity=".55"/></svg></div><b>你的手機</b><span>Claude App</span></div>
+              <div class="zl"><b>你的手機</b></div>
+              <div class="bub me">幫我看這個 bug</div>
+              <div class="bub ai">問題在第 42 行…</div>
+              <div class="bub me late">順便幫我修好</div>
+              <span class="ok">允許</span>
+            </div>
+
+            <div class="packet" id="packet"></div>
+          </div>
+        </div>
+        <ol class="recap">
+          <li>在你的電腦上組合<span>讀本地檔案，照固定順序打包成一整包</span></li>
+          <li>一路送到遠端<span>上鎖、跨海到機房，再驗證、切 token、比對快取、GPU 生成</span></li>
+          <li>答案怎麼回來<span>邊算邊傳；要用工具就再跑一輪；最後存回你的電腦</span></li>
+          <li>手機怎麼同步<span>電腦和手機都連到中繼，檔案一直留在電腦</span></li>
+          <li class="zero">從頭到尾，模型被改的次數：<b>0</b></li>
+        </ol>
+        <p class="st-sub" id="sub"></p>
+      </div>
+    </div>
+
+    <div class="steps" id="steps">
+      <section class="step" data-step="0">
+        <div class="card">
+          <span class="eyebrow">開場</span>
+          <h3>先看全貌：資料會走過三個地方</h3>
+          <p>上面是你的電腦，中間是遠端的 Anthropic 伺服器，最下面是你的手機。往下捲，光線會帶你一個一個走進去。夾在中間、有斜線底紋的那一段是網路：從你家出發，一路跨海到機房。</p>
+        </div>
+      </section>
+
+      <div class="chap"><span>第一章</span><h2>在你的電腦上組合</h2></div>
+      <section class="step" data-step="1">
+        <div class="card">
+          <span class="eyebrow">第 1 步</span>
+          <h3>Enter 按下去，先接手的是你電腦上的程式</h3>
+          <p>你打字的地方是 Claude Code，一個裝在你電腦上的程式，叫做客戶端（client，負責跟伺服器講話的那一端）。這時候還沒有任何東西離開你的電腦。</p>
+        </div>
+      </section>
+      <section class="step" data-step="2">
+        <div class="card">
+          <span class="eyebrow">第 2 步</span>
+          <h3>它先翻你電腦上的檔案</h3>
+          <p>客戶端會讀進記憶檔 CLAUDE.md（你的專案規範和偏好）、skills 清單、MCP 工具的說明，以及這段對話之前的完整紀錄。這些檔案都放在你的硬碟上。</p>
+          <p class="elder"><b>白話說</b><span>出門找顧問之前，先把筆記本、公司規定和以前的往來信件都收進包包。</span></p>
+        </div>
+      </section>
+      <section class="step" data-step="3" id="j-pack">
+        <div class="card">
+          <span class="eyebrow">第 3 步</span>
+          <h3>照固定順序，打包成一整包</h3>
+          <p>順序是工具說明、系統規則（含 skills 清單）、記憶、對話紀錄，最後才是你剛打的那句。整包寫成一份 JSON，準備送到 API 的 <code>/v1/messages</code>。不常變的放前面，下一章的快取會用到這個順序。</p>
+        </div>
+      </section>
+
+      <div class="chap"><span>第二章</span><h2>一路送到遠端</h2></div>
+      <section class="step" data-step="4">
+        <div class="card">
+          <span class="eyebrow">第 4 步</span>
+          <h3>出門之前，先上鎖</h3>
+          <p>整包透過 HTTPS 送出。HTTPS 是加密的連線，路上經過的網路設備看不懂內容。你的電腦只往外連，不需要打開任何讓別人連進來的門。</p>
+          <p class="elder"><b>白話說</b><span>信裝進上鎖的保險箱再交給快遞，快遞只知道送去哪，不知道裡面寫什麼。</span></p>
+        </div>
+      </section>
+      <section class="step" data-step="5" id="j-trip">
+        <div class="card">
+          <span class="eyebrow">第 5 步</span>
+          <h3>離開你家，跨海到遠端機房</h3>
+          <p>上了鎖的整包從你家的 Wi-Fi 路由器出發，經過電信業者的網路，走海底電纜，送到 Anthropic 使用的雲端資料中心。以機房在美國西岸為例，單程大約 1 萬公里，訊號來回一趟約 0.1 到 0.2 秒。</p>
+          <p>從這一步開始，資料已經不在你的電腦上。接下來的驗證、計算和生成，全部發生在遠端。</p>
+          <p class="elder"><b>白話說</b><span>像寄國際快遞：從你家門口出發，過海送到另一個國家的大樓。只是網路快得多，眨個眼就能來回。</span></p>
+        </div>
+      </section>
+      <section class="step" data-step="6">
+        <div class="card">
+          <span class="eyebrow">第 6 步</span>
+          <h3>伺服器前台先驗明正身</h3>
+          <p>API（程式之間講好的收件窗口）先確認你的帳號或金鑰、檢查用量額度，再把這一包分給一台有空的 GPU 機器。</p>
+        </div>
+      </section>
+      <section class="step" data-step="7">
+        <div class="card">
+          <span class="eyebrow">第 7 步</span>
+          <h3>文字被切成 token，變成一串數字</h3>
+          <p>模型不直接讀字，它讀的是 token（模型處理文字的最小單位，可能是一個字、半個詞或一段英文）。每個 token 對應一個編號。圖上的切法和數字只是示意。</p>
+          <p class="elder"><b>白話說</b><span>把一句話拆成一塊塊積木，每塊積木背後有一個號碼。</span></p>
+        </div>
+      </section>
+      <section class="step" data-step="8" id="j-cache">
+        <div class="card">
+          <span class="eyebrow">第 8 步</span>
+          <h3>跟上次一樣的部分，直接用存好的</h3>
+          <p>伺服器會從頭比對這一包跟上一輪送來的是否一字不差。相同的前綴，直接拿暫存的計算結果（prompt cache），只有新的部分要現算。快取預設存活約 5 分鐘，太久沒用就要整包重算。</p>
+          <p class="elder"><b>白話說</b><span>熟客五分鐘內再點，廚房不用重新備料。記得的是備好的料，廚師的手藝沒變。</span></p>
+        </div>
+      </section>
+      <section class="step" data-step="9">
+        <div class="card">
+          <span class="eyebrow">第 9 步</span>
+          <h3>模型一個 token 一個 token 往下接</h3>
+          <p>模型在 GPU 上讀完整包，算出下一個最可能的 token，接上去，再算下一個。這叫推論。模型的權重（它學到的全部內容）在這個過程裡完全不會改變。</p>
+        </div>
+      </section>
+
+      <div class="chap"><span>第三章</span><h2>答案怎麼回來</h2></div>
+      <section class="step" data-step="10">
+        <div class="card">
+          <span class="eyebrow">第 10 步</span>
+          <h3>邊算邊傳回來</h3>
+          <p>答案用串流（streaming）的方式送回，算出一小段就傳一小段，沿著同一條加密連線回到你的電腦。所以你看到的字是一段一段跳出來，不是等全部寫完才出現。</p>
+        </div>
+      </section>
+      <section class="step" data-step="11" id="j-tool">
+        <div class="card">
+          <span class="eyebrow">第 11 步</span>
+          <h3>模型想看檔案，是你的電腦去讀</h3>
+          <p>如果模型覺得要先看程式碼，它回傳的不是答案，而是一段「我要用 Read 工具讀 app.js」的請求（tool_use）。真正去讀檔的是你電腦上的客戶端；比較危險的動作會先跳出來問你。</p>
+          <p class="elder"><b>白話說</b><span>顧問不會來你家，他寫紙條請你家的助理去拿文件，重要的事助理會先問你。</span></p>
+        </div>
+      </section>
+      <section class="step" data-step="12">
+        <div class="card">
+          <span class="eyebrow">第 12 步</span>
+          <h3>結果加回去，整包再走一次第二章</h3>
+          <p>讀到的內容加在整包最後面，再加密送出、驗證、比對快取、生成。前面都跟上一輪一樣，所以幾乎全部命中快取。這樣來回直到模型不再要工具，就是 agent 迴圈。</p>
+        </div>
+      </section>
+      <section class="step" data-step="13">
+        <div class="card">
+          <span class="eyebrow">第 13 步</span>
+          <h3>做完了，整段存回你的電腦</h3>
+          <p>這一輪的問題、工具呼叫、結果和回答，都寫進你電腦上的對話紀錄（<code>~/.claude/projects/</code> 裡的 .jsonl 檔）。下次你接著問，客戶端會再把它整份讀出來重送。</p>
+          <p class="elder"><b>白話說</b><span>AI「記得」上次聊什麼，是因為你的電腦把紀錄留著，下次再附上去。</span></p>
+        </div>
+      </section>
+
+      <div class="chap"><span>第四章</span><h2>手機怎麼同步</h2></div>
+      <section class="step" data-step="14" id="j-relay">
+        <div class="card">
+          <span class="eyebrow">第 14 步</span>
+          <h3>電腦和手機，都連到同一個中繼站</h3>
+          <p>開了 Remote Control，你的電腦會主動連到 Anthropic 的中繼服務，手機的 Claude App 也連過去。中繼只負責把兩邊的訊息互相轉送，連線期間也會存一份對話紀錄給手機看。它不跑你的程式，也碰不到你的檔案。</p>
+          <p class="elder"><b>白話說</b><span>手機像遙控器，電腦像電視，中間有個轉接站幫忙傳訊號。</span></p>
+        </div>
+      </section>
+      <section class="step" data-step="15">
+        <div class="card">
+          <span class="eyebrow">第 15 步</span>
+          <h3>手機打的字，經過中繼交給電腦</h3>
+          <p>你在手機上打「順便幫我修好」，訊息先到中繼，再轉給你的電腦。電腦把它加到整包最後面，從第一章重新走一遍。手機上的「允許」按鈕，也是用同一條路把你的決定送回電腦。所以電腦要保持開機，檔案一直留在家裡。</p>
+        </div>
+      </section>
+
+      <section class="step" data-step="16">
+        <div class="card">
+          <span class="eyebrow">所以</span>
+          <h3>你的一句話，走了四段路</h3>
+          <p>在你的電腦上組合，送到遠端的模型，邊算邊回來，再透過中繼同步到手機。一路上變多的只有紀錄，模型本身一個位元都沒有改。</p>
+          <p>想自己動手調看看每一層，可以到 <a href="tech.html#sim">它怎麼運作 · context 模擬器</a>；同步的三種用法比較在 <a href="tech.html#sync">手機與電腦同步</a>。</p>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer class="gutter">
+  <div class="frame sample-note">
+    <p>以 Claude Code 為例。token 的切法與編號為示意；台灣到美國西岸的距離與延遲為估算，實際路線與機房位置會不同；prompt cache 時效以官方文件為準。更完整的技術細節在 <a href="tech.html">它怎麼運作</a>。</p>
+    <p>資料來源：Anthropic〈Prompt caching〉文件、Claude Code〈Remote Control〉與資料存放說明、TeleGeography 海底電纜地圖。</p>
+    <p>寫於 2026 年 11 月。</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var stage = document.getElementById("stage"), scene = document.getElementById("scene"), view = document.getElementById("view");
+  var tag = document.getElementById("tag"), sub = document.getElementById("sub"), term = document.getElementById("term");
+  var prog = document.getElementById("prog"), packet = document.getElementById("packet");
+  var steps = document.querySelectorAll(".step");
+  var CH = ["", "第一章 在你的電腦上組合", "第二章 一路送到遠端", "第三章 答案怎麼回來", "第四章 手機怎麼同步"];
+  var F = "filled";
+
+  /* 每一步：章、步名、字幕、名詞卡、亮哪裡、那一包在哪、舞台狀態 */
+  var S = [
+    { ch: 0, name: "開場", sub: "從按下 Enter 到手機上看到答案，資料走過<em>三個地方</em>", hot: [], fit: true, beam: ["pipe0", "pipe", "pipe2"] },
+    { ch: 1, name: "按下 Enter", sub: "先接手的是<em>你電腦上的程式</em>", hot: ["#input"], cam: ["#pipe0", "#files"], beam: ["pipe0"], lit: "z-pc", term: ["客戶端", "裝在你電腦上、負責跟伺服器講話的程式"] },
+    { ch: 1, name: "讀本地檔案", sub: "它先翻你電腦上的<em>記憶、skills、工具、舊紀錄</em>", hot: ["#files"], term: ["CLAUDE.md", "記憶檔：專案規範和你的偏好"] },
+    { ch: 1, name: "照順序打包", sub: "照固定順序，打包成<em>一整包</em>", hot: ["#files", "#pack"], pk: "#pack", kind: "ctx", st: F, term: ["context", "模型這次要讀的全部內容"] },
+    { ch: 2, name: "先上鎖", sub: "出門前先<em>上鎖</em>：整包用 HTTPS 加密", hot: ["#pack"], pk: "#pack", kind: "lock", st: F, term: ["HTTPS", "加密的連線，路上的人看不懂內容"] },
+    { ch: 2, name: "跨海到機房", sub: "整包<em>離開你家</em>，一路跨海到遠端機房", hot: ["#pipe"], cam: ["#pipe", "#srv-ico"], tour: ["#wp1", "#wp2", "#wp3", "#wp4", "#srv-ico"], beam: ["pipe"], lit: "z-srv", kind: "lock", st: F, term: ["資料中心", "放滿伺服器和 GPU 的遠端機房"] },
+    { ch: 2, name: "前台驗證", sub: "前台先<em>驗明正身</em>、查額度，再分給一台機器", hot: ["#front"], pk: "#front", cam: ["#front", "#tok"], kind: "ctx", st: F, term: ["API", "程式之間講好的收件窗口"] },
+    { ch: 2, name: "切成 token", sub: "文字被切成 <em>token</em>，變成一串數字", hot: ["#tok"], pk: "#tok", kind: "ctx", st: F + " tokens", term: ["token", "模型處理文字的最小單位"] },
+    { ch: 2, name: "比對快取", sub: "跟上次一樣的部分，直接用<em>存好的結果</em>", hot: ["#cache", "#pack"], pk: "#cache", kind: "ctx", st: F + " tokens hit", term: ["prompt cache", "伺服器暫存讀過的前綴，約 5 分鐘"] },
+    { ch: 2, name: "GPU 生成", sub: "模型<em>一個 token 一個 token</em> 往下接", hot: ["#gpu"], pk: "#gpu", kind: "ctx", st: F + " tokens gen-on", term: ["推論", "用固定的權重算出下一個字"] },
+    { ch: 3, name: "串流回傳", sub: "答案<em>邊算邊傳</em>，字一段段跳出來", hot: ["#gpu", "#pipe", "#screen"], cam: ["#screen", "#pipe"], tour: ["#wp4", "#wp3", "#wp2", "#wp1", "#screen"], beam: ["pipe up"], kind: "reply", st: F + " tokens gen-on typed", term: ["串流", "算出一小段就先傳一小段"] },
+    { ch: 3, name: "執行工具", sub: "模型要看檔案，是<em>你的電腦</em>去讀，必要時先問你", hot: ["#tool"], pk: "#tool", kind: "tool", st: F + " typed perm-on", term: ["tool_use", "「我要用哪個工具」的固定格式請求"] },
+    { ch: 3, name: "再送一次", sub: "結果<em>加回</em>整包，再走一次第二章", hot: ["#pack", "#pipe", "#front", "#tok", "#cache"], pk: "#cache", beam: ["pipe"], kind: "ctx", st: F + " typed result hit", term: ["agent 迴圈", "送出、動手、放回，重複到做完"] },
+    { ch: 3, name: "存回本地", sub: "整段對話<em>存回你的電腦</em>，模型什麼都沒記住", hot: ["#files", "#screen"], pk: "#files", kind: "save", st: F + " typed result saved-on", term: [".jsonl 對話紀錄", "存在 ~/.claude/projects/ 裡"] },
+    { ch: 4, name: "連到中繼", sub: "電腦和手機都連到 Anthropic 的<em>中繼站</em>", hot: ["#relay", "#pipe", "#pipe2", "#phone"], cam: ["#relay", "#phone"], beam: ["pipe2"], lit: "phone", st: F + " typed result saved-on", term: ["Remote Control", "用手機遙控電腦上的 Claude Code"] },
+    { ch: 4, name: "手機下指令", sub: "手機打的字<em>經過中繼</em>交給電腦，檔案一直在家", hot: ["#phone", "#pipe2", "#relay", "#pipe", "#input"], pk: "#input", kind: "msg", cam: ["#pipe", "#phone"], beam: ["pipe2 up", "pipe up"], st: F + " typed result saved-on phone-msg", term: ["同步", "同步的是訊息和紀錄，不是模型"] },
+    { ch: 0, name: "所以", sub: "一路上變多的只有紀錄，模型被改的次數 <em>0</em>", hot: [], fit: true, st: "end" }
+  ];
+  var KIND = {
+    ctx: '<i style="--c:var(--l-tools)"></i><i style="--c:var(--l-sys)"></i><i style="--c:var(--l-mem)"></i><i style="--c:var(--l-hist)"></i><i style="--c:var(--l-new)"></i><b>整包</b>',
+    reply: '<i style="--c:var(--l-out)"></i><b>回答</b>',
+    tool: '<i style="--c:var(--l-out)"></i><b>tool_use</b>',
+    save: '<i style="--c:var(--l-hist)"></i><b>存檔</b>',
+    lock: '<span class="lk"></span><b>已加密</b>',
+    msg: '<i style="--c:var(--l-new)"></i><b>新訊息</b>'
+  };
+
+  function box(el) {
+    var x = 0, y = 0, e = el;
+    while (e && e !== scene) { x += e.offsetLeft; y += e.offsetTop; e = e.offsetParent; }
+    return { x: x, y: y, w: el.offsetWidth, h: el.offsetHeight };
+  }
+
+  var cur = -1, tourT = 0;
+  function place(q) {
+    var b = box(scene.querySelector(q)), pw = packet.offsetWidth, ph = packet.offsetHeight;
+    packet.style.transform = "translate(" + (b.x + b.w - pw - 6) + "px," + (b.y + b.h / 2 - ph / 2) + "px)";
+  }
+  function go(n, force) {
+    if (n === cur && !force) return;
+    cur = n;
+    var s = S[n];
+    stage.className = "stage " + (s.st || "");
+    /* 哪些地方已經「進去」了 */
+    document.getElementById("z-pc").classList.toggle("open", n >= 1);
+    document.getElementById("z-srv").classList.toggle("open", n >= 6);
+    document.getElementById("phone").classList.toggle("open", n >= 14);
+    scene.querySelectorAll(".beam").forEach(function (el) { el.classList.remove("beam", "up"); });
+    (s.beam || []).forEach(function (b) { var p = b.split(" "), el = document.getElementById(p[0]); el.classList.add("beam"); if (p[1]) el.classList.add("up"); });
+    scene.querySelectorAll(".cover.lit").forEach(function (el) { el.classList.remove("lit"); });
+    if (s.lit) document.querySelector("#" + s.lit + " > .cover").classList.add("lit");
+    tag.innerHTML = (s.ch ? "<small>" + CH[s.ch] + "</small>" : "") + (n && n < 16 ? "第 " + n + " 步：" : "") + s.name;
+    sub.innerHTML = "<span>" + s.sub + "</span>";
+    prog.style.width = (Math.min(n, 15) / 15 * 100) + "%";
+    steps.forEach(function (el) { el.classList.toggle("on", +el.dataset.step === n); });
+    if (s.term) { term.firstChild.textContent = s.term[0]; term.lastChild.textContent = s.term[1]; term.classList.add("on"); }
+    else term.classList.remove("on");
+
+    scene.querySelectorAll(".hot").forEach(function (el) { el.classList.remove("hot"); });
+    var hot = [];
+    s.hot.forEach(function (q) { var el = scene.querySelector(q); if (el) { el.classList.add("hot"); hot.push(el); } });
+    scene.classList.toggle("focus", hot.length > 0);
+
+    clearTimeout(tourT);
+    if (s.pk || s.tour) {
+      packet.innerHTML = KIND[s.kind];
+      packet.classList.add("on");
+      if (s.tour && !reduce) {
+        var i = 0;
+        (function hop() { place(s.tour[i]); if (++i < s.tour.length) tourT = setTimeout(hop, 750); })();
+      } else place(s.pk || s.tour[s.tour.length - 1]);
+    } else packet.classList.remove("on");
+
+    camera(s.fit ? [] : s.cam ? s.cam.map(function (q) { return scene.querySelector(q); }) : hot);
+  }
+
+  /* 鏡頭：亮起來的地方放大到畫面中間；沒有指定就看全貌 */
+  function camera(hot) {
+    var vw = view.clientWidth, vh = view.clientHeight, sw = scene.offsetWidth, sh = scene.offsetHeight;
+    var x0, y0, x1, y1;
+    if (!hot.length) { x0 = 0; y0 = 0; x1 = sw; y1 = sh; }
+    else {
+      x0 = 1e9; y0 = 1e9; x1 = -1e9; y1 = -1e9;
+      hot.forEach(function (el) { var o = box(el); x0 = Math.min(x0, o.x); y0 = Math.min(y0, o.y); x1 = Math.max(x1, o.x + o.w); y1 = Math.max(y1, o.y + o.h); });
+      x0 -= 10; y0 -= 10; x1 += 10; y1 += 10;
+    }
+    var w = x1 - x0, h = y1 - y0;
+    var k = Math.min(1.5, vw / w, vh / h);
+    var tx = vw / 2 - (x0 + w / 2) * k, ty = vh / 2 - (y0 + h / 2) * k;
+    tx = sw * k <= vw ? (vw - sw * k) / 2 : Math.min(0, Math.max(vw - sw * k, tx));
+    ty = sh * k <= vh ? (vh - sh * k) / 2 : Math.min(0, Math.max(vh - sh * k, ty));
+    scene.style.transform = "translate(" + tx.toFixed(1) + "px," + ty.toFixed(1) + "px) scale(" + k.toFixed(3) + ")";
+  }
+
+  function pick() {
+    var line = innerHeight * (innerWidth < 900 ? .82 : .55), n = 0;
+    steps.forEach(function (el) { if (el.getBoundingClientRect().top < line) n = +el.dataset.step; });
+    go(n);
+  }
+  var queued = false;
+  addEventListener("scroll", function () { if (!queued) { queued = true; requestAnimationFrame(function () { queued = false; pick(); }); } }, { passive: true });
+  addEventListener("resize", function () { go(Math.max(cur, 0), true); });
+  if (reduce) { scene.style.transition = "none"; packet.style.transition = "none"; }
+  /* 從別頁連到某一步：把那一步捲到看得到的位置（手機上舞台佔了上半部） */
+  var target = location.hash && document.getElementById(location.hash.slice(1));
+  if (target && target.classList.contains("step")) {
+    var toHash = function () {
+      var c = target.querySelector(".card");
+      scrollTo(0, c.getBoundingClientRect().top + scrollY - (innerWidth < 900 ? innerHeight * .68 + 8 : innerHeight * .25));
+    };
+    addEventListener("load", toHash);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { setTimeout(toHash, 50); });
+  }
+  pick();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { go(Math.max(cur, 0), true); });
+})();
+</script>
+</body>
+</html>

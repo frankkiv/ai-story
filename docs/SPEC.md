@@ -28,6 +28,7 @@
 | `history.html` | 時間線 | 捲動式時間線：中軸隨捲動填滿、事件依序出現、分類篩選、右下角年份標籤、資料來源 |
 | `bench.html` | 模型評比（評比） | 分數為什麼不能全信、能力曲線、第三方對照表、廠商自家表、誰擅長什麼、命名對照、模型名冊、資料來源 |
 | `tech.html` | 它怎麼運作（原理） | 誤會、一次請求的組成、互動模擬器、prompt cache、agent 迴圈、AI IDE 的 Auto 模式、手機與電腦同步、多 agent 協作（BMAD → Projects）、記憶與 skills |
+| `journey.html` | （不在導覽列，屬於 PART 3） | 「按下 Enter 之後」捲動敘事導覽：一句話在本地組合、送到遠端伺服器、傳回來、同步到手機，四章十五步。入口在首頁 hero、`tech.html` hero 和 request／cache／agent／sync 四段的「看動畫」連結 |
 | `china.html` | 追趕與蒸餾（中國） | 中國各家、追上來的原因、蒸餾是什麼、指控時間線、攻防對照、爭議、能不能用中國 AI App |
 | `future.html` | 下一個瓶頸（瓶頸） | 電力（含換算器）、資料中心、台灣角度、記憶體（含 KV cache 計算器）、儲存、常見問題 |
 | `assets/site.css` | | 全站共用樣式與設計 token |
@@ -75,6 +76,7 @@
 | 模型名冊 | `bench.html#roster-sec` | 依廠商篩選，依日期新到舊 |
 | context 模擬器 | `tech.html#sim` | 三區：你的電腦／這次送出的 context／模型。8 步導覽加自由操作。「壓縮方式」可切換 Claude Code／Codex／Gemini CLI 三種做法，下方 `#compact` 有各家壓縮比較表。重點訊息：模型被改的次數永遠是 0 |
 | 電力換算器、KV cache 計算器 | `future.html` | 滑桿換算 |
+| 捲動敘事舞台 | `journey.html` | 固定舞台裡是一張資料走過的地圖（你的電腦／網路路線／Anthropic 伺服器／手機），捲一段換一步：鏡頭推近、亮金光、名詞卡、關鍵字金色大字幕，最後是複習清單。三個地方先是圖示封面，光線沿管線帶進去後才展開細節。步驟錨點 `#j-pack`、`#j-trip`、`#j-cache`、`#j-tool`、`#j-relay` 供其他頁連結。維護方式見 MAINTAINING 的 C 節 |
 
 ## 7. 驗收
 

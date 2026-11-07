@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>After you press Enter · AI Grew Hands</title>
+<meta name="description" content="You type a message to an AI and press Enter. How the data is assembled on your computer, sent to a model on a remote server, sent back, and synced to your phone: four chapters, fifteen steps, one place at a time.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+<link rel="alternate" hreflang="zh-Hant" href="../journey.html">
+<link rel="alternate" hreflang="en" href="journey.html">
+<script src="../assets/i18n.js"></script>
+<style>
+
+.story { display: grid; gap: 2rem; padding-block: 1rem 4rem; }
+@media (min-width: 900px) { .story { grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 3rem; } }
+.stage-col { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 4.5rem); height: calc(100svh - 6rem); max-height: 48rem; z-index: 3; width: 100%; max-width: 28rem; justify-self: center; }
+@media (max-width: 899px) {
+  .story { display: block; }
+  .stage-col { top: env(safe-area-inset-top, 0px); height: 68svh; min-height: 27rem; max-height: none; max-width: none; background: var(--bg); padding-block: .5rem; margin-inline: -16px; padding-inline: 16px; }
+}
+:root { --st-gold: var(--l-skills); }
+
+.stage { position: relative; height: 100%; border-radius: 22px; overflow: hidden; background: var(--code-bg); color: var(--code-text); display: grid; grid-template-rows: auto auto minmax(0, 1fr) auto; box-shadow: var(--shadow); isolation: isolate; }
+
+
+.st-top { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: .75rem; padding: .85rem 1rem .4rem; z-index: 4; }
+.st-tag { border-left: 3px solid var(--st-gold); padding-left: .55rem; line-height: 1.3; color: #fff; font-weight: 700; font-size: .98rem; }
+.st-tag small { display: block; font-weight: 500; font-size: .74rem; color: var(--st-gold); letter-spacing: .04em; }
+.st-prog { width: 4.5rem; height: 4px; border-radius: 4px; background: rgba(255,255,255,.15); overflow: hidden; margin-bottom: .35rem; }
+.st-prog i { display: block; height: 100%; width: 0; background: var(--st-gold); transition: width .5s; }
+
+
+.st-term { position: relative; z-index: 5; margin: 0 1rem; justify-self: start; min-height: 2.4rem; background: rgba(10,12,16,.82); border: 1px solid color-mix(in srgb, var(--st-gold) 70%, transparent); border-radius: 10px; padding: .3rem .7rem; font-size: .82rem; line-height: 1.45; display: flex; flex-wrap: wrap; align-items: baseline; column-gap: .6rem; opacity: 0; transition: opacity .35s; }
+.st-term.on { opacity: 1; }
+.st-term:not(.on) { visibility: hidden; }
+.st-term b { color: var(--st-gold); font-size: .95rem; }
+.st-term span { color: #c9d1dc; }
+
+
+.st-view { position: relative; overflow: hidden; min-height: 0; }
+.scene { position: absolute; left: 0; top: 0; width: 100%; transform-origin: 0 0; transition: transform .9s cubic-bezier(.2,.7,.2,1); padding: .8rem; display: grid; gap: .5rem; line-height: 1.35; }
+.hotable { transition: opacity .45s, box-shadow .45s; }
+.scene.focus .hotable:not(.hot) { opacity: .25; }
+.hot { box-shadow: 0 0 0 2px var(--st-gold), 0 0 24px 2px color-mix(in srgb, var(--st-gold) 50%, transparent); }
+
+.zn { border-radius: 14px; border: 1px dashed rgba(255,255,255,.2); padding: .55rem; display: grid; gap: .45rem; }
+.zn > h4 { margin: 0; font-family: var(--mono); font-weight: 500; font-size: .74rem; letter-spacing: .04em; color: #8b95a5; }
+.zn > h4 b { color: #fff; font-family: var(--sans); font-weight: 700; font-size: .86rem; margin-right: .4rem; letter-spacing: 0; }
+.srv { background: rgba(122, 79, 209, .09); }
+.box { position: relative; border-radius: 10px; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.045); padding: .45rem .6rem; display: grid; gap: .3rem; }
+.zl { font-family: var(--mono); font-size: .7rem; letter-spacing: .03em; color: #8b95a5; }
+.zl b { color: #dfe5ee; font-family: var(--sans); font-weight: 600; font-size: .78rem; margin-right: .3rem; letter-spacing: 0; }
+.cmd { font-family: var(--mono); font-size: .8rem; color: #fff; }
+.cmd::before { content: "> "; color: var(--l-new); }
+.chips { display: flex; flex-wrap: wrap; gap: .28rem; }
+.chip { --c: var(--l-sys); font-size: .7rem; line-height: 1.4; padding: .08rem .42rem; border-radius: 6px; border: 1px solid color-mix(in srgb, var(--c) 70%, transparent); color: color-mix(in srgb, var(--c) 55%, #fff); background: color-mix(in srgb, var(--c) 18%, transparent); position: relative; }
+.chip.mono { font-family: var(--mono); }
+.row2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: .45rem; }
+
+
+.bars { list-style: none; margin: 0; padding: 0; display: grid; gap: .16rem; }
+.bar { --c: var(--l-sys); position: relative; font-size: .7rem; line-height: 1.3; padding: .08rem .45rem; border-radius: 5px; border-left: 4px solid var(--c); background: color-mix(in srgb, var(--c) 22%, transparent); color: #e7ecf2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: .18; transition: opacity .45s; }
+.stage.filled .bar { opacity: 1; }
+.bar.res { display: none; }
+.stage.result .bar.res { display: block; }
+.badge { font-style: normal; position: absolute; right: .35rem; top: 50%; transform: translateY(-50%); font-family: var(--mono); font-size: .6rem; padding: 0 .3rem; border-radius: 4px; background: var(--st-gold); color: #0e1116; opacity: 0; transition: opacity .35s; }
+.badge.new { background: var(--l-new); color: #fff; }
+.stage.hit .badge { opacity: 1; }
+
+
+.pipe { position: relative; height: 3.2rem; display: grid; place-items: center; }
+.pipe::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 6px; margin-left: -3px; border-radius: 3px; background: repeating-linear-gradient(to bottom, rgba(255,255,255,.28) 0 6px, transparent 6px 11px); }
+.pipe span { position: relative; font-family: var(--mono); font-size: .66rem; color: #c9d1dc; background: var(--code-bg); padding: .05rem .45rem; border-radius: 999px; border: 1px solid rgba(255,255,255,.2); }
+.pipe.short { height: 2.4rem; }
+.pipe.hot { box-shadow: none; }
+.pipe.hot::before { background: repeating-linear-gradient(to bottom, var(--st-gold) 0 6px, transparent 6px 11px); }
+.pipe.hot span { border-color: var(--st-gold); color: var(--st-gold); }
+
+
+.tk { display: none; }
+.stage.tokens .tk { display: flex; }
+.tk .chip { font-family: var(--mono); }
+.gen { display: flex; flex-wrap: wrap; gap: .2rem; min-height: 1.2rem; }
+.gen i { font-style: normal; font-size: .72rem; padding: 0 .3rem; border-radius: 4px; background: color-mix(in srgb, var(--l-out) 35%, transparent); color: #fff; opacity: 0; }
+.stage.gen-on .gen i { opacity: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  .stage.gen-on .gen i { animation: pop .3s both; animation-delay: calc(var(--i) * .22s); }
+  .stage.typed .typing span { animation: pop .25s both; animation-delay: calc(var(--i) * .16s); }
+}
+@keyframes pop { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
+.weights { font-size: .72rem; color: #a7b0bd; }
+.weights i { font-style: normal; font-family: var(--mono); color: var(--st-gold); font-weight: 700; }
+.typing { font-size: .74rem; color: #fff; min-height: 2.1em; }
+.typing span { opacity: 0; }
+.stage.typed .typing span { opacity: 1; }
+.svd { position: absolute; right: -.3rem; top: -.55rem; font-style: normal; font-family: var(--mono); font-size: .58rem; background: var(--l-new); color: #fff; border-radius: 4px; padding: 0 .25rem; opacity: 0; transition: opacity .35s; }
+.stage.saved-on .svd { opacity: 1; }
+
+
+.perm { position: absolute; right: .35rem; bottom: .35rem; font-size: .68rem; background: #fff; color: #0e1116; border-radius: 7px; padding: .2rem .4rem; display: flex; gap: .3rem; align-items: center; opacity: 0; transform: scale(.9); transition: opacity .35s, transform .35s; box-shadow: 0 6px 18px rgba(0,0,0,.4); }
+.perm u { text-decoration: none; font-weight: 700; border-radius: 5px; padding: 0 .3rem; background: var(--l-new); color: #fff; }
+.stage.perm-on .perm { opacity: 1; transform: none; }
+
+
+.phone { justify-self: center; width: min(13rem, 70%); border-radius: 22px; border: 2px solid rgba(255,255,255,.3); padding: .55rem .6rem .7rem; display: grid; gap: .3rem; background: rgba(255,255,255,.04); }
+.phone .zl { text-align: center; }
+.bub { font-size: .7rem; padding: .2rem .5rem; border-radius: 10px; max-width: 85%; }
+.bub.me { justify-self: end; background: color-mix(in srgb, var(--l-new) 40%, transparent); color: #fff; }
+.bub.ai { justify-self: start; background: rgba(255,255,255,.1); color: #e7ecf2; }
+.bub.late { display: none; }
+.stage.phone-msg .bub.late { display: block; }
+.phone .ok { justify-self: center; font-size: .68rem; font-weight: 700; background: var(--l-new); color: #fff; border-radius: 6px; padding: .05rem .6rem; }
+
+
+
+.route { position: relative; border-radius: 12px; border: 1px dashed rgba(255,255,255,.22); padding: .5rem .7rem .55rem 2rem; display: grid; gap: .35rem; background: repeating-linear-gradient(135deg, rgba(255,255,255,.025) 0 8px, transparent 8px 16px); }
+.route::before { content: ""; position: absolute; left: .95rem; top: .6rem; bottom: .6rem; width: 3px; margin-left: -1.5px; background: repeating-linear-gradient(to bottom, rgba(255,255,255,.3) 0 5px, transparent 5px 9px); }
+.rt-head { font-family: var(--mono); font-size: .68rem; color: #8b95a5; }
+.rt-head b { font-family: var(--sans); color: #fff; font-size: .8rem; margin-right: .4rem; }
+.wps { list-style: none; margin: 0; padding: 0; display: grid; gap: .45rem; }
+.wps li { position: relative; font-size: .74rem; color: #dfe5ee; }
+.wps li::before { content: ""; position: absolute; left: -1.33rem; top: .32em; width: .55rem; height: .55rem; border-radius: 50%; background: var(--code-bg); border: 2px solid rgba(255,255,255,.45); }
+.rt-foot { font-size: .68rem; color: #a7b0bd; }
+.rt-foot b { color: #fff; font-weight: 600; }
+.route.hot { box-shadow: 0 0 0 2px var(--st-gold), 0 0 24px 2px color-mix(in srgb, var(--st-gold) 50%, transparent); }
+.route.hot::before { background: repeating-linear-gradient(to bottom, var(--st-gold) 0 5px, transparent 5px 9px); }
+.route.hot .wps li::before { border-color: var(--st-gold); }
+.route.hot .rt-foot b { color: var(--st-gold); }
+.where { font-family: var(--sans); font-size: .66rem; letter-spacing: 0; border-radius: 999px; padding: .02rem .45rem; margin-right: .45rem; background: color-mix(in srgb, var(--l-new) 30%, transparent); color: #fff; }
+.where.far { background: color-mix(in srgb, var(--l-out) 45%, transparent); }
+.srv { border: 1px solid color-mix(in srgb, var(--l-out) 55%, transparent); }
+.lk { position: relative; display: block; width: .8rem; height: .6rem; margin: .4rem auto 0; border-radius: 2px; background: #0e1116; }
+.lk::before { content: ""; position: absolute; left: .14rem; top: -.38rem; width: .38rem; height: .32rem; border: 2px solid #0e1116; border-bottom: 0; border-radius: .3rem .3rem 0 0; }
+
+
+
+.zn, .phone { position: relative; }
+.cover { position: absolute; inset: -1px; z-index: 4; border-radius: inherit; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: .35rem; padding-top: 2.2rem; text-align: center; background: radial-gradient(120% 70% at 50% 18%, #1b2130, var(--code-bg) 70%); border: 1px solid rgba(255,255,255,.18); transition: opacity .6s, transform .7s cubic-bezier(.2,.7,.2,1), box-shadow .4s; }
+.phone .cover { padding-top: 1rem; }
+.cover .ico { width: min(9rem, 46%); color: #dfe5ee; transition: color .4s, filter .4s; }
+.phone .cover .ico { width: 62%; }
+.cover svg { display: block; width: 100%; height: auto; }
+.cover b { font-size: 1.5rem; color: #fff; letter-spacing: -.01em; }
+.cover span { font-size: .85rem; color: #a7b0bd; }
+.phone .cover b { font-size: 1.1rem; }
+.cover.lit { box-shadow: 0 0 0 2px var(--st-gold), 0 0 36px 4px color-mix(in srgb, var(--st-gold) 55%, transparent); }
+.cover.lit .ico { color: var(--st-gold); filter: drop-shadow(0 0 10px var(--st-gold)); }
+.open > .cover { opacity: 0; transform: scale(1.18); pointer-events: none; transition-delay: .7s; }
+.scene.focus .zn > .cover, .scene.focus .phone > .cover { opacity: 1; }
+.scene.focus .open > .cover { opacity: 0; }
+
+
+.pipe::after, .route::after { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 5px; margin-left: -2.5px; opacity: 0; background: linear-gradient(to bottom, transparent 0, var(--st-gold) 35%, #fff 50%, var(--st-gold) 65%, transparent 100%) no-repeat; background-size: 100% 50%; filter: drop-shadow(0 0 6px var(--st-gold)); }
+.route::after { left: .95rem; top: .6rem; bottom: .6rem; }
+.beam::after { opacity: 1; animation: beam 1.1s linear infinite; }
+.beam.up::after { animation-direction: reverse; }
+@keyframes beam { from { background-position: 0 -100%; } to { background-position: 0 200%; } }
+@media (prefers-reduced-motion: reduce) { .beam::after { animation: none; background-position: 0 50%; } .cover { transition: none !important; } }
+
+
+.packet { position: absolute; z-index: 6; left: 0; top: 0; width: 3rem; border-radius: 7px; padding: .2rem; display: grid; gap: 2px; background: #fff; box-shadow: 0 6px 18px rgba(0,0,0,.5), 0 0 0 2px var(--st-gold); transition: transform .7s cubic-bezier(.2,.7,.2,1), opacity .3s; opacity: 0; pointer-events: none; }
+.packet.on { opacity: 1; }
+.packet i { display: block; height: 4px; border-radius: 2px; background: var(--c); }
+.packet b { font-size: .62rem; text-align: center; color: #0e1116; line-height: 1.2; }
+
+
+.recap { position: absolute; inset: 0; z-index: 6; list-style: none; margin: 0; padding: 1rem 1.3rem; background: var(--code-bg); display: grid; align-content: center; gap: .7rem; opacity: 0; pointer-events: none; transition: opacity .5s; }
+.recap li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .15rem .7rem; color: #fff; font-size: .98rem; font-weight: 700; }
+.recap li::before { content: ""; grid-row: span 2; width: .7rem; height: .7rem; margin-top: .45rem; border-radius: 50%; background: var(--st-gold); box-shadow: 0 0 12px var(--st-gold); }
+.recap li span { font-weight: 400; font-size: .84rem; color: #a7b0bd; }
+.recap .zero { display: block; margin-top: .4rem; font-size: .9rem; font-weight: 400; color: #a7b0bd; }
+.recap .zero::before { display: none; }
+.recap .zero b { color: var(--st-gold); font-family: var(--mono); font-size: 1.1rem; }
+.stage.end .recap { opacity: 1; }
+
+
+.st-sub { z-index: 4; padding: .55rem 1rem .9rem; font-size: 1.08rem; font-weight: 700; line-height: 1.45; color: #fff; text-align: center; min-height: 3.9rem; display: flex; align-items: center; justify-content: center; text-wrap: balance; background: var(--code-bg); border-top: 1px solid rgba(255,255,255,.08); }
+.st-sub em { font-style: normal; color: var(--st-gold); }
+@media (max-width: 899px) { .st-sub { font-size: 1rem; min-height: 3.4rem; } }
+
+
+.steps { display: grid; }
+.step { min-height: 72svh; display: grid; align-content: center; padding-block: 2rem; }
+.step:first-child { min-height: 50svh; }
+.step:last-child { min-height: 70svh; }
+.step .card { gap: .8rem; transition: border-color .3s; }
+.step.on .card { border-color: var(--l-skills); }
+.step .eyebrow { color: var(--l-skills); }
+.chap { padding-block: 2.5rem .5rem; }
+.chap span { font-family: var(--mono); font-size: .82rem; color: var(--muted); letter-spacing: .04em; }
+.chap h2 { font-size: clamp(1.4rem, 3.5vw, 1.9rem); }
+@media (max-width: 899px) { .step { min-height: 58svh; align-content: end; padding-block: 1rem; } .step:first-child { min-height: 28svh; } .chap { padding-block: 2rem 0; } }
+.sample-note { font-size: .9rem; color: var(--muted); display: grid; gap: .5rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .scene, .packet, .hotable, .bar, .st-term, .recap, .perm, .st-prog i { transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav gutter" aria-label="Site">
+  <div class="frame">
+    <a class="brand" href="index.html"><i></i><span>AI Grew Hands</span></a>
+    <ul>
+      <li><a class="l" href="history.html"><span class="lg">Timeline</span><span class="sh">Timeline</span></a></li>
+      <li><a class="l" href="bench.html"><span class="lg">Model benchmarks</span><span class="sh">Bench</span></a></li>
+      <li><a class="l site-on" href="tech.html"><span class="lg">How it works</span><span class="sh">How</span></a></li>
+      <li><a class="l" href="china.html"><span class="lg">Catching up</span><span class="sh">China</span></a></li>
+      <li><a class="l" href="future.html"><span class="lg">Next bottleneck</span><span class="sh">Limits</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero gutter" style="padding-block: 3.5rem 1.5rem">
+  <div class="frame" style="display:block">
+    <div class="hero-copy measure">
+      <span class="pill">PART 3 walkthrough · <b>Follow one message</b></span>
+      <h1>After you press Enter,<br><em>where do your words go?</em></h1>
+      <p class="sub">You type "Can you look at this bug?" into Claude Code on your computer. That message is packed up on your computer, travels all the way to a model in a remote data center, and the answer comes back. Your phone can see the same conversation too. Four chapters, fifteen steps. Scroll down and look at one place at a time.</p>
+    </div>
+  </div>
+</header>
+
+<main class="gutter">
+  <div class="frame story">
+    <div class="stage-col">
+      <div class="stage" id="stage" aria-hidden="true">
+        <div class="st-top">
+          <div class="st-tag" id="tag"></div>
+          <div class="st-prog"><i id="prog"></i></div>
+        </div>
+        <div class="st-term" id="term"><b></b><span></span></div>
+        <div class="st-view" id="view">
+          <div class="scene" id="scene">
+
+            <div class="pipe short hotable" id="pipe0"><span>You press Enter</span></div>
+            <section class="zn" id="z-pc">
+              <div class="cover" aria-hidden="true"><div class="ico" id="pc-ico"><svg viewBox="0 0 64 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="52" height="32" rx="3"/><path d="M24 44h16M32 36v8"/><path d="M14 14h14M14 21h22M14 28h10" opacity=".55"/></svg></div><b>Your computer</b><span>At home. The client: Claude Code</span></div>
+              <h4><b>Your computer</b><span class="where">at home</span>client: Claude Code</h4>
+              <div class="box hotable" id="input">
+                <div class="zl"><b>Input</b>what you typed</div>
+                <div class="cmd">Can you look at this bug?</div>
+              </div>
+              <div class="box hotable" id="files">
+                <div class="zl"><b>Local files</b>only on your disk</div>
+                <div class="chips">
+                  <span class="chip mono" style="--c:var(--l-mem)">CLAUDE.md</span>
+                  <span class="chip mono" style="--c:var(--l-skills)">skills/</span>
+                  <span class="chip" style="--c:var(--l-tools)">MCP tools</span>
+                  <span class="chip mono" style="--c:var(--l-hist)">history.jsonl<em class="svd">saved</em></span>
+                </div>
+              </div>
+              <div class="box hotable" id="pack">
+                <div class="zl"><b>Package</b>POST /v1/messages</div>
+                <ol class="bars">
+                  <li class="bar" style="--c:var(--l-tools)">tools: tool manuals<em class="badge">hit</em></li>
+                  <li class="bar" style="--c:var(--l-sys)">system: rules + skills list<em class="badge">hit</em></li>
+                  <li class="bar" style="--c:var(--l-mem)">memory: CLAUDE.md<em class="badge">hit</em></li>
+                  <li class="bar" style="--c:var(--l-hist)">history<em class="badge">hit</em></li>
+                  <li class="bar" style="--c:var(--l-new)">new: Can you look at this bug?<em class="badge new">new</em></li>
+                  <li class="bar res" style="--c:var(--l-tools)">tool result: contents of app.js<em class="badge new">new</em></li>
+                </ol>
+              </div>
+              <div class="row2">
+                <div class="box hotable" id="tool">
+                  <div class="zl"><b>Run tool</b></div>
+                  <div class="cmd" style="font-size:.72rem">Read app.js</div>
+                  <div class="perm">Allow?<u>Allow</u></div>
+                </div>
+                <div class="box hotable" id="screen">
+                  <div class="zl"><b>Screen</b></div>
+                  <div class="typing"><span style="--i:0">The bug </span><span style="--i:1">is on </span><span style="--i:2">line 42: </span><span style="--i:3">a </span><span style="--i:4">misspelled </span><span style="--i:5">variable</span></div>
+                </div>
+              </div>
+            </section>
+
+            <div class="route hotable" id="pipe">
+              <div class="rt-head"><b>Internet</b>HTTPS encrypted · outbound only</div>
+              <ol class="wps">
+                <li id="wp1">Your home Wi-Fi router</li>
+                <li id="wp2">Your internet provider</li>
+                <li id="wp3">Undersea cable</li>
+                <li id="wp4">Cloud data center</li>
+              </ol>
+              <div class="rt-foot">Taiwan to a US West Coast data center: about <b>10,000 km</b> one way, <b>0.1–0.2 s</b> round trip</div>
+            </div>
+
+            <section class="zn srv" id="z-srv">
+              <div class="cover" aria-hidden="true"><div class="ico" id="srv-ico"><svg viewBox="0 0 64 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 30a10 10 0 0 1 1-20 14 14 0 0 1 26 3 9 9 0 0 1 1 17z"/><rect x="20" y="33" width="24" height="5" rx="1.5"/><rect x="20" y="40" width="24" height="5" rx="1.5"/><path d="M24 35.5h.01M24 42.5h.01"/></svg></div><b>Anthropic servers</b><span>A remote cloud data center</span></div>
+              <h4><b>Anthropic servers</b><span class="where far">remote</span>cloud data center</h4>
+              <div class="box hotable" id="front">
+                <div class="zl"><b>API front desk</b>the intake window</div>
+                <div class="chips">
+                  <span class="chip" style="--c:var(--l-sys)">Check key</span>
+                  <span class="chip" style="--c:var(--l-sys)">Check quota</span>
+                  <span class="chip" style="--c:var(--l-sys)">Pick a machine</span>
+                </div>
+              </div>
+              <div class="box hotable" id="tok">
+                <div class="zl"><b>Split into tokens</b>illustrative</div>
+                <div class="chips"><span class="chip" style="--c:var(--l-new)">Can</span><span class="chip" style="--c:var(--l-new)"> you</span><span class="chip" style="--c:var(--l-new)"> look</span><span class="chip" style="--c:var(--l-new)"> at</span><span class="chip" style="--c:var(--l-new)"> this</span><span class="chip" style="--c:var(--l-new)"> bug</span></div>
+                <div class="chips tk"><span class="chip" style="--c:var(--l-out)">6854</span><span class="chip" style="--c:var(--l-out)">499</span><span class="chip" style="--c:var(--l-out)">1427</span><span class="chip" style="--c:var(--l-out)">520</span><span class="chip" style="--c:var(--l-out)">420</span><span class="chip" style="--c:var(--l-out)">10077</span></div>
+              </div>
+              <div class="box hotable" id="cache">
+                <div class="zl"><b>Prompt cache</b>lives about 5 minutes</div>
+                <div class="chips">
+                  <span class="chip" style="--c:var(--l-skills)">Same prefix as last time: reuse</span>
+                  <span class="chip" style="--c:var(--l-new)">New part: compute now</span>
+                </div>
+              </div>
+              <div class="box hotable" id="gpu">
+                <div class="zl"><b>The model on GPUs</b>inference</div>
+                <div class="gen"><i style="--i:0">The</i><i style="--i:1"> bug</i><i style="--i:2"> is</i><i style="--i:3"> on</i><i style="--i:4"> line</i><i style="--i:5"> 42…</i></div>
+                <div class="weights">Weights fixed. Times changed: <i>0</i></div>
+              </div>
+              <div class="box hotable" id="relay">
+                <div class="zl"><b>Remote Control relay</b>passes messages along</div>
+                <div class="chips">
+                  <span class="chip" style="--c:var(--l-hist)">Computer connects</span>
+                  <span class="chip" style="--c:var(--l-new)">Phone connects</span>
+                  <span class="chip" style="--c:var(--l-sys)">Runs no code</span>
+                </div>
+              </div>
+            </section>
+
+            <div class="pipe short hotable" id="pipe2"><span>The phone only talks to the relay</span></div>
+
+            <div class="phone hotable" id="phone">
+              <div class="cover" aria-hidden="true"><div class="ico" id="ph-ico"><svg viewBox="0 0 64 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="21" y="2" width="22" height="44" rx="4"/><path d="M29 7h6"/><path d="M26 16h12M26 22h8M26 28h12" opacity=".55"/></svg></div><b>Your phone</b><span>Claude app</span></div>
+              <div class="zl"><b>Your phone</b></div>
+              <div class="bub me">Can you look at this bug?</div>
+              <div class="bub ai">The bug is on line 42…</div>
+              <div class="bub me late">Please fix it too</div>
+              <span class="ok">Allow</span>
+            </div>
+
+            <div class="packet" id="packet"></div>
+          </div>
+        </div>
+        <ol class="recap">
+          <li>Assembled on your computer<span>Read local files and pack them into one package, in a fixed order</span></li>
+          <li>All the way to the server<span>Lock it, cross the ocean, then check, tokenize, match the cache, generate on GPUs</span></li>
+          <li>How the answer comes back<span>Streamed as it is computed; another round for each tool; saved back to your computer</span></li>
+          <li>How your phone stays in sync<span>Computer and phone both connect to a relay; your files stay on your computer</span></li>
+          <li class="zero">Times the model was changed, start to finish: <b>0</b></li>
+        </ol>
+        <p class="st-sub" id="sub"></p>
+      </div>
+    </div>
+
+    <div class="steps" id="steps">
+      <section class="step" data-step="0">
+        <div class="card">
+          <span class="eyebrow">Opening</span>
+          <h3>The big picture: your data visits three places</h3>
+          <p>At the top is your computer, in the middle are Anthropic's remote servers, and at the bottom is your phone. As you scroll, a line of light leads you into each one. The striped stretch in between is the internet: from your home, across the ocean, to the data center.</p>
+        </div>
+      </section>
+
+      <div class="chap"><span>Chapter 1</span><h2>Assembled on your computer</h2></div>
+      <section class="step" data-step="1">
+        <div class="card">
+          <span class="eyebrow">Step 1</span>
+          <h3>You press Enter, and a program on your computer takes over</h3>
+          <p>Where you type is Claude Code, a program installed on your computer. It is called the client: the side that talks to the server. At this point nothing has left your computer yet.</p>
+        </div>
+      </section>
+      <section class="step" data-step="2">
+        <div class="card">
+          <span class="eyebrow">Step 2</span>
+          <h3>First it reads files on your computer</h3>
+          <p>The client reads the memory file CLAUDE.md (your project rules and preferences), the list of skills, the descriptions of MCP tools, and the full history of this conversation so far. All of these files live on your disk.</p>
+          <p class="elder"><b>In plain words</b><span>Before you go see a consultant, you put your notebook, the company rules and all your past letters into your bag.</span></p>
+        </div>
+      </section>
+      <section class="step" data-step="3" id="j-pack">
+        <div class="card">
+          <span class="eyebrow">Step 3</span>
+          <h3>Packed into one package, in a fixed order</h3>
+          <p>The order is tool descriptions, system rules (with the skills list), memory, conversation history, and only then the line you just typed. The whole package is written as one JSON document, ready for the API's <code>/v1/messages</code>. Things that rarely change go first; the cache in the next chapter relies on that order.</p>
+        </div>
+      </section>
+
+      <div class="chap"><span>Chapter 2</span><h2>All the way to the server</h2></div>
+      <section class="step" data-step="4">
+        <div class="card">
+          <span class="eyebrow">Step 4</span>
+          <h3>Locked before it leaves</h3>
+          <p>The package goes out over HTTPS, an encrypted connection: the network equipment along the way can't read it. Your computer only connects outward and never opens a door for anyone to connect in.</p>
+          <p class="elder"><b>In plain words</b><span>The letter goes into a locked box before the courier takes it. The courier knows where it is going, not what it says.</span></p>
+        </div>
+      </section>
+      <section class="step" data-step="5" id="j-trip">
+        <div class="card">
+          <span class="eyebrow">Step 5</span>
+          <h3>Out of your home and across the ocean</h3>
+          <p>The locked package leaves through your home Wi-Fi router, travels over your internet provider's network and an undersea cable, and arrives at a cloud data center that Anthropic uses. From Taiwan to a data center on the US West Coast, that is about 10,000 km one way, and a round trip takes roughly 0.1 to 0.2 seconds.</p>
+          <p>From this step on, the data is no longer on your computer. The checks, the computing and the writing of the answer all happen remotely.</p>
+          <p class="elder"><b>In plain words</b><span>Like an international courier: it leaves your doorstep and crosses the ocean to a building in another country. The internet is just much faster; the round trip takes a blink.</span></p>
+        </div>
+      </section>
+      <section class="step" data-step="6">
+        <div class="card">
+          <span class="eyebrow">Step 6</span>
+          <h3>The front desk checks who you are</h3>
+          <p>The API (the agreed intake window between programs) checks your account or key and your usage quota, then hands the package to a GPU machine that is free.</p>
+        </div>
+      </section>
+      <section class="step" data-step="7">
+        <div class="card">
+          <span class="eyebrow">Step 7</span>
+          <h3>The text is split into tokens, a string of numbers</h3>
+          <p>The model doesn't read letters. It reads tokens, the smallest units it handles: a word, part of a word, or a piece of punctuation. Each token has an ID number. The split and the numbers in the picture are only illustrations.</p>
+          <p class="elder"><b>In plain words</b><span>A sentence is broken into building blocks, and each block has a number on the back.</span></p>
+        </div>
+      </section>
+      <section class="step" data-step="8" id="j-cache">
+        <div class="card">
+          <span class="eyebrow">Step 8</span>
+          <h3>Whatever matches last time is reused</h3>
+          <p>The server compares this package with the last one, from the start, character by character. For the identical prefix it reuses the stored computation (the prompt cache); only the new part is computed now. By default the cache lives about 5 minutes; leave it too long and the whole package is computed again.</p>
+          <p class="elder"><b>In plain words</b><span>A regular who orders again within five minutes doesn't make the kitchen prep from scratch. What it remembers is the prepped ingredients; the chef's skill hasn't changed.</span></p>
+        </div>
+      </section>
+      <section class="step" data-step="9">
+        <div class="card">
+          <span class="eyebrow">Step 9</span>
+          <h3>The model writes one token at a time</h3>
+          <p>On the GPUs, the model reads the whole package, works out the most likely next token, appends it, and works out the next one. This is called inference. The model's weights (everything it learned) do not change at all during this.</p>
+        </div>
+      </section>
+
+      <div class="chap"><span>Chapter 3</span><h2>How the answer comes back</h2></div>
+      <section class="step" data-step="10">
+        <div class="card">
+          <span class="eyebrow">Step 10</span>
+          <h3>Sent back while it is being written</h3>
+          <p>The answer is streamed: each small piece is sent as soon as it is computed, back along the same encrypted connection to your computer. That is why the words appear a bit at a time instead of all at once.</p>
+        </div>
+      </section>
+      <section class="step" data-step="11" id="j-tool">
+        <div class="card">
+          <span class="eyebrow">Step 11</span>
+          <h3>If the model wants a file, your computer reads it</h3>
+          <p>If the model needs to see the code first, it doesn't send back an answer. It sends a request, "use the Read tool on app.js" (tool_use). The client on your computer is what actually reads the file, and it asks you first before anything risky.</p>
+          <p class="elder"><b>In plain words</b><span>The consultant doesn't come to your home. They write a note asking your assistant to fetch the document, and the assistant checks with you before anything important.</span></p>
+        </div>
+      </section>
+      <section class="step" data-step="12">
+        <div class="card">
+          <span class="eyebrow">Step 12</span>
+          <h3>The result is added, and the package goes through Chapter 2 again</h3>
+          <p>What was read is added to the end of the package, which is encrypted, sent, checked, matched against the cache, and processed again. Everything before it matches the previous round, so almost all of it hits the cache. Going back and forth until the model stops asking for tools is the agent loop.</p>
+        </div>
+      </section>
+      <section class="step" data-step="13">
+        <div class="card">
+          <span class="eyebrow">Step 13</span>
+          <h3>Done, and the whole exchange is saved on your computer</h3>
+          <p>This round's question, tool calls, results and answer are written to the conversation history on your computer (a .jsonl file in <code>~/.claude/projects/</code>). Next time you ask, the client reads all of it again and resends it.</p>
+          <p class="elder"><b>In plain words</b><span>AI "remembers" what you talked about because your computer kept the record and attaches it again next time.</span></p>
+        </div>
+      </section>
+
+      <div class="chap"><span>Chapter 4</span><h2>How your phone stays in sync</h2></div>
+      <section class="step" data-step="14" id="j-relay">
+        <div class="card">
+          <span class="eyebrow">Step 14</span>
+          <h3>Computer and phone both connect to the same relay</h3>
+          <p>With Remote Control on, your computer connects out to Anthropic's relay service, and the Claude app on your phone connects to it too. The relay only passes messages between the two, and keeps a copy of the conversation during the session so your phone can show it. It doesn't run your programs and can't touch your files.</p>
+          <p class="elder"><b>In plain words</b><span>The phone is the remote, the computer is the TV, and a relay station in between passes the signal along.</span></p>
+        </div>
+      </section>
+      <section class="step" data-step="15">
+        <div class="card">
+          <span class="eyebrow">Step 15</span>
+          <h3>What you type on the phone reaches the computer through the relay</h3>
+          <p>You type "Please fix it too" on your phone. The message goes to the relay first, then on to your computer, which adds it to the end of the package and starts again from Chapter 1. The Allow button on your phone sends your decision back to the computer the same way. So the computer has to stay on, and your files never leave home.</p>
+        </div>
+      </section>
+
+      <section class="step" data-step="16">
+        <div class="card">
+          <span class="eyebrow">So</span>
+          <h3>One message, four legs of a journey</h3>
+          <p>Assembled on your computer, sent to a remote model, streamed back, and synced to your phone through a relay. The only thing that grows along the way is the record. The model itself doesn't change by a single bit.</p>
+          <p>To play with each layer yourself, try <a href="tech.html#sim">How it works · the context simulator</a>. The three ways of syncing are compared in <a href="tech.html#sync">phone and computer sync</a>.</p>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer class="gutter">
+  <div class="frame sample-note">
+    <p>Claude Code is used as the example. The token split and IDs are illustrative. The distance and delay from Taiwan to the US West Coast are estimates; real routes and data center locations vary. Check the official docs for prompt cache lifetimes. Fuller technical detail is in <a href="tech.html">How it works</a>.</p>
+    <p>Sources: Anthropic "Prompt caching" docs; Claude Code "Remote Control" and data storage docs; TeleGeography submarine cable map.</p>
+    <p>Written in November 2026.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var stage = document.getElementById("stage"), scene = document.getElementById("scene"), view = document.getElementById("view");
+  var tag = document.getElementById("tag"), sub = document.getElementById("sub"), term = document.getElementById("term");
+  var prog = document.getElementById("prog"), packet = document.getElementById("packet");
+  var steps = document.querySelectorAll(".step");
+  var CH = ["", "Chapter 1 · Assembled on your computer", "Chapter 2 · All the way to the server", "Chapter 3 · How the answer comes back", "Chapter 4 · How your phone stays in sync"];
+  var F = "filled";
+
+  
+  var S = [
+    { ch: 0, name: "Opening", sub: "From pressing Enter to an answer on your phone, data visits <em>three places</em>", hot: [], fit: true, beam: ["pipe0", "pipe", "pipe2"] },
+    { ch: 1, name: "Press Enter", sub: "First, <em>a program on your computer</em> takes over", hot: ["#input"], cam: ["#pipe0", "#files"], beam: ["pipe0"], lit: "z-pc", term: ["Client", "the program on your computer that talks to the server"] },
+    { ch: 1, name: "Read local files", sub: "It reads your <em>memory, skills, tools and history</em>", hot: ["#files"], term: ["CLAUDE.md", "memory file: project rules and your preferences"] },
+    { ch: 1, name: "Pack in order", sub: "In a fixed order, packed into <em>one package</em>", hot: ["#files", "#pack"], pk: "#pack", kind: "ctx", st: F, term: ["context", "everything the model reads this time"] },
+    { ch: 2, name: "Lock it", sub: "Before it leaves, it gets <em>locked</em>: HTTPS encryption", hot: ["#pack"], pk: "#pack", kind: "lock", st: F, term: ["HTTPS", "an encrypted connection nobody on the way can read"] },
+    { ch: 2, name: "Across the ocean", sub: "The package <em>leaves your home</em> and crosses to the data center", hot: ["#pipe"], cam: ["#pipe", "#srv-ico"], tour: ["#wp1", "#wp2", "#wp3", "#wp4", "#srv-ico"], beam: ["pipe"], lit: "z-srv", kind: "lock", st: F, term: ["Data center", "a remote building full of servers and GPUs"] },
+    { ch: 2, name: "Front desk", sub: "The front desk <em>checks who you are</em> and your quota, then picks a machine", hot: ["#front"], pk: "#front", cam: ["#front", "#tok"], kind: "ctx", st: F, term: ["API", "the agreed intake window between programs"] },
+    { ch: 2, name: "Tokenize", sub: "The text is split into <em>tokens</em>, a string of numbers", hot: ["#tok"], pk: "#tok", kind: "ctx", st: F + " tokens", term: ["token", "the smallest unit of text a model handles"] },
+    { ch: 2, name: "Match the cache", sub: "Whatever matches last time uses <em>stored results</em>", hot: ["#cache", "#pack"], pk: "#cache", kind: "ctx", st: F + " tokens hit", term: ["prompt cache", "the server keeps a read prefix for about 5 minutes"] },
+    { ch: 2, name: "Generate on GPUs", sub: "The model writes <em>one token at a time</em>", hot: ["#gpu"], pk: "#gpu", kind: "ctx", st: F + " tokens gen-on", term: ["Inference", "fixed weights work out the next token"] },
+    { ch: 3, name: "Stream back", sub: "The answer is <em>sent as it is computed</em>, a bit at a time", hot: ["#gpu", "#pipe", "#screen"], cam: ["#screen", "#pipe"], tour: ["#wp4", "#wp3", "#wp2", "#wp1", "#screen"], beam: ["pipe up"], kind: "reply", st: F + " tokens gen-on typed", term: ["Streaming", "each small piece is sent as soon as it is ready"] },
+    { ch: 3, name: "Run a tool", sub: "When the model wants a file, <em>your computer</em> reads it, asking you first if needed", hot: ["#tool"], pk: "#tool", kind: "tool", st: F + " typed perm-on", term: ["tool_use", "a structured request saying which tool to use"] },
+    { ch: 3, name: "Send again", sub: "The result is <em>added</em>, and Chapter 2 runs again", hot: ["#pack", "#pipe", "#front", "#tok", "#cache"], pk: "#cache", beam: ["pipe"], kind: "ctx", st: F + " typed result hit", term: ["agent loop", "send, act, add back, repeat until done"] },
+    { ch: 3, name: "Save locally", sub: "The exchange is <em>saved on your computer</em>; the model remembers nothing", hot: ["#files", "#screen"], pk: "#files", kind: "save", st: F + " typed result saved-on", term: [".jsonl history", "stored in ~/.claude/projects/"] },
+    { ch: 4, name: "Connect to relay", sub: "Computer and phone both connect to Anthropic's <em>relay</em>", hot: ["#relay", "#pipe", "#pipe2", "#phone"], cam: ["#relay", "#phone"], beam: ["pipe2"], lit: "phone", st: F + " typed result saved-on", term: ["Remote Control", "steer Claude Code on your computer from your phone"] },
+    { ch: 4, name: "Phone sends a message", sub: "Your phone's message goes <em>through the relay</em> to the computer; files stay home", hot: ["#phone", "#pipe2", "#relay", "#pipe", "#input"], pk: "#input", kind: "msg", cam: ["#pipe", "#phone"], beam: ["pipe2 up", "pipe up"], st: F + " typed result saved-on phone-msg", term: ["Sync", "messages and history sync, not the model"] },
+    { ch: 0, name: "So", sub: "Only the record grows. Times the model changed: <em>0</em>", hot: [], fit: true, st: "end" }
+  ];
+  var KIND = {
+    ctx: '<i style="--c:var(--l-tools)"></i><i style="--c:var(--l-sys)"></i><i style="--c:var(--l-mem)"></i><i style="--c:var(--l-hist)"></i><i style="--c:var(--l-new)"></i><b>package</b>',
+    reply: '<i style="--c:var(--l-out)"></i><b>answer</b>',
+    tool: '<i style="--c:var(--l-out)"></i><b>tool_use</b>',
+    save: '<i style="--c:var(--l-hist)"></i><b>saved</b>',
+    lock: '<span class="lk"></span><b>locked</b>',
+    msg: '<i style="--c:var(--l-new)"></i><b>message</b>'
+  };
+
+  function box(el) {
+    var x = 0, y = 0, e = el;
+    while (e && e !== scene) { x += e.offsetLeft; y += e.offsetTop; e = e.offsetParent; }
+    return { x: x, y: y, w: el.offsetWidth, h: el.offsetHeight };
+  }
+
+  var cur = -1, tourT = 0;
+  function place(q) {
+    var b = box(scene.querySelector(q)), pw = packet.offsetWidth, ph = packet.offsetHeight;
+    packet.style.transform = "translate(" + (b.x + b.w - pw - 6) + "px," + (b.y + b.h / 2 - ph / 2) + "px)";
+  }
+  function go(n, force) {
+    if (n === cur && !force) return;
+    cur = n;
+    var s = S[n];
+    stage.className = "stage " + (s.st || "");
+    
+    document.getElementById("z-pc").classList.toggle("open", n >= 1);
+    document.getElementById("z-srv").classList.toggle("open", n >= 6);
+    document.getElementById("phone").classList.toggle("open", n >= 14);
+    scene.querySelectorAll(".beam").forEach(function (el) { el.classList.remove("beam", "up"); });
+    (s.beam || []).forEach(function (b) { var p = b.split(" "), el = document.getElementById(p[0]); el.classList.add("beam"); if (p[1]) el.classList.add("up"); });
+    scene.querySelectorAll(".cover.lit").forEach(function (el) { el.classList.remove("lit"); });
+    if (s.lit) document.querySelector("#" + s.lit + " > .cover").classList.add("lit");
+    tag.innerHTML = (s.ch ? "<small>" + CH[s.ch] + "</small>" : "") + (n && n < 16 ? "Step " + n + ": " : "") + s.name;
+    sub.innerHTML = "<span>" + s.sub + "</span>";
+    prog.style.width = (Math.min(n, 15) / 15 * 100) + "%";
+    steps.forEach(function (el) { el.classList.toggle("on", +el.dataset.step === n); });
+    if (s.term) { term.firstChild.textContent = s.term[0]; term.lastChild.textContent = s.term[1]; term.classList.add("on"); }
+    else term.classList.remove("on");
+
+    scene.querySelectorAll(".hot").forEach(function (el) { el.classList.remove("hot"); });
+    var hot = [];
+    s.hot.forEach(function (q) { var el = scene.querySelector(q); if (el) { el.classList.add("hot"); hot.push(el); } });
+    scene.classList.toggle("focus", hot.length > 0);
+
+    clearTimeout(tourT);
+    if (s.pk || s.tour) {
+      packet.innerHTML = KIND[s.kind];
+      packet.classList.add("on");
+      if (s.tour && !reduce) {
+        var i = 0;
+        (function hop() { place(s.tour[i]); if (++i < s.tour.length) tourT = setTimeout(hop, 750); })();
+      } else place(s.pk || s.tour[s.tour.length - 1]);
+    } else packet.classList.remove("on");
+
+    camera(s.fit ? [] : s.cam ? s.cam.map(function (q) { return scene.querySelector(q); }) : hot);
+  }
+
+  
+  function camera(hot) {
+    var vw = view.clientWidth, vh = view.clientHeight, sw = scene.offsetWidth, sh = scene.offsetHeight;
+    var x0, y0, x1, y1;
+    if (!hot.length) { x0 = 0; y0 = 0; x1 = sw; y1 = sh; }
+    else {
+      x0 = 1e9; y0 = 1e9; x1 = -1e9; y1 = -1e9;
+      hot.forEach(function (el) { var o = box(el); x0 = Math.min(x0, o.x); y0 = Math.min(y0, o.y); x1 = Math.max(x1, o.x + o.w); y1 = Math.max(y1, o.y + o.h); });
+      x0 -= 10; y0 -= 10; x1 += 10; y1 += 10;
+    }
+    var w = x1 - x0, h = y1 - y0;
+    var k = Math.min(1.5, vw / w, vh / h);
+    var tx = vw / 2 - (x0 + w / 2) * k, ty = vh / 2 - (y0 + h / 2) * k;
+    tx = sw * k <= vw ? (vw - sw * k) / 2 : Math.min(0, Math.max(vw - sw * k, tx));
+    ty = sh * k <= vh ? (vh - sh * k) / 2 : Math.min(0, Math.max(vh - sh * k, ty));
+    scene.style.transform = "translate(" + tx.toFixed(1) + "px," + ty.toFixed(1) + "px) scale(" + k.toFixed(3) + ")";
+  }
+
+  function pick() {
+    var line = innerHeight * (innerWidth < 900 ? .82 : .55), n = 0;
+    steps.forEach(function (el) { if (el.getBoundingClientRect().top < line) n = +el.dataset.step; });
+    go(n);
+  }
+  var queued = false;
+  addEventListener("scroll", function () { if (!queued) { queued = true; requestAnimationFrame(function () { queued = false; pick(); }); } }, { passive: true });
+  addEventListener("resize", function () { go(Math.max(cur, 0), true); });
+  if (reduce) { scene.style.transition = "none"; packet.style.transition = "none"; }
+  
+  var target = location.hash && document.getElementById(location.hash.slice(1));
+  if (target && target.classList.contains("step")) {
+    var toHash = function () {
+      var c = target.querySelector(".card");
+      scrollTo(0, c.getBoundingClientRect().top + scrollY - (innerWidth < 900 ? innerHeight * .68 + 8 : innerHeight * .25));
+    };
+    addEventListener("load", toHash);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { setTimeout(toHash, 50); });
+  }
+  pick();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { go(Math.max(cur, 0), true); });
+})();
+</script>
+</body>
+</html>

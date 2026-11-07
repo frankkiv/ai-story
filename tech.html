@@ -54,6 +54,7 @@
       <div class="cta">
         <a class="btn primary" href="#sim">玩玩看 context 模擬器 →</a>
         <a class="btn" href="#myth">先看最常見的誤會</a>
+        <a class="btn" href="journey.html">先跟著一句話走一趟 →</a>
       </div>
     </div>
     <div>
@@ -126,6 +127,7 @@
       <span class="eyebrow">02 · 一次請求長什麼樣子</span>
       <h2>你打一句「幫我看這個 bug」，送出去的是一整包</h2>
       <p class="lead">以 Claude Code 為例，每一輪送到 API 的內容依序是這幾層（Anthropic 的 cache 依 tools → system → messages 的順序比對前綴）。順序很重要，下一節的 cache 會用到。</p>
+      <p class="jlink"><a href="journey.html#j-pack">看動畫：這一包在你的電腦上怎麼組合、怎麼送出去 →</a></p>
     </div>
     <div class="grid2">
       <ol class="anatomy">
@@ -265,6 +267,7 @@
       <span class="eyebrow">04 · Prompt cache</span>
       <h2>既然每次都重送，為什麼不會慢到不能用？</h2>
       <p class="lead">因為模型那一端會把「算過的前綴」暫存起來。下次送來的 context 開頭一模一樣，就直接接著算。</p>
+      <p class="jlink"><a href="journey.html#j-cache">看動畫：快取在伺服器的哪一步發生 →</a></p>
     </div>
     <div class="grid3">
       <article class="card">
@@ -295,6 +298,7 @@
       <span class="eyebrow">05 · Agent 迴圈</span>
       <h2>「AI 自己動手」其實是一個 while 迴圈</h2>
       <p class="lead">模型不會真的執行任何東西。它只會輸出「我想呼叫這個工具，參數是這些」。真正執行的是你電腦上的客戶端，執行完把結果塞回 context，再問模型一次。</p>
+      <p class="jlink"><a href="journey.html#j-tool">看動畫：工具在誰的電腦上執行 →</a></p>
     </div>
     <div class="loop">
       <ol class="steps" id="loopSteps">
@@ -375,6 +379,7 @@
       <span class="eyebrow">07 · 手機跟電腦怎麼同步</span>
       <h2>同一個帳號，資料其實放在三個不同的地方</h2>
       <p class="lead">「在手機上接著做」看起來像魔法，其實要先分清楚：這段對話存在哪？迴圈在哪台機器上跑？手機只是哪一種遙控器？</p>
+      <p class="jlink"><a href="journey.html#j-relay">看動畫：手機訊息怎麼經過中繼交給電腦 →</a></p>
     </div>
     <div class="sync" aria-label="Remote Control 的連線方式">
       <div class="node">
