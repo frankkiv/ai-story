@@ -21,7 +21,7 @@
 }
 :root { --st-gold: var(--l-skills); }
 
-.stage { position: relative; height: 100%; border-radius: 22px; overflow: hidden; background: var(--code-bg); color: var(--code-text); display: grid; grid-template-rows: auto auto minmax(0, 1fr) auto auto; box-shadow: var(--shadow); isolation: isolate; }
+.stage { position: relative; height: 100%; border-radius: 22px; overflow: hidden; background: var(--code-bg); color: var(--code-text); display: grid; grid-template-rows: auto auto auto minmax(0, 1fr) auto auto; box-shadow: var(--shadow); isolation: isolate; }
 
 
 .st-top { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: .75rem; padding: .85rem 1rem .4rem; z-index: 4; }
@@ -31,6 +31,14 @@
 .st-prog i { display: block; height: 100%; width: 0; background: var(--st-gold); transition: width .5s; }
 
 
+.st-you { z-index: 4; margin: 0 1rem .45rem; height: 2rem; display: flex; align-items: center; gap: .5rem; padding: 0 .65rem; border-radius: 9px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); font-size: .8rem; color: #8b95a5; white-space: nowrap; overflow: hidden; }
+.st-you i { flex: none; width: .5rem; height: .5rem; border-radius: 50%; background: var(--l-new); box-shadow: 0 0 8px var(--l-new); }
+.st-you.wait i { background: var(--st-gold); box-shadow: 0 0 8px var(--st-gold); animation: youBlink 1s ease-in-out infinite; }
+@keyframes youBlink { 50% { opacity: .25; } }
+.st-you span { flex: none; }
+.st-you b { color: #fff; font-weight: 600; overflow: hidden; text-overflow: ellipsis; }
+@media (prefers-reduced-motion: reduce) { .st-you.wait i { animation: none; } }
+@media (max-width: 720px) { .st-you { font-size: .76rem; gap: .4rem; margin-inline: .75rem; padding-inline: .55rem; } }
 .st-term { position: relative; z-index: 5; margin: 0 1rem; justify-self: start; min-height: 2.4rem; background: rgba(10,12,16,.82); border: 1px solid color-mix(in srgb, var(--st-gold) 70%, transparent); border-radius: 10px; padding: .3rem .7rem; font-size: .82rem; line-height: 1.45; display: flex; flex-wrap: wrap; align-items: baseline; column-gap: .6rem; opacity: 0; transition: opacity .35s; }
 .st-term.on { opacity: 1; }
 .st-term:not(.on) { visibility: hidden; }
@@ -98,9 +106,9 @@
 .stage.saved-on .svd { opacity: 1; }
 
 
-.perm { position: absolute; right: .35rem; bottom: .35rem; font-size: .68rem; background: #fff; color: #0e1116; border-radius: 7px; padding: .2rem .4rem; display: flex; gap: .3rem; align-items: center; opacity: 0; transform: scale(.9); transition: opacity .35s, transform .35s; box-shadow: 0 6px 18px rgba(0,0,0,.4); }
+.perm { position: static; justify-self: start; display: none; font-size: .68rem; background: #fff; color: #0e1116; border-radius: 7px; padding: .2rem .4rem; display: flex; gap: .3rem; align-items: center; opacity: 0; transform: scale(.9); transition: opacity .35s, transform .35s; box-shadow: 0 6px 18px rgba(0,0,0,.4); }
 .perm u { text-decoration: none; font-weight: 700; border-radius: 5px; padding: 0 .3rem; background: var(--l-new); color: #fff; }
-.stage.perm-on .perm { opacity: 1; transform: none; }
+.stage.perm-on .perm { display: flex; opacity: 1; transform: none; }
 
 
 .phone { justify-self: center; width: min(13rem, 70%); border-radius: 22px; border: 2px solid rgba(255,255,255,.3); padding: .55rem .6rem .7rem; display: grid; gap: .3rem; background: rgba(255,255,255,.04); }
@@ -247,7 +255,7 @@
     <div class="hero-copy measure">
       <span class="pill">PART 3 walkthrough · <b>Follow one message</b></span>
       <h1>After you press Enter,<br><em>where do your words go?</em></h1>
-      <p class="sub">You type "Can you look at this bug?" into Claude Code on your computer. That message is packed up on your computer, travels all the way to a model in a remote data center, and the answer comes back. Your phone can see the same conversation too. Four chapters, fifteen steps. Scroll down and look at one place at a time.</p>
+      <p class="sub">It starts with you at your computer, typing "Can you look at this bug?" into Claude Code. That message is packed up on your computer, travels all the way to a model in a remote data center, and the answer comes back. Your phone can see the same conversation too. Four chapters, fifteen steps. Scroll down and look at one place at a time.</p>
     </div>
   </div>
 </header>
@@ -260,6 +268,7 @@
           <div class="st-tag" id="tag"></div>
           <div><div class="st-count" id="count"></div><div class="st-prog"><i id="prog"></i></div></div>
         </div>
+        <div class="st-you" id="youBar" aria-hidden="true"><i></i><span id="youK"></span><b id="you"></b></div>
         <div class="st-term" id="term" aria-hidden="true"><b></b><span></span></div>
         <div class="st-view" id="view" aria-hidden="true">
           <div class="scene" id="scene">
@@ -369,10 +378,10 @@
           </div>
         </div>
         <ol class="recap" aria-hidden="true">
-          <li>Assembled on your computer<span>Read local files and pack them into one package, in a fixed order</span></li>
-          <li>All the way to the server<span>Lock it, cross the ocean, then check, tokenize, match the cache, generate on GPUs</span></li>
-          <li>How the answer comes back<span>Streamed as it is computed; another round for each tool; saved back to your computer</span></li>
-          <li>How your phone stays in sync<span>Computer and phone both connect to a relay; your files stay on your computer</span></li>
+          <li>You ask at your computer<span>You press Enter; local files are read and packed into one package</span></li>
+          <li>The second or two you wait<span>Lock it, cross the ocean, then check, tokenize, match the cache, generate on GPUs</span></li>
+          <li>The answer appears<span>Streamed as it is computed; another round for each tool; saved back to your computer</span></li>
+          <li>You pick up your phone<span>Computer and phone both connect to a relay; your files stay on your computer</span></li>
           <li class="zero">Times the model was changed, start to finish: <b>0</b></li>
         </ol>
         <div class="st-cap"><button type="button" id="prev" aria-label="Previous step">&#8249;</button><p class="st-sub" id="sub" aria-hidden="true"></p><button type="button" id="next" aria-label="Next step">&#8250;</button></div>
@@ -385,12 +394,12 @@
       <section class="step" data-step="0">
         <div class="card">
           <span class="eyebrow">Opening</span>
-          <h3>The big picture: your data visits three places</h3>
-          <p>At the top is your computer, in the middle are Anthropic's remote servers, and at the bottom is your phone. As you scroll, a line of light leads you into each one. The striped stretch in between is the internet: from your home, across the ocean, to the data center.</p>
+          <h3>You sit at your computer and open Claude Code</h3>
+          <p>You want AI to look at a bug, so in Claude Code you type "Can you look at this bug?". At every step, "Your screen" at the top of the stage tells you what you see at that moment, and the map below shows what is really happening behind it.</p>
         </div>
       </section>
 
-      <div class="chap"><span>Chapter 1</span><h2>Assembled on your computer</h2></div>
+      <div class="chap"><span>Chapter 1</span><h2>You ask a question at your computer</h2></div>
       <section class="step" data-step="1">
         <div class="card">
           <span class="eyebrow">Step 1</span>
@@ -414,7 +423,7 @@
         </div>
       </section>
 
-      <div class="chap"><span>Chapter 2</span><h2>All the way to the server</h2></div>
+      <div class="chap"><span>Chapter 2</span><h2>The second or two you wait</h2></div>
       <section class="step" data-step="4">
         <div class="card">
           <span class="eyebrow">Step 4</span>
@@ -463,7 +472,7 @@
         </div>
       </section>
 
-      <div class="chap"><span>Chapter 3</span><h2>How the answer comes back</h2></div>
+      <div class="chap"><span>Chapter 3</span><h2>The answer appears on your screen</h2></div>
       <section class="step" data-step="10">
         <div class="card">
           <span class="eyebrow">Step 10</span>
@@ -495,12 +504,12 @@
         </div>
       </section>
 
-      <div class="chap"><span>Chapter 4</span><h2>How your phone stays in sync</h2></div>
+      <div class="chap"><span>Chapter 4</span><h2>You pick up your phone</h2></div>
       <section class="step" data-step="14" id="j-relay">
         <div class="card">
           <span class="eyebrow">Step 14</span>
-          <h3>Computer and phone both connect to the same relay</h3>
-          <p>With Remote Control on, your computer connects out to Anthropic's relay service, and the Claude app on your phone connects to it too. The relay only passes messages between the two, and keeps a copy of the conversation during the session so your phone can show it. It doesn't run your programs and can't touch your files.</p>
+          <h3>You leave your computer and see the same chat on your phone</h3>
+          <p>You head out, open the Claude app on your phone, and see the same conversation. That is because Remote Control is on: your computer connects out to Anthropic's relay service, and the Claude app on your phone connects to it too. The relay only passes messages between the two, and keeps a copy of the conversation during the session so your phone can show it. It doesn't run your programs and can't touch your files.</p>
           <p class="elder"><b>In plain words</b><span>The phone is the remote, the computer is the TV, and a relay station in between passes the signal along.</span></p>
         </div>
       </section>
@@ -515,7 +524,7 @@
       <section class="step" data-step="16">
         <div class="card">
           <span class="eyebrow">So</span>
-          <h3>One message, four legs of a journey</h3>
+          <h3>Four things you saw, one map behind them</h3>
           <p>Assembled on your computer, sent to a remote model, streamed back, and synced to your phone through a relay. The only thing that grows along the way is the record. The model itself doesn't change by a single bit.</p>
           <p>To play with each layer yourself, try <a href="tech.html#sim">How it works · the context simulator</a>. The three ways of syncing are compared in <a href="tech.html#sync">phone and computer sync</a>.</p>
         </div>
@@ -540,6 +549,7 @@
   var tag = document.getElementById("tag"), sub = document.getElementById("sub"), term = document.getElementById("term");
   var prog = document.getElementById("prog"), packet = document.getElementById("packet");
   var steps = document.querySelectorAll(".step");
+  var youBar = document.getElementById("youBar"), youK = document.getElementById("youK"), you = document.getElementById("you"), DEVPC = "Your screen";
   var narr = document.getElementById("narr"), count = document.getElementById("count");
   var prevB = document.getElementById("prev"), nextB = document.getElementById("next");
   function jump(i) {
@@ -555,28 +565,28 @@
   addEventListener("keydown", function (e) { if (e.key === "Escape") closeSheet(); });
   prevB.addEventListener("click", function () { jump(cur - 1); });
   nextB.addEventListener("click", function () { jump(cur + 1); });
-  var CH = ["", "Chapter 1 · Assembled on your computer", "Chapter 2 · All the way to the server", "Chapter 3 · How the answer comes back", "Chapter 4 · How your phone stays in sync"];
+  var CH = ["", "Chapter 1 · You ask at your computer", "Chapter 2 · The second or two you wait", "Chapter 3 · The answer appears", "Chapter 4 · You pick up your phone"];
   var F = "filled";
 
   
   var S = [
-    { ch: 0, name: "Opening", sub: "From Enter to your phone: <em>three places</em>", note: "Scroll, or use the arrows on each side", hot: [], fit: true, beam: ["pipe0", "pipe", "pipe2"] },
-    { ch: 1, name: "Press Enter", sub: "<em>A program on your computer</em> takes over", note: "Nothing has left your computer yet", hot: ["#input"], cam: ["#pipe0", "#files"], beam: ["pipe0"], lit: "z-pc", term: ["Client", "the program on your computer that talks to the server"] },
-    { ch: 1, name: "Read local files", sub: "It reads your <em>memory and history</em>", note: "These files live only on your disk", hot: ["#files"], term: ["CLAUDE.md", "memory file: project rules and your preferences"] },
-    { ch: 1, name: "Pack in order", sub: "Packed into <em>one package</em>", note: "Stable parts first, so the cache can work", hot: ["#files", "#pack"], pk: "#pack", kind: "ctx", st: F, term: ["context", "everything the model reads this time"] },
-    { ch: 2, name: "Lock it", sub: "<em>Locked</em> before it leaves", note: "HTTPS: nobody along the way can read it", hot: ["#pack"], pk: "#pack", kind: "lock", st: F, term: ["HTTPS", "an encrypted connection nobody on the way can read"] },
-    { ch: 2, name: "Across the ocean", sub: "The package <em>crosses the ocean</em>", note: "About 10,000 km one way, 0.1–0.2 s round trip", hot: ["#pipe"], cam: ["#pipe", "#srv-ico"], tour: ["#wp1", "#wp2", "#wp3", "#wp4", "#srv-ico"], beam: ["pipe"], lit: "z-srv", kind: "lock", st: F, term: ["Data center", "a remote building full of servers and GPUs"] },
-    { ch: 2, name: "Front desk", sub: "The front desk <em>checks who you are</em>", note: "Account and quota, then a free GPU machine", hot: ["#front"], pk: "#front", cam: ["#front", "#tok"], kind: "ctx", st: F, term: ["API", "the agreed intake window between programs"] },
-    { ch: 2, name: "Tokenize", sub: "Text becomes <em>tokens</em>", note: "The split and IDs are illustrative", hot: ["#tok"], pk: "#tok", kind: "ctx", st: F + " tokens", term: ["token", "the smallest unit of text a model handles"] },
-    { ch: 2, name: "Match the cache", sub: "Matching parts <em>come from the cache</em>", note: "The cache lasts about 5 minutes", hot: ["#cache", "#pack"], pk: "#cache", kind: "ctx", st: F + " tokens hit", term: ["prompt cache", "the server keeps a read prefix for about 5 minutes"] },
-    { ch: 2, name: "Generate on GPUs", sub: "The model writes <em>one token at a time</em>", note: "Its weights never change along the way", hot: ["#gpu"], pk: "#gpu", kind: "ctx", st: F + " tokens gen-on", term: ["Inference", "fixed weights work out the next token"] },
-    { ch: 3, name: "Stream back", sub: "The answer <em>streams back</em>", note: "Over the same encrypted connection", hot: ["#gpu", "#pipe", "#screen"], cam: ["#screen", "#pipe"], tour: ["#wp4", "#wp3", "#wp2", "#wp1", "#screen"], beam: ["pipe up"], kind: "reply", st: F + " tokens gen-on typed", term: ["Streaming", "each small piece is sent as soon as it is ready"] },
-    { ch: 3, name: "Run a tool", sub: "<em>Your computer</em> reads the file", note: "It asks you before anything risky", hot: ["#tool"], pk: "#tool", kind: "tool", st: F + " typed perm-on", term: ["tool_use", "a structured request saying which tool to use"] },
-    { ch: 3, name: "Send again", sub: "The result is <em>added</em>, then sent again", note: "Repeat until no more tools: the agent loop", hot: ["#pack", "#pipe", "#front", "#tok", "#cache"], pk: "#cache", beam: ["pipe"], kind: "ctx", st: F + " typed result hit", term: ["agent loop", "send, act, add back, repeat until done"] },
-    { ch: 3, name: "Save locally", sub: "The exchange is <em>saved on your computer</em>", note: "A .jsonl file in ~/.claude/projects/", hot: ["#files", "#screen"], pk: "#files", kind: "save", st: F + " typed result saved-on", term: [".jsonl history", "stored in ~/.claude/projects/"] },
-    { ch: 4, name: "Connect to relay", sub: "Computer and phone meet at a <em>relay</em>", note: "The relay passes messages, never your files", hot: ["#relay", "#pipe", "#pipe2", "#phone"], cam: ["#relay", "#phone"], beam: ["pipe2"], lit: "phone", st: F + " typed result saved-on", term: ["Remote Control", "steer Claude Code on your computer from your phone"] },
-    { ch: 4, name: "Phone sends a message", sub: "Your phone's words go <em>through the relay</em>", note: "So the computer stays on, files stay home", hot: ["#phone", "#pipe2", "#relay", "#pipe", "#input"], pk: "#input", kind: "msg", cam: ["#pipe", "#phone"], beam: ["pipe2 up", "pipe up"], st: F + " typed result saved-on phone-msg", term: ["Sync", "messages and history sync, not the model"] },
-    { ch: 0, name: "So", sub: "Times the model changed: <em>0</em>", note: "Only the record grows", hot: [], fit: true, st: "end" }
+    { ch: 0, name: "Opening", sub: "You sit at your computer with <em>a question</em>", note: "Scroll, or use the arrows on each side", you: "Claude Code prompt, cursor blinking", hot: [], cam: ["#pc-ico"], lit: "z-pc" },
+    { ch: 1, name: "Press Enter", sub: "You press <em>Enter</em>", note: "Claude Code on your computer takes it first", you: "You typed a line and pressed Enter", hot: ["#input"], cam: ["#pipe0", "#files"], beam: ["pipe0"], lit: "z-pc", term: ["Client", "the program on your computer that talks to the server"] },
+    { ch: 1, name: "Read local files", sub: "It reads your <em>memory and history</em>", note: "Before anything shows up, the files are still only on your disk", you: "Nothing yet", wait: true, hot: ["#files"], term: ["CLAUDE.md", "memory file: project rules and your preferences"] },
+    { ch: 1, name: "Pack in order", sub: "Packed into <em>one package</em>", note: "Stable parts first, so the cache can work", you: "Nothing yet", wait: true, hot: ["#files", "#pack"], pk: "#pack", kind: "ctx", st: F, term: ["context", "everything the model reads this time"] },
+    { ch: 2, name: "Lock it", sub: "<em>Locked</em> before it leaves", note: "HTTPS: nobody along the way can read it", you: "“Thinking…”", wait: true, hot: ["#pack"], pk: "#pack", kind: "lock", st: F, term: ["HTTPS", "an encrypted connection nobody on the way can read"] },
+    { ch: 2, name: "Across the ocean", sub: "The package <em>crosses the ocean</em>", note: "About 10,000 km one way, 0.1–0.2 s round trip", you: "Still “Thinking…”", wait: true, hot: ["#pipe"], cam: ["#pipe", "#srv-ico"], tour: ["#wp1", "#wp2", "#wp3", "#wp4", "#srv-ico"], beam: ["pipe"], lit: "z-srv", kind: "lock", st: F, term: ["Data center", "a remote building full of servers and GPUs"] },
+    { ch: 2, name: "Front desk", sub: "The front desk <em>checks who you are</em>", note: "Account and quota, then a free GPU machine", you: "Still “Thinking…”", wait: true, hot: ["#front"], pk: "#front", cam: ["#front", "#tok"], kind: "ctx", st: F, term: ["API", "the agreed intake window between programs"] },
+    { ch: 2, name: "Tokenize", sub: "Text becomes <em>tokens</em>", note: "The split and IDs are illustrative", you: "Still “Thinking…”", wait: true, hot: ["#tok"], pk: "#tok", kind: "ctx", st: F + " tokens", term: ["token", "the smallest unit of text a model handles"] },
+    { ch: 2, name: "Match the cache", sub: "Matching parts <em>come from the cache</em>", note: "The cache lasts about 5 minutes", you: "Still “Thinking…”", wait: true, hot: ["#cache", "#pack"], pk: "#cache", kind: "ctx", st: F + " tokens hit", term: ["prompt cache", "the server keeps a read prefix for about 5 minutes"] },
+    { ch: 2, name: "Generate on GPUs", sub: "The model writes <em>one token at a time</em>", note: "Its weights never change along the way", you: "Almost there", wait: true, hot: ["#gpu"], pk: "#gpu", kind: "ctx", st: F + " tokens gen-on", term: ["Inference", "fixed weights work out the next token"] },
+    { ch: 3, name: "Stream back", sub: "The answer <em>streams back</em>", note: "Over the same encrypted connection", you: "Words appear a bit at a time", hot: ["#gpu", "#pipe", "#screen"], cam: ["#screen", "#pipe"], tour: ["#wp4", "#wp3", "#wp2", "#wp1", "#screen"], beam: ["pipe up"], kind: "reply", st: F + " tokens gen-on typed", term: ["Streaming", "each small piece is sent as soon as it is ready"] },
+    { ch: 3, name: "Run a tool", sub: "<em>Your computer</em> reads the file", note: "It asks you before anything risky", you: "“Allow reading app.js?” You allow", hot: ["#tool"], pk: "#tool", kind: "tool", st: F + " typed perm-on", term: ["tool_use", "a structured request saying which tool to use"] },
+    { ch: 3, name: "Send again", sub: "The result is <em>added</em>, then sent again", note: "Repeat until no more tools: the agent loop", you: "“Reading app.js…”", wait: true, hot: ["#pack", "#pipe", "#front", "#tok", "#cache"], pk: "#cache", beam: ["pipe"], kind: "ctx", st: F + " typed result hit", term: ["agent loop", "send, act, add back, repeat until done"] },
+    { ch: 3, name: "Save locally", sub: "The exchange is <em>saved on your computer</em>", note: "A .jsonl file in ~/.claude/projects/", you: "Done. Ask the next thing", hot: ["#files", "#screen"], pk: "#files", kind: "save", st: F + " typed result saved-on", term: [".jsonl history", "stored in ~/.claude/projects/"] },
+    { ch: 4, name: "Connect to relay", sub: "Computer and phone meet at a <em>relay</em>", note: "The relay passes messages, never your files", you: "The same chat, in the Claude app", dev: "Your phone", hot: ["#relay", "#pipe", "#pipe2", "#phone"], cam: ["#relay", "#phone"], beam: ["pipe2"], lit: "phone", st: F + " typed result saved-on", term: ["Remote Control", "steer Claude Code on your computer from your phone"] },
+    { ch: 4, name: "Phone sends a message", sub: "Your phone's words go <em>through the relay</em>", note: "So the computer stays on, files stay home", you: "You type and tap Allow", dev: "Your phone", hot: ["#phone", "#pipe2", "#relay", "#pipe", "#input"], pk: "#input", kind: "msg", cam: ["#pipe", "#phone"], beam: ["pipe2 up", "pipe up"], st: F + " typed result saved-on phone-msg", term: ["Sync", "messages and history sync, not the model"] },
+    { ch: 0, name: "So", sub: "Behind what you saw: <em>this map</em>", note: "Only the record grows. Times the model changed: 0", you: "Everything you saw", hot: [], fit: true, st: "end" }
   ];
   var KIND = {
     ctx: '<i style="--c:var(--l-tools)"></i><i style="--c:var(--l-sys)"></i><i style="--c:var(--l-mem)"></i><i style="--c:var(--l-hist)"></i><i style="--c:var(--l-new)"></i><b>package</b>',
@@ -603,6 +613,7 @@
     cur = n;
     var s = S[n];
     stage.className = "stage " + (s.st || "");
+    youK.textContent = s.dev || DEVPC; you.textContent = s.you || ""; youBar.classList.toggle("wait", !!s.wait);
     
     document.getElementById("z-pc").classList.toggle("open", n >= 1);
     document.getElementById("z-srv").classList.toggle("open", n >= 6);
