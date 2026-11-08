@@ -96,7 +96,7 @@ GitHub Pages，從 `main` 分支根目錄發布（根目錄有 `.nojekyll`）。
 ## 9. 雙語（繁體中文／English）
 
 - **預設語言是繁體中文。** 中文頁放在 repo 根目錄、維持原本網址；英文頁放在 `en/`，檔名一模一樣（`tech.html` ↔ `en/tech.html`）。
-- **切換方式**：每頁導覽列右邊的齒輪是設定選單，由 `assets/i18n.js` 產生，可選語言（繁體中文／English）和外觀（跟隨系統／淺色／深色）。選擇存在瀏覽器的 localStorage（`ai-story-lang`、`ai-story-theme`）。沒選過語言的人一律看到中文；選過 English 的人，打開中文網址會自動轉到對應的英文頁，反之亦然。網址加 `?lang=stay` 可以停在目前語言不轉址。
+- **切換方式**：每頁導覽列右邊的齒輪是設定選單，由 `assets/i18n.js` 產生，可選語言（繁體中文／English）和外觀（跟隨系統／淺色／深色）。選擇存在瀏覽器的 localStorage（`ai-story-lang`、`ai-story-theme`）。預設是中文、深色：沒選過語言的人一律看到中文，沒選過外觀的人一律看到深色（選「跟隨系統」會存成 `auto`，才改跟系統設定）；選過 English 的人，打開中文網址會自動轉到對應的英文頁，反之亦然。網址加 `?lang=stay` 可以停在目前語言不轉址。
 - **每一頁 `<head>` 都要有**：`<script src="assets/i18n.js"></script>`（英文頁是 `../assets/i18n.js`），以及兩行 `<link rel="alternate" hreflang="…">` 指向兩種語言的同一頁。英文頁 `<html lang="en">`，中文頁 `<html lang="zh-Hant-TW">`。
 - **兩邊要同步**：改任何內容、數字、事件、模型資料，中英兩版都要改。英文頁的 HTML 結構、`id`、class、JS 邏輯跟中文版保持一致，只換文字；錨點（例如 `#orch`、`#sim`）兩邊共用，切換語言時會保留。
 - **英文寫作**：寫給一般英文讀者，不是逐字翻譯。「白話說」譯為 **In plain words**。台灣相關段落（例如 `future.html` 的「拉回台灣」、電力換算器以台灣用電為基準）保留，譯為 Back to Taiwan。模型名稱、考試名稱、日期格式（2026.09、2026/9/22）不翻譯。

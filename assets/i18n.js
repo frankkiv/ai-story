@@ -8,7 +8,8 @@
   function get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function set(k, v) { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) {} }
 
-  var theme = get(K_THEME);
+  // Default is dark. "auto" (follow the system) is stored explicitly so it differs from "never chosen".
+  var theme = get(K_THEME) || "dark";
   if (theme === "light" || theme === "dark") html.setAttribute("data-theme", theme);
 
   var page = location.pathname.split("/").pop() || "index.html";
@@ -33,7 +34,7 @@
     if (!frame || frame.querySelector(".settings")) return;
     var d = document.createElement("details");
     d.className = "settings";
-    var cur = get(K_THEME) || "auto";
+    var cur = get(K_THEME) || "dark";
     d.innerHTML =
       '<summary aria-label="' + T.btn + '" title="' + T.btn + '"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg><span class="st-cur">' + (lang === "en" ? "EN" : "中") + "</span></summary>" +
       '<div class="set-pop" role="group" aria-label="' + T.btn + '">' +
@@ -58,7 +59,7 @@
     d.querySelectorAll("[data-theme-set]").forEach(function (b) {
       b.addEventListener("click", function () {
         var t = b.getAttribute("data-theme-set");
-        if (t === "auto") { html.removeAttribute("data-theme"); set(K_THEME, null); }
+        if (t === "auto") { html.removeAttribute("data-theme"); set(K_THEME, "auto"); }
         else { html.setAttribute("data-theme", t); set(K_THEME, t); }
         d.querySelectorAll("[data-theme-set]").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
       });
