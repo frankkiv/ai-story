@@ -127,32 +127,40 @@
   <div class="frame">
     <div class="s-head measure">
       <span class="eyebrow">02 · Where new facts come from</span>
-      <h2>It doesn't go online by itself, so how does it know what's new?</h2>
-      <p class="lead">The model itself doesn't. What it learned stops on a certain day. Anything newer is put into the context from outside, at the moment you ask, for it to read.</p>
+      <h2>A trained model never changes. So how can it answer about recent events?</h2>
+      <p class="lead">As the last section said, the model is stateless: once training ends, its weights are fixed, and no amount of chatting changes them. So it really doesn't know what happened after training. It can still answer because it can decide "I need to look this up", ask the app to fetch live data with a tool, put the result into this round's context, and answer after reading it.</p>
       <p class="jlink"><a href="journey.html#j-search">Watch it: how the model decides whether to search →</a></p>
     </div>
-    <div class="grid3">
-      <article class="card">
-        <span class="tag">CUTOFF · Learned up to a date</span>
-        <h3>Its knowledge stops on a certain day</h3>
-        <p>Training data is collected up to a certain date, called the knowledge cutoff. Whatever happened after that, the model never read. Companies usually state this date in their model documentation.</p>
-      </article>
-      <article class="card">
-        <span class="tag">NEW VERSION · Retrained</span>
-        <h3>Updating means training a new version</h3>
-        <p>A model doesn't update itself every day. To teach it more, the company has to gather data and train again, releasing a new version every few months to a year or so. The cutoff only moves forward when the version you use changes.</p>
-      </article>
-      <article class="card hl">
-        <span class="tag">CONTEXT · Added right now</span>
-        <h3>Fresh information is read to it on the spot</h3>
-        <p>In each conversation, the app puts new information into the context: today's date in the system prompt, page excerpts from a search the model chose to run, an article or file you pasted, or data read through a connector (MCP). The model uses it and moves on; none of it stays in the weights.</p>
-      </article>
+    <div class="loop">
+      <ol class="steps">
+        <li><div><span class="who">YOU → APP</span><b>You ask: "Who won the 2026 World Cup?"</b><span>Say this model's training data stops in early 2026, and the World Cup only kicked off in June. The app sends your question to the model along with today's date and the list of available tools (web search, any MCP connectors you've added).</span></div></li>
+        <li><div><span class="who">MODEL</span><b>It realizes it doesn't know</b><span>Nothing it learned contains the result, and the date in the system prompt tells it the tournament is already over.</span></div></li>
+        <li><div><span class="who">MODEL → APP</span><b>It decides to call a tool</b><span>Instead of answering, it outputs a request: "web search for '2026 World Cup winner'". If you've connected a sports-scores MCP connector, it might pick that instead. Whether to look something up, and with which tool, is the model's own call.</span></div></li>
+        <li><div><span class="who">TOOL</span><b>The tool fetches live data</b><span>Web search is run by Anthropic's servers; an MCP tool is called by the app, which contacts that service. The model itself never goes online.</span></div></li>
+        <li><div><span class="who">APP → MODEL</span><b>The result joins the context, and it reads it all again</b><span>The page excerpts or score data are added to the end of this round's context, and the model reads the whole package again.</span></div></li>
+        <li><div><span class="who">MODEL → YOU</span><b>It answers from what it found</b><span>"The winner was ___", usually with source links. The round ends and not a single weight has changed; ask again in a new conversation and it has to look it up again.</span></div></li>
+      </ol>
+      <div class="col">
+        <article class="card">
+          <span class="tag">Without tools</span>
+          <h3>It only has what it learned before the cutoff</h3>
+          <p>If the app has search off and no connectors, the model has nowhere to look. Ask who won the World Cup and, at best, it says "my data stops before the tournament, so I can't be sure". At worst, it guesses from old data in the same confident tone.</p>
+          <p>How to tell: look for source links, or for a "Searching…" note or a named tool call on screen. If there are none, treat the answer as what it remembered before the cutoff, check it yourself, or simply tell it to search the web.</p>
+        </article>
+        <article class="card">
+          <span class="tag">Three ways new information reaches the context</span>
+          <ul class="kv">
+            <li><span>The model looks it up</span><span>Web search, MCP connectors. Called only when the model decides to; the app runs them and puts the result back into context</span></li>
+            <li><span>The app always adds it</span><span>Today's date, memory files, the system prompt. Added even though the model never asked</span></li>
+            <li><span>You paste it in</span><span>Articles, files, screenshots</span></li>
+          </ul>
+        </article>
+      </div>
     </div>
     <div class="prose measure mt">
-      <p>So you will see two cases. When the app has search on and the model decides it needs to look something up, the answer usually comes with source links, and it is telling you what it just found. When it doesn't search, it can only answer from what it learned before the cutoff. Ask about something recent and it may say it doesn't know, or give an outdated or even wrong answer in the same confident tone.</p>
-      <p>An easy check: when you ask about something recent, look for source links. If there are none, treat the answer as "what it remembered before the cutoff" and verify it yourself, or simply tell it to search the web.</p>
-      <p class="elder"><b>In plain words</b><span>The model is an encyclopedia printed on a certain day. It never grows new pages by itself; the publisher brings out a new edition now and then. To know about today, someone has to clip today's newspaper and slip it in. Once read, the clipping doesn't become part of the encyclopedia.</span></p>
-      <p><small>Sources: Anthropic model documentation (training data cutoff for each model); Anthropic "Web search tool" docs.</small></p>
+      <p>All three only put information into this round's context. Once the round is over it is gone, and the model hasn't "learned" anything. The only way for the model itself to know newer things is for the company to gather data again and train a new version, roughly every few months to a year. Only when the version you use changes does the knowledge cutoff move forward.</p>
+      <p class="elder"><b>In plain words</b><span>The model is an expert who went into seclusion just before the World Cup; their memory stops on that day. Ask who won, and they glance at the calendar, see the tournament is long over, and send an assistant out for a newspaper. Only after reading it do they answer. The newspaper is taken away afterward and their memory hasn't changed; ask again next time and they need another newspaper.</span></p>
+      <p><small>The World Cup example is illustrative, so the winner is left blank. Sources: Anthropic model documentation (training data cutoff for each model); Anthropic "Web search tool" docs; Model Context Protocol docs.</small></p>
     </div>
   </div>
 </section>

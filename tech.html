@@ -126,32 +126,40 @@
   <div class="frame">
     <div class="s-head measure">
       <span class="eyebrow">02 · 最新的事從哪來</span>
-      <h2>它不會自己上網，那怎麼知道最新的事？</h2>
-      <p class="lead">其實模型本身不知道。它學到的東西停在某一天；之後的新資訊，都是在你提問的那一刻，從外面放進 context 給它讀的。</p>
+      <h2>模型訓練完就不會再變，為什麼還答得出最新的事？</h2>
+      <p class="lead">上一段說過，模型是無狀態的：訓練一結束，權重就固定了，你跟它聊再久也不會改。所以它其實不知道訓練之後發生的事。它答得出來，是因為它會判斷「這個我需要查」，請 App 用工具去拿即時資料，把結果放進這一輪的 context，讀完再回答你。</p>
       <p class="jlink"><a href="journey.html#j-search">看動畫：模型怎麼決定要不要上網查 →</a></p>
     </div>
-    <div class="grid3">
-      <article class="card">
-        <span class="tag">CUTOFF · 學到哪一天</span>
-        <h3>模型的知識停在某一天</h3>
-        <p>訓練用的資料收集到某個日期為止，這叫知識截止日（knowledge cutoff）。之後發生的事，模型本身沒有讀過。各家通常會在模型說明裡寫出這個日期。</p>
-      </article>
-      <article class="card">
-        <span class="tag">NEW VERSION · 換新版</span>
-        <h3>要更新，就得訓練新版本</h3>
-        <p>模型不會每天自己更新。要讓它知道更多，模型公司得重新收集資料、重新訓練，隔幾個月到一年左右推出新版本。你用的版本換了，截止日才會往後移。</p>
-      </article>
-      <article class="card hl">
-        <span class="tag">CONTEXT · 當下放進去</span>
-        <h3>最新的資訊，是當下讀給它聽的</h3>
-        <p>每次對話，App 會把新資訊放進 context：系統提示裡寫上今天的日期、模型決定搜尋時抓回來的網頁摘要、你貼上的文章或檔案，或是透過連接器（MCP）讀到的資料。模型讀完就用，用完也不會留在權重裡。</p>
-      </article>
+    <div class="loop">
+      <ol class="steps">
+        <li><div><span class="who">YOU → APP</span><b>你問：「2026 世界盃冠軍是誰？」</b><span>假設這個模型的訓練資料停在 2026 年初，世界盃 6 月才開踢。App 把你的問題連同今天的日期、可用的工具清單（網路搜尋、你接上的 MCP 連接器）一起送給模型。</span></div></li>
+        <li><div><span class="who">MODEL</span><b>它發現自己不知道</b><span>它學過的資料裡沒有比賽結果，而系統提示裡的日期告訴它：比賽已經結束了。</span></div></li>
+        <li><div><span class="who">MODEL → APP</span><b>它決定呼叫工具</b><span>它先不回答，而是輸出一段請求：「用網路搜尋查『2026 世界盃 冠軍』」。如果你接了體育比分的 MCP 連接器，它也可能選那個。要不要查、用哪個工具，是模型自己判斷的。</span></div></li>
+        <li><div><span class="who">TOOL</span><b>工具去拿即時資料</b><span>網路搜尋由 Anthropic 的伺服器代為執行；MCP 工具由 App 去呼叫那個服務。模型本身不會連網。</span></div></li>
+        <li><div><span class="who">APP → MODEL</span><b>結果放進 context，整包再讀一次</b><span>查到的網頁摘要或比分資料加在這一輪 context 的最後面，模型把整包重新讀一遍。</span></div></li>
+        <li><div><span class="who">MODEL → YOU</span><b>它根據查到的內容回答</b><span>「冠軍是 ○○ 隊」，通常會附上來源連結。這一輪結束，權重一個數字都沒變；開新對話再問一次，它還是得重新查。</span></div></li>
+      </ol>
+      <div class="col">
+        <article class="card">
+          <span class="tag">沒有工具的時候</span>
+          <h3>它只能靠截止日以前學到的</h3>
+          <p>如果 App 沒開搜尋、也沒接任何連接器，模型就沒有地方可以查。問世界盃冠軍，好的情況是它說「我的資料停在比賽之前，沒辦法確定」；不好的情況是它照舊資料猜一個，語氣一樣篤定。</p>
+          <p>判斷方法：回答有沒有附來源連結，或畫面上有沒有出現「正在搜尋」、呼叫了哪個工具。都沒有，就當它是截止日以前的印象，自己再查證，或直接跟它說「請上網查」。</p>
+        </article>
+        <article class="card">
+          <span class="tag">新資訊進到 context 的三種方式</span>
+          <ul class="kv">
+            <li><span>模型自己去查</span><span>網路搜尋、MCP 連接器。模型判斷需要才呼叫，App 執行，結果放回 context</span></li>
+            <li><span>App 每次都放</span><span>今天的日期、記憶檔、系統提示。模型沒有開口要，App 也會放</span></li>
+            <li><span>你自己貼上</span><span>文章、檔案、截圖</span></li>
+          </ul>
+        </article>
+      </div>
     </div>
     <div class="prose measure mt">
-      <p>所以你會遇到兩種情況。App 有開搜尋、模型也判斷需要查的時候，回答通常會附上來源連結，這時它講的是剛查到的內容。沒有查的時候，它只能用截止日以前學到的東西回答；問到最近的事，它可能說不知道，也可能講出過時、甚至錯誤的答案，而且語氣一樣篤定。</p>
-      <p>簡單的判斷方法：問到最近的事，看回答有沒有附來源連結。沒有的話，就當它是「截止日以前的印象」，自己再查證一次，或直接跟它說「請上網查」。</p>
-      <p class="elder"><b>白話說</b><span>模型像一套在某天印好的百科全書，不會自己長出新的一頁，出版社隔一陣子才出新版。想知道今天的事，得有人把今天的報紙剪下來夾進去給它看；看完了，報紙也不會變成百科的一部分。</span></p>
-      <p><small>資料來源：Anthropic 模型說明（各模型的訓練資料截止日）、Anthropic〈Web search tool〉文件。</small></p>
+      <p>這三種方式都只放進這一輪的 context，用完就沒了，不會讓模型「學會」。要讓模型本身知道更新的事，唯一的方法是模型公司重新收集資料、訓練出新版本，大約隔幾個月到一年一次；你用的版本換了，知識截止日（knowledge cutoff）才會往後移。</p>
+      <p class="elder"><b>白話說</b><span>模型像一位在世界盃開踢前就閉關的專家，記憶停在那天。你問他冠軍是誰，他先看一眼日曆，發現比賽早就結束了，就請助理去買報紙；讀完報紙，他才回答你。報紙看完就收走，他的記憶沒有變；下次再問，還得再買一次。</span></p>
+      <p><small>世界盃的例子是示意，冠軍隊名刻意留白。資料來源：Anthropic 模型說明（各模型的訓練資料截止日）、Anthropic〈Web search tool〉文件、Model Context Protocol 文件。</small></p>
     </div>
   </div>
 </section>
