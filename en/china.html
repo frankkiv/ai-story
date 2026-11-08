@@ -13,6 +13,9 @@
 <link rel="alternate" hreflang="en" href="china.html">
 <script src="../assets/i18n.js"></script>
 <style>
+.bignum { display: block; margin: .3rem 0 .1rem; font-family: var(--mono); font-size: 2rem; font-weight: 500; line-height: 1.1; color: var(--accent); font-variant-numeric: tabular-nums; }
+.bignum.w { color: var(--warn); }
+.bignum.m { color: var(--muted); }
 .reasons { counter-reset: r; }
 .reasons .card { position: relative; }
 .flowchart { display: grid; gap: .5rem; }
@@ -71,8 +74,8 @@
     <a class="brand" href="index.html"><i></i><span>AI Grew Hands</span></a>
     <ul>
       <li><a class="l" href="history.html"><span class="lg">Timeline</span><span class="sh">Timeline</span></a></li>
-      <li><a class="l" href="bench.html"><span class="lg">Model benchmarks</span><span class="sh">Bench</span></a></li>
       <li><a class="l" href="tech.html"><span class="lg">How it works</span><span class="sh">How</span></a></li>
+      <li><a class="l" href="bench.html"><span class="lg">Model benchmarks</span><span class="sh">Bench</span></a></li>
       <li><a class="l site-on" href="china.html"><span class="lg">Catching up</span><span class="sh">China</span></a></li>
       <li><a class="l" href="future.html"><span class="lg">Next bottleneck</span><span class="sh">Limits</span></a></li>
     </ul>
@@ -169,6 +172,7 @@
       <li><span class="d">2026.02.12</span><b>OpenAI's memo to the US House Select Committee on China</b><span>Says people linked to DeepSeek developed ways around access restrictions, getting US model outputs through "third-party routers that mask the source".</span></li>
       <li><span class="d">2026.02</span><b>Google</b><span>Says a single campaign sent Gemini more than 100,000 prompts trying to replicate the model, calling it intellectual property theft.</span></li>
       <li><span class="d">2026.02.23</span><b>Anthropic's report names DeepSeek, Moonshot and MiniMax</b><span>About 24,000 fraudulent accounts and over 16 million conversations. By Anthropic's count: MiniMax over 13 million, Moonshot over 3.4 million, DeepSeek over 150,000. Targets were agentic coding, tool use and reasoning, and DeepSeek is also said to have used Claude as a grader for reinforcement learning.</span></li>
+      <li><span class="d">2026.09.08</span><b>Joint NSA, CISA and FBI advisory</b><span>Names six labs (DeepSeek, Moonshot AI, Alibaba, MiniMax, StepFun and Zhipu) and says they have taken billions of tokens from US models since 2024. It is the first time the US government named them publicly.</span></li>
       <li><span class="d">2026.10.12</span><b>Anthropic's second report</b><span>Says new defenses cut the data distillers obtained by about 90–99%, blocked tens of thousands of accounts, and adds Zhipu for distilling security-related capabilities.</span></li>
     </ol>
   </div>
@@ -221,10 +225,35 @@
   </div>
 </section>
 
+<section class="s gutter" id="block">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">06 · How much is blocked</span>
+      <h2>How well do the defenses work, and have Chinese releases slowed?</h2>
+      <p class="lead">The short answer: only Anthropic has published a number, saying distillers now get over 90% less data from its own platform. Nobody has published how much is blocked across the industry. As of November 2026, Chinese releases show no clear slowdown because of it.</p>
+    </div>
+    <div class="grid3">
+      <article class="card"><span class="tag">Vendor-reported · Anthropic, Oct 2026</span><span class="bignum">90–99%</span><h3>Less reasoning data taken from Claude</h3><p>Once the new defenses were fully in place, the reasoning distillers could extract from Claude fell 10 to 100 times, on some days too little to measure. Tens of thousands of accounts were banned, many within two hours of starting. The classifier's false-positive rate is under 0.1%. This is Anthropic's own estimate, for its own platform only, with no third-party audit.</p></article>
+      <article class="card"><span class="tag">US government · Sep 8, 2026</span><span class="bignum w">6 labs</span><h3>NSA, CISA and FBI name names</h3><p>A joint advisory (AA26-251A) names DeepSeek, Moonshot AI, Alibaba, MiniMax, StepFun and Zhipu (Z.ai). It says they have taken "billions of tokens" from US models since 2024, and that distillation is core to their development strategy. It recommends defenses but gives no blocking rate.</p></article>
+      <article class="card"><span class="tag">Academia · Oxford et al., Sep 2026</span><span class="bignum m">Gap closed</span><h3>Summaries alone won't hold for long</h3><p>Researchers used a small model to expand reasoning summaries back into near-complete traces, then trained on them. After reinforcement learning, the student nearly matched one trained on full traces. The experiments used models of 3B parameters or fewer and math problems only, so they don't directly carry over to the largest models.</p></article>
+    </div>
+
+    <div class="prose measure mt">
+      <h3>Have Chinese releases slowed?</h3>
+      <p><b>Not visibly.</b> Chinese labs kept shipping in the second half of 2026: Moonshot's Kimi K3 (July), Zhipu's GLM-5.3 (August), an updated DeepSeek V4.1 Flash (October) and Kimi K3.1 Pro (October).</p>
+      <p><b>There were delays, but not because of distillation.</b> DeepSeek V4 slipped twice, which analysts blamed on the heavy re-engineering needed to move to Huawei chips. Alibaba showed Qwen 4 at its September conference but had given no release date by late October, without saying why.</p>
+      <p><b>The defenses make distillation harder, but haven't stopped it.</b> Anthropic says that while building GLM-5.3, Zhipu tried to distill Claude's cyber capabilities. When it found the newest model's safeguards weakened its attacks, it switched to an older Claude model and another lab's model. GLM-5.3 shipped anyway.</p>
+      <p><b>The gap is roughly 4 to 7 months.</b> By the AI 2027 Tracker's count, the best Chinese model trails the best US model by about 4 to 7 months, depending on the test. The gap is larger on newer kinds of tests.</p>
+      <p>A balanced reading: the new defenses were only fully in place by September and October 2026, which is too soon to show up in models that were already trained. The real test will be China's next generation of models in 2027. The 90–99% figure also covers Anthropic alone, not other labs' traffic, and Anthropic itself says: "We expect that attackers will find ways around these safeguards."</p>
+      <p class="elder"><b>In plain words</b><span>The famous teacher now writes only key points on the board, and the note-copiers get over 90% less. But these students were already capable, they can copy from another teacher's class, or practice on their own to fill in the gaps. So for now, there's no sign they're failing to hand in their homework.</span></p>
+    </div>
+  </div>
+</section>
+
 <section class="s gutter" id="debate">
   <div class="frame">
     <div class="s-head measure">
-      <span class="eyebrow">06 · Where the controversy lies</span>
+      <span class="eyebrow">07 · Where the controversy lies</span>
       <h2>It's not as black and white as it looks</h2>
     </div>
     <div class="grid3">
@@ -242,7 +271,7 @@
 <section class="s gutter" id="faq">
   <div class="frame">
     <div class="s-head measure">
-      <span class="eyebrow">07 · What family will ask</span>
+      <span class="eyebrow">08 · What family will ask</span>
       <h2>Can I use Chinese AI apps?</h2>
     </div>
     <div class="faq measure">
@@ -267,7 +296,21 @@
       <a href="https://the-decoder.com/google-and-openai-complain-about-distillation-attacks-that-clone-their-ai-models-on-the-cheap/">The Decoder · Google and OpenAI on distillation attacks (2026/02)</a>
       <a href="https://arxiv.org/abs/2412.19437">DeepSeek-V3 Technical Report (arXiv 2412.19437)</a>
       <a href="https://arxiv.org/abs/2501.12948">DeepSeek-R1 (arXiv 2501.12948)</a>
+      <a href="https://media.defense.gov/2026/Sep/08/2003992823/-1/-1/1/CSA_CHINA_BASED_AI_COMPANIES_MALICIOUS_DISTILLATION_AGAINST_US.PDF">NSA · CISA · FBI · Joint advisory AA26-251A (2026/09/08)</a>
+      <a href="https://www.nextgov.com/artificial-intelligence/2026/09/intelligence-agencies-warn-chinas-large-scale-ai-model-distillation-efforts/415851/">Nextgov/FCW · Intelligence agencies warn of China's large-scale AI model distillation efforts (2026/09/08)</a>
+      <a href="https://arxiv.org/abs/2609.35699">Javaheri et al. · Distillation Defenses Easily Break After Reinforcement Learning (arXiv 2609.35699, 2026/09)</a>
+      <a href="https://ai2027-tracker.com/predictions/china-model-gap/">AI 2027 Tracker · Leading Chinese AI lab ~6 months behind US frontier (2026/11/02)</a>
+      <a href="https://cleus.ai/blog/new-ai-models-october-2026">Cleus · New AI models released in October 2026 (2026/10/30)</a>
+      <a href="https://en.wikipedia.org/wiki/Z.ai">Wikipedia · Z.ai (GLM-5.3)</a>
       <a href="https://arxiv.org/abs/2504.13146">Antidistillation Sampling (arXiv 2504.13146)</a>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter">
+  <div class="frame">
+    <div class="next">
+      <a href="future.html"><article class="card"><span class="tag">PART 5 · The next bottleneck →</span><h3>Whoever leads, everyone hits the same wall</h3><p>Power, memory and storage, with a power converter and a KV cache calculator.</p></article></a>
     </div>
   </div>
 </section>

@@ -13,6 +13,9 @@
 <link rel="alternate" hreflang="en" href="en/china.html">
 <script src="assets/i18n.js"></script>
 <style>
+.bignum { display: block; margin: .3rem 0 .1rem; font-family: var(--mono); font-size: 2rem; font-weight: 500; line-height: 1.1; color: var(--accent); font-variant-numeric: tabular-nums; }
+.bignum.w { color: var(--warn); }
+.bignum.m { color: var(--muted); }
 .reasons { counter-reset: r; }
 .reasons .card { position: relative; }
 .flowchart { display: grid; gap: .5rem; }
@@ -71,8 +74,8 @@
     <a class="brand" href="index.html"><i></i><span>AI 長出手了</span></a>
     <ul>
       <li><a class="l" href="history.html"><span class="lg">時間線</span><span class="sh">時間線</span></a></li>
-      <li><a class="l" href="bench.html"><span class="lg">模型評比</span><span class="sh">評比</span></a></li>
       <li><a class="l" href="tech.html"><span class="lg">它怎麼運作</span><span class="sh">原理</span></a></li>
+      <li><a class="l" href="bench.html"><span class="lg">模型評比</span><span class="sh">評比</span></a></li>
       <li><a class="l site-on" href="china.html"><span class="lg">追趕與蒸餾</span><span class="sh">中國</span></a></li>
       <li><a class="l" href="future.html"><span class="lg">下一個瓶頸</span><span class="sh">瓶頸</span></a></li>
     </ul>
@@ -169,6 +172,7 @@
       <li><span class="d">2026.02.12</span><b>OpenAI 給美國眾議院中國特別委員會的備忘錄</b><span>指 DeepSeek 相關人員開發繞過存取限制的方法，透過「遮蔽來源的第三方 router」取用美國模型的輸出。</span></li>
       <li><span class="d">2026.02</span><b>Google</b><span>表示曾有單一行動對 Gemini 送出超過 10 萬個 prompt 試圖複製模型，稱之為智慧財產竊取。</span></li>
       <li><span class="d">2026.02.23</span><b>Anthropic 發布報告，點名 DeepSeek、Moonshot、MiniMax</b><span>約 2.4 萬個詐欺帳號、超過 1,600 萬次對話。依 Anthropic 統計：MiniMax 超過 1,300 萬次、Moonshot 超過 340 萬次、DeepSeek 超過 15 萬次。目標是 agent 寫程式、工具使用、推理，DeepSeek 還被指拿 Claude 當強化學習的評分者。</span></li>
+      <li><span class="d">2026.09.08</span><b>美國 NSA、CISA、FBI 聯合警示</b><span>點名 DeepSeek、月之暗面、阿里巴巴、MiniMax、階躍星辰、智譜六家，說它們從 2024 年起從美國模型取走數十億 token。這是美國政府第一次公開點名。</span></li>
       <li><span class="d">2026.10.12</span><b>Anthropic 第二份報告</b><span>說新防線讓蒸餾者拿到的資料減少約 90–99%，封鎖了數萬個帳號，並新增點名智譜蒸餾資安相關能力。</span></li>
     </ol>
   </div>
@@ -221,10 +225,35 @@
   </div>
 </section>
 
+<section class="s gutter" id="block">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">06 · 擋住了多少</span>
+      <h2>防得住多少？中國新模型有沒有因此變慢？</h2>
+      <p class="lead">先講結論：唯一公布數字的是 Anthropic，說它自己平台上被拿走的資料少了九成以上；但整個產業擋住多少，沒有人公布過。中國模型到 2026 年 11 月也還看不出因此放慢。</p>
+    </div>
+    <div class="grid3">
+      <article class="card"><span class="tag">廠商自報 · Anthropic 2026/10</span><span class="bignum">90–99%</span><h3>從 Claude 拿到的推理資料少了這麼多</h3><p>新防線全面上線後，蒸餾者從 Claude 取得的推理量少了 10 到 100 倍，有些天少到量不出來。封了數萬個帳號，很多在開始蒸餾兩小時內就被擋下；分類器誤判率低於 0.1%。這是 Anthropic 自己的估算，只算它自己的平台，沒有第三方查核。</p></article>
+      <article class="card"><span class="tag">美國政府 · 2026/9/8</span><span class="bignum w">6 家</span><h3>NSA、CISA、FBI 聯合點名</h3><p>聯合警示（AA26-251A）點名 DeepSeek、月之暗面、阿里巴巴、MiniMax、階躍星辰、智譜，說它們從 2024 年起從美國模型取走「數十億 token」，而且蒸餾是它們開發策略的核心。警示列了建議的防禦方式，但沒有給任何攔截比例。</p></article>
+      <article class="card"><span class="tag">學界 · 牛津等 2026/9</span><span class="bignum m">幾乎補回</span><h3>只給摘要，也擋不了太久</h3><p>研究者用一個小模型，把推理摘要「擴寫」回接近完整的推理，再拿去訓練；學生模型做完強化學習後，和用完整推理訓練的差距幾乎消失。實驗只用了 3B 以下的小模型和數學題，還不能直接套到最大的模型上。</p></article>
+    </div>
+
+    <div class="prose measure mt">
+      <h3>那中國新模型有沒有變慢？</h3>
+      <p><b>還看不出來。</b>2026 年下半年中國實驗室照樣發表：月之暗面 Kimi K3（7 月）、智譜 GLM-5.3（8 月）、DeepSeek V4.1 Flash 更新版（10 月）、Kimi K3.1 Pro（10 月）。</p>
+      <p><b>有延後，但原因不是蒸餾。</b>DeepSeek V4 延了兩次，分析師歸因於改用華為晶片要重做很多工程；阿里巴巴 Qwen 4 在 9 月的發表會上亮相，到 10 月底還沒有上市日期，官方沒說原因。</p>
+      <p><b>防線讓蒸餾變難，但沒讓它停下。</b>Anthropic 說智譜開發 GLM-5.3 時想蒸餾 Claude 的資安能力，發現新模型的防護會削弱它的攻擊，就改去抄舊版 Claude 和另一家的模型。GLM-5.3 最後照樣推出。</p>
+      <p><b>差距大約 4 到 7 個月。</b>依 AI 2027 Tracker 的整理，最好的中國模型落後美國最強模型大約 4 到 7 個月，看用哪種測試而定；在新型態的測試上差距比較大。</p>
+      <p>比較持平的看法：新防線到 2026 年 9、10 月才完全上線，時間太短，還不足以反映在已經訓練好的模型上。真正看得出影響的，會是 2027 年的下一代中國模型。而且這個 90–99% 只是 Anthropic 一家，其他廠商的流量不算在內，Anthropic 自己也說「預期攻擊者會找到繞過的方法」。</p>
+      <p class="elder"><b>白話說</b><span>名師現在只寫重點，來抄筆記的人拿到的少了九成以上。但這些學生本來就有實力，也還可以去抄別班老師的，或自己多練習把缺的補回來。所以短期內，還看不到他們因此交不出作業。</span></p>
+    </div>
+  </div>
+</section>
+
 <section class="s gutter" id="debate">
   <div class="frame">
     <div class="s-head measure">
-      <span class="eyebrow">06 · 爭議在哪</span>
+      <span class="eyebrow">07 · 爭議在哪</span>
       <h2>這件事沒有表面上那麼黑白分明</h2>
     </div>
     <div class="grid3">
@@ -242,7 +271,7 @@
 <section class="s gutter" id="faq">
   <div class="frame">
     <div class="s-head measure">
-      <span class="eyebrow">07 · 家人會問</span>
+      <span class="eyebrow">08 · 家人會問</span>
       <h2>我可以用中國的 AI App 嗎？</h2>
     </div>
     <div class="faq measure">
@@ -267,7 +296,21 @@
       <a href="https://the-decoder.com/google-and-openai-complain-about-distillation-attacks-that-clone-their-ai-models-on-the-cheap/">The Decoder · Google and OpenAI on distillation attacks（2026/02）</a>
       <a href="https://arxiv.org/abs/2412.19437">DeepSeek-V3 Technical Report（arXiv 2412.19437）</a>
       <a href="https://arxiv.org/abs/2501.12948">DeepSeek-R1（arXiv 2501.12948）</a>
+      <a href="https://media.defense.gov/2026/Sep/08/2003992823/-1/-1/1/CSA_CHINA_BASED_AI_COMPANIES_MALICIOUS_DISTILLATION_AGAINST_US.PDF">NSA · CISA · FBI · Joint advisory AA26-251A (2026/09/08)</a>
+      <a href="https://www.nextgov.com/artificial-intelligence/2026/09/intelligence-agencies-warn-chinas-large-scale-ai-model-distillation-efforts/415851/">Nextgov/FCW · Intelligence agencies warn of China's large-scale AI model distillation efforts (2026/09/08)</a>
+      <a href="https://arxiv.org/abs/2609.35699">Javaheri et al. · Distillation Defenses Easily Break After Reinforcement Learning (arXiv 2609.35699, 2026/09)</a>
+      <a href="https://ai2027-tracker.com/predictions/china-model-gap/">AI 2027 Tracker · Leading Chinese AI lab ~6 months behind US frontier (2026/11/02)</a>
+      <a href="https://cleus.ai/blog/new-ai-models-october-2026">Cleus · New AI models released in October 2026 (2026/10/30)</a>
+      <a href="https://en.wikipedia.org/wiki/Z.ai">Wikipedia · Z.ai (GLM-5.3)</a>
       <a href="https://arxiv.org/abs/2504.13146">Antidistillation Sampling（arXiv 2504.13146）</a>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter">
+  <div class="frame">
+    <div class="next">
+      <a href="future.html"><article class="card"><span class="tag">PART 5 · 下一個瓶頸 →</span><h3>不管誰領先，大家都卡在同一個地方</h3><p>電力、記憶體和儲存，附電力換算器和 KV cache 計算器。</p></article></a>
     </div>
   </div>
 </section>
