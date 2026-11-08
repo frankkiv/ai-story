@@ -278,6 +278,17 @@
 .side-txt p { margin: 0; }
 .side-txt .elder { font-size: .96rem; }
 .side-txt.swap { animation: narrIn .35s both; }
+
+.endwrap { position: absolute; left: 0; right: 0; top: 0; bottom: 7.8rem; z-index: 6; background: var(--code-bg); display: grid; align-content: center; gap: 1.1rem; padding: 1rem 1.3rem; overflow-y: auto; opacity: 0; visibility: hidden; transition: opacity .5s, visibility .5s; }
+.stage.end .endwrap { opacity: 1; visibility: visible; }
+.endwrap .recap { position: static; inset: auto; opacity: 1; padding: 0; background: none; z-index: auto; }
+.end-act { display: flex; flex-wrap: wrap; gap: .6rem; }
+.end-act a, .end-act button { font: inherit; font-size: .95rem; font-weight: 600; min-height: 2.75rem; padding: 0 1.15rem; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; gap: .4rem; cursor: pointer; text-decoration: none; }
+.end-act .go { background: var(--st-gold); color: #0e1116; border: 0; }
+.end-act .again { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.3); }
+.end-act .again:hover { border-color: var(--st-gold); color: var(--st-gold); }
+@media (min-width: 1100px) { .endwrap { bottom: 4.4rem; } }
+@media (prefers-reduced-motion: reduce) { .endwrap { transition: none; } }
 </style>
 </head>
 <body>
@@ -444,6 +455,7 @@
             <div class="packet" id="packet"></div>
           </div>
         </div>
+        <div class="endwrap">
         <ol class="recap" aria-hidden="true">
           <li>你在電腦前問了一句話<span>按下 Enter，電腦先讀本地檔案、打包成一整包</span></li>
           <li>你等待的那一兩秒<span>上鎖跨海、驗證、比對快取；模型讀整包、一層層算、一個字一個字猜</span></li>
@@ -451,6 +463,8 @@
           <li>你拿起手機繼續<span>電腦和手機都連到中繼，檔案一直留在電腦</span></li>
           <li class="zero">從頭到尾，模型被改的次數：<b>0</b></li>
         </ol>
+          <div class="end-act"><a class="go" id="exit2" href="tech.html" data-back="&#8592; 回到剛剛的頁面">&#8592; 回到「它怎麼運作」</a><button type="button" class="again" id="again">&#8593; 從頭再看一次</button></div>
+        </div>
         <div class="st-cap"><button type="button" id="prev" aria-label="上一步">&#8249;</button><p class="st-sub" id="sub" aria-hidden="true"></p><button type="button" id="next" aria-label="下一步">&#8250;</button></div>
         <div class="st-narr"><div class="txt" id="narr" aria-hidden="true"></div><button type="button" class="more" id="more" aria-hidden="true" tabindex="-1">詳細 ↑</button></div>
         <div class="sheet" id="sheet" aria-hidden="true"><div class="sheet-head"><b id="sheetTitle"></b><button type="button" id="close" aria-label="關閉" tabindex="-1">&#215;</button></div><div class="sheet-txt" id="sheetTxt"></div></div>
@@ -646,12 +660,18 @@
   }
   var side = document.getElementById("side"), sideCh = document.getElementById("sideCh"), sideN = document.getElementById("sideN"), sideH = document.getElementById("sideH"), sideTxt = document.getElementById("sideTxt");
   /* back to where you came from when it was a page of this site; otherwise the link's own href */
-  document.getElementById("exit").addEventListener("click", function (e) {
+  function cameFrom() {
     try {
       var r = document.referrer ? new URL(document.referrer) : null;
-      if (r && r.origin === location.origin && !/journey\.html$/.test(r.pathname) && history.length > 1) { e.preventDefault(); history.back(); }
-    } catch (x) {}
-  });
+      return !!(r && r.origin === location.origin && !/journey\.html$/.test(r.pathname) && history.length > 1);
+    } catch (x) { return false; }
+  }
+  function leave(e) { if (cameFrom()) { e.preventDefault(); history.back(); } }
+  document.getElementById("exit").addEventListener("click", leave);
+  var exit2 = document.getElementById("exit2");
+  exit2.addEventListener("click", leave);
+  if (cameFrom()) exit2.innerHTML = exit2.dataset.back;
+  document.getElementById("again").addEventListener("click", function () { jump(0); });
   var more = document.getElementById("more"), sheet = document.getElementById("sheet");
   var sheetTxt = document.getElementById("sheetTxt"), sheetTitle = document.getElementById("sheetTitle"), closeB = document.getElementById("close");
   function openSheet() { sheet.classList.add("open"); sheet.setAttribute("aria-hidden", "false"); closeB.tabIndex = 0; sheetTxt.scrollTop = 0; closeB.focus({ preventScroll: true }); }
