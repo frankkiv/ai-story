@@ -68,4 +68,45 @@
     document.addEventListener("keydown", function (e) { if (e.key === "Escape" && d.open) { d.open = false; d.querySelector("summary").focus(); } });
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", build); else build();
+
+  // Back-to-top button (every page except the journey walkthrough, which has its own controls).
+  // Smooth in-page anchor scrolling too, unless the reader prefers reduced motion.
+  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (page !== "journey.html" && !reduce) html.style.scrollBehavior = "smooth";
+  function toTop() {
+    if (page === "journey.html" || document.querySelector(".totop")) return;
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "totop";
+    b.setAttribute("aria-label", lang === "en" ? "Back to top" : "回到最上面");
+    b.title = b.getAttribute("aria-label");
+    b.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 19V5M5.5 11.5 12 5l6.5 6.5"/></svg>';
+    document.body.appendChild(b);
+    var shown = false, ticking = false;
+    function update() {
+      ticking = false;
+      var on = scrollY > innerHeight * 1.2;
+      if (on !== shown) { shown = on; b.classList.toggle("on", on); b.tabIndex = on ? 0 : -1; }
+    }
+    addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    update();
+    var anim = 0;
+    function stop() { if (anim) { cancelAnimationFrame(anim); anim = 0; } }
+    ["wheel", "touchstart", "keydown"].forEach(function (ev) { addEventListener(ev, stop, { passive: true }); });
+    b.addEventListener("click", function () {
+      stop();
+      var from = scrollY;
+      var done = function () { var brand = document.querySelector(".nav .brand"); if (brand) brand.focus({ preventScroll: true }); };
+      if (reduce || from < 2) { scrollTo({ top: 0, behavior: "instant" }); done(); return; }
+      // Ease in-out; longer pages get a little more time, capped so it never drags.
+      var dur = Math.min(1100, 420 + from / 14), t0 = performance.now();
+      function ease(t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+      (function step(now) {
+        var t = Math.min(1, (now - t0) / dur);
+        scrollTo({ top: Math.round(from * (1 - ease(t))), behavior: "instant" });
+        if (t < 1) anim = requestAnimationFrame(step); else { anim = 0; done(); }
+      })(t0);
+    });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", toTop); else toTop();
 })();

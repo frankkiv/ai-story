@@ -405,3 +405,21 @@ footer { padding-block: 3rem 4rem; border-top: 1px solid var(--line); color: var
   .nav .brand { min-width: 32px; }
   html[lang="en"] .nav a.l { font-size: .9rem; padding: .45rem .35rem; }
 }
+
+/* Back-to-top button (added by assets/i18n.js) */
+.totop { position: fixed; right: max(1rem, env(safe-area-inset-right, 0px)); bottom: calc(1rem + env(safe-area-inset-bottom, 0px)); z-index: 25; width: 2.9rem; height: 2.9rem; border-radius: 999px; display: grid; place-items: center; border: 1px solid var(--line); background: color-mix(in srgb, var(--surface) 88%, transparent); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); color: var(--text); box-shadow: var(--shadow); cursor: pointer; opacity: 0; transform: translateY(.75rem) scale(.92); pointer-events: none; transition: opacity .25s ease, transform .3s cubic-bezier(.2,.7,.2,1), border-color .2s ease, color .2s ease; }
+.totop.on { opacity: 1; transform: none; pointer-events: auto; }
+.totop:hover { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.totop:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.totop:active { transform: scale(.94); }
+@media (min-width: 760px) { .totop { right: max(1.5rem, env(safe-area-inset-right, 0px)); bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px)); } }
+@media (prefers-reduced-motion: reduce) { .totop { transition: opacity .15s linear; transform: none; } }
+/* history.html keeps its year label in the bottom-right corner; stack the button above it. */
+body:has(.tl-now) .totop { bottom: calc(3.75rem + env(safe-area-inset-bottom, 0px)); }
+/* "Next part" cards at the bottom of pages */
+.next { display: grid; gap: 1rem; }
+@media (min-width: 760px) { .next { grid-template-columns: 1fr 1fr; } }
+.next a { display: block; border-radius: 16px; text-decoration: none; color: inherit; }
+.next .card:hover { border-color: var(--text); }
+.next a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.next a:only-child { grid-column: 1 / -1; }
