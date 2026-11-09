@@ -24,6 +24,9 @@
 .part .go { font-weight: 600; color: var(--text); }
 .part .band { height: .4rem; border-radius: 999px; background: linear-gradient(90deg, var(--a), var(--b)); }
 .hero .stack-wrap { min-height: 20rem; }
+.share-row { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; margin-top: 1.25rem; }
+.share-row .btn { min-height: 44px; cursor: pointer; font: inherit; }
+.share-msg { color: var(--muted); font-size: .92rem; }
 </style>
 </head>
 <body>
@@ -45,8 +48,8 @@
   <div class="frame">
     <div class="hero-copy">
       <span class="pill">寫給想弄懂 AI 的你，<b>也寫給你的爸媽</b></span>
-      <h1>AI 長出手了。<br><em>從聊天，到代理。</em></h1>
-      <p class="sub">AI 從會聊天的顧問，變成會自己動手的助理團隊，而且用手機就能指揮。但它其實沒有在「學」你：模型本身一點都沒變，變的是每次交給它看的那份「筆記」，工程師叫它 context。分五個部分講清楚，最後有一段給家人的實用提醒。</p>
+      <h1>AI 長出手了。<br><em>從陪你聊天，到替你辦事。</em></h1>
+      <p class="sub">AI 從會聊天的顧問，變成會自己動手的助理團隊，而且用手機就能指揮。這種會替你辦事的 AI，英文叫 agent，中文常譯作「代理」。但它其實沒有在「學」你：模型本身一點都沒變，變的是每次交給它看的那份「筆記」，工程師叫它 context。分五個部分講清楚，最後有一段給家人的實用提醒。</p>
       <div class="cta">
         <a class="btn primary" href="history.html">從時間線開始 →</a>
         <a class="btn" href="tech.html#sim">直接玩 context 模擬器</a>
@@ -57,24 +60,24 @@
       <div class="stack-wrap" id="stack" aria-hidden="true">
         <div class="stack" id="stackInner">
           <div class="layer model" style="--i:0"><span>模型權重（固定不變）</span></div>
-          <div class="layer" style="--i:1; --c: var(--l-tools)"><span>tools · MCP</span></div>
-          <div class="layer" style="--i:2; --c: var(--l-sys)"><span>system prompt</span></div>
-          <div class="layer" style="--i:3; --c: var(--l-skills)"><span>skills</span></div>
-          <div class="layer" style="--i:4; --c: var(--l-mem)"><span>memory · CLAUDE.md</span></div>
+          <div class="layer" style="--i:1; --c: var(--l-tools)"><span>工具 · tools · MCP</span></div>
+          <div class="layer" style="--i:2; --c: var(--l-sys)"><span>規則 · system prompt</span></div>
+          <div class="layer" style="--i:3; --c: var(--l-skills)"><span>技能 · skills</span></div>
+          <div class="layer" style="--i:4; --c: var(--l-mem)"><span>記憶檔 · CLAUDE.md</span></div>
           <div class="layer" style="--i:5; --c: var(--l-hist)"><span>對話紀錄</span></div>
           <div class="layer" style="--i:6; --c: var(--l-new)"><span>你剛打的這一句</span></div>
         </div>
       </div>
-            <ol class="stack-legend" aria-label="一次請求由上到下的內容">
+            <ol class="stack-legend" aria-label="一次請求疊起來的樣子，最上面是最後疊上去的">
         <li><i style="--c:var(--l-new)"></i>你剛打的這一句</li>
         <li><i style="--c:var(--l-hist)"></i>之前的對話紀錄</li>
-        <li><i style="--c:var(--l-mem)"></i>記憶檔（CLAUDE.md）</li>
-        <li><i style="--c:var(--l-skills)"></i>skills 清單</li>
+        <li><i style="--c:var(--l-mem)"></i>記憶檔、專案設定（CLAUDE.md）</li>
+        <li><i style="--c:var(--l-skills)"></i>技能清單（skills）</li>
         <li><i style="--c:var(--l-sys)"></i>system prompt（規則）</li>
-        <li><i style="--c:var(--l-tools)"></i>工具定義（tools · MCP）</li>
+        <li><i style="--c:var(--l-tools)"></i>工具箱說明（tools · MCP）</li>
         <li><i style="--c:var(--model-bg)"></i>模型本身（固定不變）</li>
       </ol>
-      <p class="stack-cap">每一次請求，都是把這幾層疊起來，整份送給同一個固定的模型。</p>
+      <p class="stack-cap">每一次請求，都是把這幾層像積木一樣疊起來，整份送給同一個固定的模型。實際送出時從最底層的工具說明開始，你剛打的這一句放在最後，模型讀到這裡，就順著往下寫回答。</p>
     </div>
   </div>
 </header>
@@ -104,13 +107,13 @@
       <a class="part" href="china.html" style="--a: var(--l-mem); --b: var(--warn)">
         <span class="band"></span><span class="num">PART 4 · 追趕與蒸餾</span>
         <h2>中國 AI 怎麼追上來，美國廠商怎麼防</h2>
-        <p>中國模型怎麼在兩年內追上來？蒸餾是什麼、被指控怎麼做，模型公司又怎麼反制。</p>
+        <p>中國模型怎麼在兩年內追上來？蒸餾（拿別人大模型的回答，訓練自己的模型）是什麼、被指控怎麼做，模型公司又怎麼反制。</p>
         <span class="go">閱讀 →</span>
       </a>
       <a class="part" href="future.html" style="--a: var(--l-hist); --b: var(--l-mem)">
         <span class="band"></span><span class="num">PART 5 · 下一個瓶頸</span>
         <h2>電、記憶體和硬碟</h2>
-        <p>資料中心用電、HBM 缺貨、影音訓練的儲存需求，附電力換算器和 KV cache 計算器。</p>
+        <p>資料中心用電、AI 專用記憶體（HBM）缺貨、影音訓練的儲存需求，附電力換算器，以及算模型「記住前文」要用多少記憶體的 KV cache 計算器。</p>
         <span class="go">閱讀 →</span>
       </a>
     </div>
@@ -128,8 +131,13 @@
       <li><b>別把身分證、帳戶、病歷貼進去</b><span>你打的每一句都會送到服務商的伺服器。真的需要時，先把姓名、號碼遮掉。</span></li>
       <li><b>看一下隱私設定</b><span>多數 App 可以選「不要拿我的對話去訓練模型」，也可以關掉記憶功能。花一分鐘設定一次就好。</span></li>
       <li><b>數字、藥名、法律問題要再查證</b><span>AI 講得很有自信不代表是對的。重要的事問兩個來源，或直接問專業的人。</span></li>
-      <li><b>看到「AI 投資」「AI 代操」先懷疑</b><span>用 AI 名義保證獲利的，幾乎都是詐騙。AI 也能假造名人影片和聲音，接到熟人要錢的電話，先掛掉再打回去確認。</span></li>
+      <li><b>看到「AI 投資」「AI 代操」先懷疑</b><span>用 AI 名義保證獲利的，幾乎都是詐騙。AI 也能假造名人影片和聲音，接到熟人要錢的電話，先掛掉再打回去確認。在台灣，有疑問可以直接打 165 反詐騙專線。</span></li>
     </ol>
+    <div class="share-row">
+      <button type="button" class="btn primary" id="copyTips">複製這五個提醒</button>
+      <a class="btn" id="lineTips" href="https://line.me/R/share" target="_blank" rel="noopener">分享到 LINE</a>
+      <span class="share-msg" id="copyMsg" aria-live="polite"></span>
+    </div>
   </div>
 </section>
 
@@ -142,7 +150,7 @@
     <div class="faq measure">
       <details>
         <summary>它會記得我嗎？</summary>
-        <div class="a"><p>模型本身不會。會「記得」是因為 App 把對話存起來、下次再送一次，或是記憶功能把重點寫成筆記，開新對話時帶進去。關掉記憶、開新對話，它就是第一次見到你。</p></div>
+        <div class="a"><p>模型本身不會。會「記得」是因為 App 把對話存起來、下次再送一次，或是記憶功能把重點寫成筆記，開新對話時帶進去。關掉記憶、開新對話，模型就不會知道你們之前聊過什麼。但這不代表紀錄不存在：服務商的伺服器可能還留著你的對話，你設定的自訂指示也會每次帶進去。想讓紀錄消失，要到設定裡刪除。</p></div>
       </details>
       <details>
         <summary>我教它的事，它會學起來嗎？</summary>
@@ -155,6 +163,10 @@
       <details>
         <summary>聊太久它會變笨嗎？</summary>
         <div class="a"><p>有可能。context 有上限，塞太多無關的東西，重要資訊反而容易被忽略。很長的對話會被自動摘要壓縮，細節可能遺失。開個新對話、只帶需要的資料，常常反而更準。</p></div>
+      </details>
+      <details>
+        <summary>為什麼覺得它最近變了？</summary>
+        <div class="a"><p>多半不是因為你。模型不會因為跟你聊天而改變，但廠商會改：推出新版本、把預設模型換掉，或改寫每次都帶進去的系統提示（規則）。記憶功能整理出新的筆記，也會讓回答不一樣。所以「模型一個位元都沒變」說的是你跟它聊天的這段時間，廠商隨時可以換掉它或調整它。</p></div>
       </details>
       <details>
         <summary>為什麼 AI 管家會被騙？</summary>
@@ -179,6 +191,35 @@
   if ("IntersectionObserver" in window && matchMedia("(hover: none)").matches) {
     new IntersectionObserver(function (es) { es.forEach(function (e) { wrap.classList.toggle("open", e.isIntersecting); }); }, { threshold: .6 }).observe(wrap);
   }
+})();
+</script>
+<script>
+(function () {
+  var list = document.querySelector("#tips .tips"), btn = document.getElementById("copyTips"), line = document.getElementById("lineTips"), msg = document.getElementById("copyMsg");
+  if (!list || !btn) return;
+  var HEAD = "給家人的五個 AI 使用提醒", DONE = "已複製，可以貼到 LINE 或簡訊。", FAIL = "沒辦法自動複製，請手動選取上面的文字。";
+  function text() {
+    var out = [HEAD];
+    [].forEach.call(list.children, function (li, i) {
+      var b = li.querySelector("b"), s = li.querySelector("span");
+      out.push((i + 1) + ". " + b.textContent + "\n" + s.textContent);
+    });
+    out.push(location.href.split("#")[0] + "#tips");
+    return out.join("\n\n");
+  }
+  line.addEventListener("click", function () { line.href = "https://line.me/R/share?text=" + encodeURIComponent(text()); });
+  btn.addEventListener("click", function () {
+    var t = text();
+    function ok() { msg.textContent = DONE; }
+    function fallback() {
+      var ta = document.createElement("textarea");
+      ta.value = t; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy") ? ok() : (msg.textContent = FAIL); } catch (e) { msg.textContent = FAIL; }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(t).then(ok, fallback); else fallback();
+  });
 })();
 </script>
 </body>

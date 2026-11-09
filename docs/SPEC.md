@@ -100,5 +100,5 @@ GitHub Pages，從 `main` 分支根目錄發布（根目錄有 `.nojekyll`）。
 - **每一頁 `<head>` 都要有**：`<script src="assets/i18n.js"></script>`（英文頁是 `../assets/i18n.js`），以及兩行 `<link rel="alternate" hreflang="…">` 指向兩種語言的同一頁。英文頁 `<html lang="en">`，中文頁 `<html lang="zh-Hant-TW">`。
 - **兩邊要同步**：改任何內容、數字、事件、模型資料，中英兩版都要改。英文頁的 HTML 結構、`id`、class、JS 邏輯跟中文版保持一致，只換文字；錨點（例如 `#orch`、`#sim`）兩邊共用，切換語言時會保留。
 - **英文寫作**：寫給一般英文讀者，不是逐字翻譯。「白話說」譯為 **In plain words**。台灣相關段落（例如 `future.html` 的「拉回台灣」、電力換算器以台灣用電為基準）保留，譯為 Back to Taiwan。模型名稱、考試名稱、日期格式（2026.09、2026/9/22）不翻譯。
-- **檢查**：英文頁不能殘留中文字（可以用 `LC_ALL=C.UTF-8 grep -nP '\p{Han}' en/*.html` 檢查，沒有輸出才對）。手機寬 390px 時，導覽列五個分頁加齒輪要剛好放得下（`.nav ul` 的 scrollWidth 等於 clientWidth），英文短名依序是 Timeline／How／Bench／China／Limits。
+- **檢查**：英文頁不能殘留中文字（可以用 `LC_ALL=C.UTF-8 grep -nP '[\x{3400}-\x{4DBF}\x{4E00}-\x{9FFF}\x{F900}-\x{FAFF}]' en/*.html` 檢查，沒有輸出才對。不要用 `\p{Han}`：它會把英文頁常用的中間點「·」也算進去，造成誤判）。手機寬 390px 時，導覽列五個分頁加齒輪要剛好放得下（`.nav ul` 的 scrollWidth 等於 clientWidth），英文短名依序是 Timeline／How／Bench／China／Limits。
 

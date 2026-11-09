@@ -63,24 +63,24 @@
       <div class="stack-wrap" id="stack" aria-hidden="true">
         <div class="stack" id="stackInner">
           <div class="layer model" style="--i:0"><span>model weights (fixed)</span></div>
-          <div class="layer" style="--i:1; --c: var(--l-tools)"><span>tools · MCP</span></div>
-          <div class="layer" style="--i:2; --c: var(--l-sys)"><span>system prompt</span></div>
+          <div class="layer" style="--i:1; --c: var(--l-tools)"><span>toolbox · tools · MCP</span></div>
+          <div class="layer" style="--i:2; --c: var(--l-sys)"><span>rules · system prompt</span></div>
           <div class="layer" style="--i:3; --c: var(--l-skills)"><span>skills</span></div>
-          <div class="layer" style="--i:4; --c: var(--l-mem)"><span>memory · CLAUDE.md</span></div>
+          <div class="layer" style="--i:4; --c: var(--l-mem)"><span>memory file · CLAUDE.md</span></div>
           <div class="layer" style="--i:5; --c: var(--l-hist)"><span>conversation history</span></div>
           <div class="layer" style="--i:6; --c: var(--l-new)"><span>the line you just typed</span></div>
         </div>
       </div>
-      <ol class="stack-legend" aria-label="What one request contains, top to bottom">
+      <ol class="stack-legend" aria-label="How one request is stacked; the top layer goes on last">
         <li><i style="--c:var(--l-new)"></i>The line you just typed</li>
         <li><i style="--c:var(--l-hist)"></i>The conversation so far</li>
-        <li><i style="--c:var(--l-mem)"></i>Memory file (CLAUDE.md)</li>
+        <li><i style="--c:var(--l-mem)"></i>Memory file, project settings (CLAUDE.md)</li>
         <li><i style="--c:var(--l-skills)"></i>List of skills</li>
         <li><i style="--c:var(--l-sys)"></i>System prompt (the rules)</li>
-        <li><i style="--c:var(--l-tools)"></i>Tool definitions (tools · MCP)</li>
+        <li><i style="--c:var(--l-tools)"></i>Toolbox descriptions (tools · MCP)</li>
         <li><i style="--c:var(--model-bg)"></i>The model itself (fixed)</li>
       </ol>
-      <p class="stack-cap">Every request stacks these layers and sends the whole bundle to the same fixed model.</p>
+      <p class="stack-cap">Every request stacks these layers like building blocks and sends the whole bundle to the same fixed model. The bundle is sent starting from the tool descriptions at the bottom, and the line you just typed comes last, so the model reads it and continues straight into its answer.</p>
     </div>
   </div>
 </header>
@@ -117,7 +117,7 @@
       </article>
     </div>
     <div class="prose measure mt">
-      <p>The model itself is <strong>stateless</strong>: the API doesn't remember your previous message. It feels like "it remembers" because the client (the app, Claude Code) saves the whole conversation and sends it again with your new message. "Making AI understand you better" really means <strong>improving the context sent in each time</strong>: better prompts, a tidier memory file, common workflows written as skills. That's engineering, not training.</p>
+      <p>The model itself is <strong>stateless</strong>: the model doesn't remember your previous message. It feels like "it remembers" because the client (the app, Claude Code) saves the whole conversation and sends it again with your new message. Some APIs (OpenAI's Responses API, for example) can store the conversation on the server for you, but that only moves who keeps the record; underneath, the history is still stitched back in and the model rereads all of it. "Making AI understand you better" really means <strong>improving the context sent in each time</strong>: better prompts, a tidier memory file, common workflows written as skills. That's engineering, not training.</p>
       <p class="elder"><b>In plain words</b><span>AI is like an expert whose memory lasts one meal. Every time you meet, you hand over your whole notebook (what you talked about before, your home situation, how you like things done) for them to reread. They didn't get smarter; your notebook got better.</span></p>
     </div>
   </div>
@@ -287,8 +287,8 @@
       <table>
         <thead><tr><th scope="col">Tool</th><th scope="col">When it compacts</th><th scope="col">How</th><th scope="col">What's left afterwards</th></tr></thead>
         <tbody>
-          <tr><td>Claude Code</td><td>Automatically when nearly full (around 90%, after reserving room for output); or manually with <code>/compact</code>, followed by what to keep</td><td>In layers: first, without the model, old tool results are cleared to a one-line "cleared"; if that's not enough, the model writes a structured summary</td><td>The summary (goals, files changed, errors, to-dos, what you said, etc.) plus the most recently edited files read back in; CLAUDE.md is in the system prompt and unaffected</td></tr>
-          <tr><td>OpenAI Codex CLI</td><td>Automatically at around 90%; manually with <code>/compact</code></td><td>The model writes a "handoff summary"; with Codex models this can go to the server's compact API, which returns encrypted content</td><td>Everything you said, verbatim; the AI's replies and tool results are replaced by that summary</td></tr>
+          <tr><td>Claude Code</td><td>Automatically when nearly full (around 90%, after reserving room for output); or manually with <code>/compact</code>, followed by what to keep</td><td>In layers: first, without the model, old tool results are cleared to a one-line "cleared"; if that's not enough, the model writes a structured summary</td><td>The summary (goals, files changed, errors, to-dos, what you said, etc.) plus the most recently edited files read back in; CLAUDE.md is not summarized away: after compaction the client reads it from disk again and puts it back at the start of the conversation</td></tr>
+          <tr><td>OpenAI Codex CLI</td><td>Automatically at around 90%; manually with <code>/compact</code></td><td>The model writes a "handoff summary"; with Codex models this can go to the server's compact API, which returns encrypted content</td><td>Your recent messages, verbatim (up to a token limit; older ones are cut); the AI's replies and tool results are replaced by that summary</td></tr>
           <tr><td>Gemini CLI</td><td>By default at about half full (adjustable); manually with <code>/compress</code></td><td>Writes a summary, then has the model check it once for omissions</td><td>The most recent ~30% of the conversation verbatim, plus a summary of the older part</td></tr>
           <tr><td>OpenCode</td><td>Only at about 96%–99%</td><td>First prunes old tool output, then summarizes if still needed</td><td>The last ~40,000 tokens of tool output and your last two turns</td></tr>
           <tr><td>Anthropic API context editing</td><td>A threshold the developer sets</td><td>The server automatically clears old tool results, with no summary</td><td>The conversation's structure is unchanged; old tool results just become "cleared"</td></tr>
@@ -300,7 +300,7 @@
       <article class="card"><span class="tag">The trade-off</span><h3>Compact early or late?</h3><p>Compacting early (like Gemini CLI) sends less each time and costs less, but summarizes more often and loses more detail. Compacting late (like OpenCode) keeps the most original text, but by the time it's nearly full, the model's attention is already diluted.</p></article>
       <article class="card"><span class="tag">Practical tip</span><h3>New topic, new conversation</h3><p>Compaction is a last resort. When one task is done and you're moving to the next, start a new session and have the AI read CLAUDE.md or the spec docs. That's usually cleaner than continuing after a compaction.</p></article>
     </div>
-    <p class="elder mt"><b>In plain words</b><span>Chat too long and the notebook fills up. One approach tears out old pages and keeps the highlights (Claude Code); another keeps every word you said and condenses the rest into a handoff note (Codex); another writes the highlights and then double-checks for anything missed (Gemini). Every approach loses some detail.</span></p>
+    <p class="elder mt"><b>In plain words</b><span>Chat too long and the notebook fills up. One approach tears out old pages and keeps the highlights (Claude Code); another keeps your recent words and condenses the rest into a handoff note (Codex); another writes the highlights and then double-checks for anything missed (Gemini). Every approach loses some detail.</span></p>
     <p class="caveat mt">Thresholds and details change between versions. Claude Code's internals come from community analysis (it isn't open source); the rest draws on each tool's documentation and April 2026 comparison articles (Daniel Vaughan, "Context Compaction Showdown"; Justin3go, "Context Compaction in Codex, Claude Code, and OpenCode").</p>
   </div>
 </section>
@@ -694,7 +694,7 @@
       var users = S.hist.filter(function (b) { return b.role === "user" && b.chat; }).map(relabel);
       request([blk("new", "(auto) write a handoff summary", 80, "user", "(auto) Please write a handoff summary")], blk("out", "assistant: handoff summary", 700, "assistant", "(handoff summary)"));
       S.hist = users.concat([blk("hist", "handoff summary", 700, "assistant", "📝 Handoff summary: notes for whoever picks this up")]);
-      msg = "Codex: everything you said is kept verbatim; the AI's replies and tool results are dropped and replaced by one \"handoff summary\". With Codex models this can also go to the server's compact API, which returns encrypted content.";
+      msg = "Codex: your messages are kept verbatim (up to a limit; the oldest are cut); the AI's replies and tool results are dropped and replaced by one \"handoff summary\". With Codex models this can also go to the server's compact API, which returns encrypted content.";
     } else if (CMODE === "gemini") {
       var keep = [], acc = 0;
       for (var i = S.hist.length - 1; i >= 0; i--) {

@@ -50,6 +50,8 @@
 .cases li::before { content: ""; position: absolute; left: -7px; top: .55rem; width: 12px; height: 12px; border-radius: 50%; background: var(--surface); border: 2px solid var(--warn); }
 .cases .d { font-family: var(--mono); font-size: .82rem; color: var(--warn); }
 .cases span { color: var(--muted); font-size: .96rem; }
+.cases li.reply::before { border-color: var(--accent); }
+.cases li.reply .d { color: var(--accent); }
 
 .split-bars { display: grid; gap: .7rem; }
 .sb { display: grid; grid-template-columns: minmax(0, 10rem) 1fr 3.5rem; gap: .75rem; align-items: center; font-size: .92rem; }
@@ -87,7 +89,7 @@
     <div class="hero-copy measure">
       <span class="pill">PART 4 · <b>Catching up and distillation</b></span>
       <h1>How Chinese AI caught up,<br><em>and how US labs push back</em></h1>
-      <p class="sub">At the end of 2024, China's best models still trailed US flagships by a wide margin on coding exams. By 2026 the gap had shrunk to a few points, and most of them are open-weight and much cheaper. Engineering innovation is one of the main reasons; "distilling" other companies' models is the most controversial one.</p>
+      <p class="sub">At the end of 2024, China's best models still trailed US flagships by a wide margin on coding exams. By 2026 the gap on that nearly maxed-out exam had shrunk to a few points, and most of them are open-weight and much cheaper. On harder exams the gap is still clear: on SWE-bench Pro, Qwen3.8 Max scores 67.7% to Opus 5.5's 89.9%, and on the third-party composite index the best Chinese model scores 46.5 to Opus 5.5's 59.1 (see <a href="bench.html#matrix">Benchmarks</a>). Engineering innovation is one of the main reasons; "distilling" other companies' models is the most controversial one.</p>
     </div>
   </div>
 </header>
@@ -102,7 +104,7 @@
       <p class="lead">When DeepSeek R1 launched in January 2025, many people realized for the first time how close Chinese models had come. After that, several companies took turns releasing strong open-weight models. For how the scores changed, see <a href="bench.html#bench">the capability curve on the benchmarks page</a>.</p>
     </div>
     <div class="lab-grid">
-      <div class="lab"><span class="who">DeepSeek</span><b>V3 (2024.12), R1 (2025.01)</b><span>V3 is a 671B-parameter MoE model that activates only 37B per token; its technical report says full training took 2.788 million H800 GPU hours. R1 showed that reinforcement learning alone can teach a model to reason, and the paper was later published in Nature.</span></div>
+      <div class="lab"><span class="who">DeepSeek</span><b>V3 (2024.12), R1 (2025.01)</b><span>V3 is a 671B-parameter MoE model that activates only 37B per token; its technical report says full training took 2.788 million H800 GPU hours, and notes that this covers only the final training run, not the earlier research and experiments. R1-Zero, released alongside it, learned step-by-step reasoning from reinforcement learning alone; R1 itself first went through a round of supervised fine-tuning, then reinforcement learning. The paper was later published in Nature.</span></div>
       <div class="lab"><span class="who">Moonshot AI</span><b>The Kimi K2 family</b><span>Focused on agents and coding, open-weight. Versions from K2 Thinking onward come close to US flagships on SWE-bench.</span></div>
       <div class="lab"><span class="who">Alibaba</span><b>Qwen</b><span>Everything from small models to flagships. The open-weight versions are widely used by developers worldwide and often serve as the base for other models.</span></div>
       <div class="lab"><span class="who">Zhipu</span><b>The GLM family</b><span>From GLM-4.5 on, focused on agent capabilities, also open-weight.</span></div>
@@ -164,7 +166,7 @@
     <div class="s-head measure">
       <span class="eyebrow">04 · Public accusations</span>
       <h2>From suspicion to naming names</h2>
-      <p class="lead">Everything below is the accusing company's own account. As of writing, this page found no detailed public response from the companies named.</p>
+      <p class="lead">Every accusation below is the accuser's own account. Most of the companies named have not responded publicly, and Alibaba declined to comment on the June accusation. China's government, however, publicly rejected the claims twice, in July and September 2026; those responses are listed too.</p>
     </div>
     <ol class="cases measure">
       <li><span class="d">2025.01</span><b>After DeepSeek R1 launched</b><span>OpenAI and Microsoft reportedly investigated whether someone had distilled OpenAI's models through the API.</span></li>
@@ -172,8 +174,13 @@
       <li><span class="d">2026.02.12</span><b>OpenAI's memo to the US House Select Committee on China</b><span>Says people linked to DeepSeek developed ways around access restrictions, getting US model outputs through "third-party routers that mask the source".</span></li>
       <li><span class="d">2026.02</span><b>Google</b><span>Says a single campaign sent Gemini more than 100,000 prompts trying to replicate the model, calling it intellectual property theft.</span></li>
       <li><span class="d">2026.02.23</span><b>Anthropic's report names DeepSeek, Moonshot and MiniMax</b><span>About 24,000 fraudulent accounts and over 16 million conversations. By Anthropic's count: MiniMax over 13 million, Moonshot over 3.4 million, DeepSeek over 150,000. Targets were agentic coding, tool use and reasoning, and DeepSeek is also said to have used Claude as a grader for reinforcement learning.</span></li>
-      <li><span class="d">2026.09.08</span><b>Joint NSA, CISA and FBI advisory</b><span>Names six labs (DeepSeek, Moonshot AI, Alibaba, MiniMax, StepFun and Zhipu) and says they have taken billions of tokens from US models since 2024. It is the first time the US government named them publicly.</span></li>
-      <li><span class="d">2026.10.12</span><b>Anthropic's second report</b><span>Says new defenses cut the data distillers obtained by about 90–99%, blocked tens of thousands of accounts, and adds Zhipu for distilling security-related capabilities.</span></li>
+      <li><span class="d">2026.04.23</span><b>White House OSTP memo</b><span>According to press reports, this memo already described China's distillation operations as "deliberate, industrial-scale campaigns". This page has not seen the memo itself.</span></li>
+      <li><span class="d">2026.06</span><b>Anthropic accuses Alibaba</b><span>In a June 10 letter to US senators and White House officials (reported on 6/24), Anthropic said operators linked to Alibaba's Qwen lab used nearly 25,000 fraudulent accounts for about 28.8 million exchanges with Claude between 4/22 and 6/5, the largest distillation attack it had seen. Alibaba declined to comment.</span></li>
+      <li class="reply"><span class="d">2026.07.27</span><b>China's Commerce Ministry responds for the first time</b><span>After US officials accused Moonshot AI of distilling US models to build Kimi K3 and threatened investigations and sanctions, a ministry spokesperson said the accusations lacked factual evidence and legal basis.</span></li>
+      <li><span class="d">2026.09.08</span><b>Joint NSA, CISA and FBI advisory</b><span>Names six labs (DeepSeek, Moonshot AI, Alibaba, MiniMax, StepFun and Zhipu) and says they have taken billions of tokens from US models since 2024. It is the first time US intelligence and cybersecurity agencies jointly named six labs; before this, a White House memo and officials' statements had already made the accusation publicly.</span></li>
+      <li class="reply"><span class="d">2026.09.09</span><b>China's Commerce Ministry responds to the advisory</b><span>Answering reporters the next day: the US claims have no factual or legal basis; distillation is essentially a neutral technique used by model companies worldwide, including American ones; and if the US uses anti-distillation as a pretext to suppress Chinese companies, China will take firm countermeasures.</span></li>
+      <li><span class="d">2026.10.12</span><b>Anthropic's second report</b><span>Says distillers later scaled up, building proxy networks that control hundreds of thousands of fraudulent accounts; new defenses cut the data they obtained by about 90–99%. It also adds Zhipu for distilling security-related capabilities.</span></li>
+      <li><span class="d">2026.10</span><b>US Homeland Security orders DeepSeek removed from federal systems</b><span>Published in October, the order requires federal civilian agencies to remove DeepSeek products from their IT systems, including third-party products built with DeepSeek, and bars new purchases. It is a security and procurement order, not about distillation, but it reflects the same wariness toward Chinese AI.</span></li>
     </ol>
   </div>
 </section>
@@ -188,7 +195,7 @@
     <div class="duel">
       <div class="duel-head"><span>Attacker: the distiller</span><span></span><span>Defender: the model company</span></div>
       <div class="duel-row">
-        <div class="side atk"><span class="tag">ATTACK · Scale</span><b>Masses of fake accounts + proxy networks</b><span>Traffic spread over tens of thousands of accounts, backed by what Anthropic calls "hydra cluster" proxy networks. A single network managed over 20,000 accounts at once; ban one and another takes its place.</span></div>
+        <div class="side atk"><span class="tag">ATTACK · Scale</span><b>Masses of fake accounts + proxy networks</b><span>Traffic spread over many accounts, backed by what Anthropic calls "hydra cluster" proxy networks. In February a single network managed over 20,000 accounts at once; by October, Anthropic said these proxy networks controlled hundreds of thousands of fraudulent accounts. Ban one and another takes its place.</span></div>
         <div class="vs">vs</div>
         <div class="side def"><span class="tag">DEFENSE · Detection</span><b>Behavioral fingerprints and classifiers</b><span>Linking accounts into a single campaign through IP correlation, request metadata and infrastructure traits; a two-stage classifier recognizes distillation patterns, with a false positive rate Anthropic puts below 0.1%.</span></div>
       </div>
@@ -259,6 +266,7 @@
     <div class="grid3">
       <article class="card"><span class="tag">Is it legal?</span><h3>Breaking terms of service isn't breaking the law</h3><p>Every lab forbids using outputs to train competing models, and fake accounts violate the terms too. But whether model outputs can be copyrighted is unsettled in every country, so it's mostly a business and policy question.</p></article>
       <article class="card"><span class="tag">Double standard?</span><h3>US models used other people's data too</h3><p>Critics point out that large models were trained on huge amounts of other people's content from the web. Supporters argue that systematically taking a competitor's work through fake accounts is different in kind.</p></article>
+      <article class="card"><span class="tag">China's government</span><h3>"A neutral technique; the claims are groundless"</h3><p>China's Commerce Ministry responded twice, in July and September 2026: the US accusations lack factual and legal basis; distillation is a neutral practice used worldwide, including by US companies; and China will retaliate if the US uses it as a pretext against Chinese firms. Most of the companies named have not responded themselves.</p></article>
       <article class="card"><span class="tag">Security and policy</span><h3>Distillation can also get around export controls</h3><p>Anthropic argues distillation undermines chip export controls, and that distilled models don't necessarily keep the original's safety protections. That turns a business dispute into a geopolitical issue.</p></article>
     </div>
     <div class="prose measure mt">
@@ -276,7 +284,7 @@
     </div>
     <div class="faq measure">
       <details open><summary>Yes, but know three things</summary><div class="a">
-        <p><b>Where your data is stored.</b> With a Chinese company's own app or website, conversations are usually stored on servers in China, subject to Chinese law, and may legally have to be handed over in government investigations. Taiwan's government agencies have banned official use of DeepSeek since 2025.</p>
+        <p><b>Where your data is stored.</b> With a Chinese company's own app or website, conversations are usually stored on servers in China, subject to Chinese law, and may legally have to be handed over in government investigations. Taiwan's government agencies have banned official use of DeepSeek since 2025, and in October 2026 the US Department of Homeland Security published an order for federal civilian agencies to remove DeepSeek products.</p>
         <p><b>Content is censored.</b> On politically sensitive topics (such as Taiwan or Tiananmen), answers often dodge the question or follow the official line. When researching or learning, don't rely on it alone for these topics.</p>
         <p><b>The app and the model are different things.</b> Many Chinese models are open-weight, so other companies can host them on servers in other countries. Then your data doesn't go through the original company, but the censorship tendencies trained into the model remain.</p>
       </div></details>
@@ -294,6 +302,12 @@
       <a href="https://www.anthropic.com/news/updating-restrictions-of-sales-to-unsupported-regions">Anthropic · Updating restrictions of sales to unsupported regions (2025/09)</a>
       <a href="https://restofworld.org/2026/openai-deepseek-distillation-dispute-us-china/">Rest of World · OpenAI–DeepSeek distillation dispute (2026/02)</a>
       <a href="https://the-decoder.com/google-and-openai-complain-about-distillation-attacks-that-clone-their-ai-models-on-the-cheap/">The Decoder · Google and OpenAI on distillation attacks (2026/02)</a>
+      <a href="https://thenextweb.com/news/anthropic-accuses-alibaba-distillation-claude-qwen">The Next Web · Anthropic accuses Alibaba of running the largest distillation campaign yet (2026/06/24)</a>
+      <a href="https://cset.georgetown.edu/publication/china-mofcom-statement-model-distillation/">CSET · China MOFCOM statement on model distillation (translation, 2026/07/27)</a>
+      <a href="https://www.implicator.ai/china-says-us-firms-distilled-chinese-models/">Implicator · China says US firms distilled Chinese models (2026/07, incl. report of the 4/23 OSTP memo)</a>
+      <a href="https://natlawreview.com/article/chinas-commerce-ministry-rejects-us-accusations-industrial-scale-ai-distillation">National Law Review · China's Commerce Ministry rejects US accusations (2026/09)</a>
+      <a href="https://scmp.com/economy/article/3367001/china-rejects-us-claims-industrial-scale-ai-model-distillation-warns-retaliation">SCMP · China rejects US claims of industrial-scale AI model distillation (2026/09/09)</a>
+      <a href="https://thehackernews.com/2026/10/us-orders-deepseek-removed-from-federal.html">The Hacker News · US orders DeepSeek removed from federal systems (2026/10)</a>
       <a href="https://arxiv.org/abs/2412.19437">DeepSeek-V3 Technical Report (arXiv 2412.19437)</a>
       <a href="https://arxiv.org/abs/2501.12948">DeepSeek-R1 (arXiv 2501.12948)</a>
       <a href="https://media.defense.gov/2026/Sep/08/2003992823/-1/-1/1/CSA_CHINA_BASED_AI_COMPANIES_MALICIOUS_DISTILLATION_AGAINST_US.PDF">NSA · CISA · FBI · Joint advisory AA26-251A (2026/09/08)</a>

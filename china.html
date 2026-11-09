@@ -50,6 +50,8 @@
 .cases li::before { content: ""; position: absolute; left: -7px; top: .55rem; width: 12px; height: 12px; border-radius: 50%; background: var(--surface); border: 2px solid var(--warn); }
 .cases .d { font-family: var(--mono); font-size: .82rem; color: var(--warn); }
 .cases span { color: var(--muted); font-size: .96rem; }
+.cases li.reply::before { border-color: var(--accent); }
+.cases li.reply .d { color: var(--accent); }
 
 .split-bars { display: grid; gap: .7rem; }
 .sb { display: grid; grid-template-columns: minmax(0, 10rem) 1fr 3.5rem; gap: .75rem; align-items: center; font-size: .92rem; }
@@ -87,7 +89,7 @@
     <div class="hero-copy measure">
       <span class="pill">PART 4 · <b>追趕與蒸餾</b></span>
       <h1>中國 AI 怎麼追上來，<br><em>美國廠商怎麼防</em></h1>
-      <p class="sub">2024 年底，中國最好的模型在寫程式考試上還落後美國旗艦一大截；到 2026 年，差距縮到只剩幾分，而且多數是開放權重、價格便宜很多。工程創新是主因之一，「蒸餾」別人的模型則是最有爭議的那一個。</p>
+      <p class="sub">2024 年底，中國最好的模型在寫程式考試上還落後美國旗艦一大截；到 2026 年，在這份快被考滿的考卷上差距只剩幾分，而且多數是開放權重、價格便宜很多。換成更難的考試，差距還很明顯：SWE-bench Pro 上 Qwen3.8 Max 是 67.7%、Opus 5.5 是 89.9%，第三方綜合指數最好的中國模型 46.5、Opus 5.5 是 59.1（見<a href="bench.html#matrix">模型評比</a>）。工程創新是主因之一，「蒸餾」別人的模型則是最有爭議的那一個。</p>
     </div>
   </div>
 </header>
@@ -102,7 +104,7 @@
       <p class="lead">2025 年 1 月 DeepSeek R1 推出，是很多人第一次發現中國模型已經追到這麼近。之後幾家公司輪流推出開放權重的強模型。分數變化見<a href="bench.html#bench">模型評比頁的能力曲線</a>。</p>
     </div>
     <div class="lab-grid">
-      <div class="lab"><span class="who">DeepSeek · 深度求索</span><b>V3（2024.12）、R1（2025.01）</b><span>V3 是 671B 參數的 MoE 模型，每個 token 只啟用 37B；技術報告寫完整訓練用了 278.8 萬 H800 GPU 小時。R1 展示了用強化學習就能讓模型學會推理，論文後來登上 Nature。</span></div>
+      <div class="lab"><span class="who">DeepSeek · 深度求索</span><b>V3（2024.12）、R1（2025.01）</b><span>V3 是 671B 參數的 MoE 模型，每個 token 只啟用 37B；技術報告寫完整訓練用了 278.8 萬 H800 GPU 小時，但報告也說明這只算正式訓練那一次，不含前期的研究和實驗。同時發表的 R1-Zero 只用強化學習，就學會一步步推理；正式版 R1 則是先做一輪監督式微調、再做強化學習。論文後來登上 Nature。</span></div>
       <div class="lab"><span class="who">Moonshot · 月之暗面</span><b>Kimi K2 系列</b><span>主打 agent 和寫程式，開放權重。K2 Thinking 之後的版本在 SWE-bench 上逼近美國旗艦。</span></div>
       <div class="lab"><span class="who">Alibaba · 阿里巴巴</span><b>Qwen（通義千問）</b><span>從小模型到旗艦都有，開放權重的版本在全球開發者社群用得很廣，也常被拿來當其他模型的基底。</span></div>
       <div class="lab"><span class="who">Zhipu · 智譜</span><b>GLM 系列</b><span>GLM-4.5 之後主打 agent 能力，也是開放權重。</span></div>
@@ -164,7 +166,7 @@
     <div class="s-head measure">
       <span class="eyebrow">04 · 公開的指控</span>
       <h2>從懷疑到點名</h2>
-      <p class="lead">以下都是提出指控的公司自己的說法。截至寫作時，本頁沒有找到被點名公司的詳細公開回應。</p>
+      <p class="lead">以下指控都是提出方的說法。被點名的公司多半沒有公開回應，阿里巴巴對 6 月的指控表示不予置評；中國政府則在 2026 年 7 月和 9 月兩度公開反駁，也列在下面。</p>
     </div>
     <ol class="cases measure">
       <li><span class="d">2025.01</span><b>DeepSeek R1 推出後</b><span>OpenAI 與 Microsoft 傳出調查是否有人透過 API 蒸餾 OpenAI 的模型。</span></li>
@@ -172,8 +174,13 @@
       <li><span class="d">2026.02.12</span><b>OpenAI 給美國眾議院中國特別委員會的備忘錄</b><span>指 DeepSeek 相關人員開發繞過存取限制的方法，透過「遮蔽來源的第三方 router」取用美國模型的輸出。</span></li>
       <li><span class="d">2026.02</span><b>Google</b><span>表示曾有單一行動對 Gemini 送出超過 10 萬個 prompt 試圖複製模型，稱之為智慧財產竊取。</span></li>
       <li><span class="d">2026.02.23</span><b>Anthropic 發布報告，點名 DeepSeek、Moonshot、MiniMax</b><span>約 2.4 萬個詐欺帳號、超過 1,600 萬次對話。依 Anthropic 統計：MiniMax 超過 1,300 萬次、Moonshot 超過 340 萬次、DeepSeek 超過 15 萬次。目標是 agent 寫程式、工具使用、推理，DeepSeek 還被指拿 Claude 當強化學習的評分者。</span></li>
-      <li><span class="d">2026.09.08</span><b>美國 NSA、CISA、FBI 聯合警示</b><span>點名 DeepSeek、月之暗面、阿里巴巴、MiniMax、階躍星辰、智譜六家，說它們從 2024 年起從美國模型取走數十億 token。這是美國政府第一次公開點名。</span></li>
-      <li><span class="d">2026.10.12</span><b>Anthropic 第二份報告</b><span>說新防線讓蒸餾者拿到的資料減少約 90–99%，封鎖了數萬個帳號，並新增點名智譜蒸餾資安相關能力。</span></li>
+      <li><span class="d">2026.04.23</span><b>白宮科技政策辦公室備忘錄</b><span>據報導，這份備忘錄已經用「蓄意、工業規模」形容中國的蒸餾行動。本頁沒有看到備忘錄原文。</span></li>
+      <li><span class="d">2026.06</span><b>Anthropic 指控阿里巴巴</b><span>Anthropic 在 6/10 寫給美國參議員和白宮官員的信（6/24 經媒體披露）說，與阿里巴巴 Qwen 團隊有關的人用將近 2.5 萬個詐欺帳號，在 4/22 到 6/5 之間和 Claude 對話約 2,880 萬次，是它遇過最大的一次蒸餾攻擊。阿里巴巴表示不予置評。</span></li>
+      <li class="reply"><span class="d">2026.07.27</span><b>中國商務部第一次回應</b><span>美方官員指控月之暗面蒸餾美國模型做出 Kimi K3、並揚言調查和制裁之後，商務部發言人表示這些指控缺乏事實證據和法律依據。</span></li>
+      <li><span class="d">2026.09.08</span><b>美國 NSA、CISA、FBI 聯合警示</b><span>點名 DeepSeek、月之暗面、阿里巴巴、MiniMax、階躍星辰、智譜六家，說它們從 2024 年起從美國模型取走數十億 token。這是美國情報與資安機關第一次聯合點名六家；在這之前，白宮的備忘錄和官員發言已經公開指控過。</span></li>
+      <li class="reply"><span class="d">2026.09.09</span><b>中國商務部回應聯合警示</b><span>隔天回應記者提問：美方指控沒有事實和法律依據；蒸餾本質上是包括美國公司在內、全球模型公司都在用的中性技術；如果美方拿反蒸餾當藉口打壓中國企業，中國會堅決反制。</span></li>
+      <li><span class="d">2026.10.12</span><b>Anthropic 第二份報告</b><span>說蒸餾者後來把手法放大，建立的代理網路控制了數十萬個詐欺帳號；新防線讓他們拿到的資料減少約 90–99%，並新增點名智譜蒸餾資安相關能力。</span></li>
+      <li><span class="d">2026.10</span><b>美國國土安全部命令聯邦機關移除 DeepSeek</b><span>這道命令 10 月公布，要求聯邦民用機關從資訊系統移除 DeepSeek 的產品，連用 DeepSeek 做的第三方產品也算，並禁止再採購。這是資安與採購命令，不是針對蒸餾，但反映同一波對中國 AI 的戒心。</span></li>
     </ol>
   </div>
 </section>
@@ -188,7 +195,7 @@
     <div class="duel">
       <div class="duel-head"><span>攻方：蒸餾者</span><span></span><span>守方：模型公司</span></div>
       <div class="duel-row">
-        <div class="side atk"><span class="tag">ATTACK · 規模</span><b>大量假帳號 + 代理網路</b><span>用數萬個帳號分散流量，背後是 Anthropic 稱為「hydra cluster」的代理網路，單一網路就同時管理超過 2 萬個帳號，封掉一個馬上換一個。</span></div>
+        <div class="side atk"><span class="tag">ATTACK · 規模</span><b>大量假帳號 + 代理網路</b><span>用大量帳號分散流量，背後是 Anthropic 稱為「hydra cluster」的代理網路。2 月時單一網路就同時管理超過 2 萬個帳號；到 10 月，Anthropic 說這些代理網路控制的詐欺帳號已經到數十萬個，封掉一個馬上換一個。</span></div>
         <div class="vs">vs</div>
         <div class="side def"><span class="tag">DEFENSE · 偵測</span><b>行為指紋與分類器</b><span>從 IP 關聯、請求中繼資料、基礎設施特徵把帳號串成同一個行動；用兩階段分類器辨識蒸餾模式，Anthropic 說誤判率低於 0.1%。</span></div>
       </div>
@@ -259,6 +266,7 @@
     <div class="grid3">
       <article class="card"><span class="tag">合不合法</span><h3>違反使用條款，不等於觸法</h3><p>各家都禁止用輸出訓練競爭模型，用假帳號也違反條款。但「模型輸出能不能受著作權保護」在各國都還沒有定論，所以多半是商業與政策問題。</p></article>
       <article class="card"><span class="tag">雙重標準？</span><h3>美國模型也用了別人的資料</h3><p>批評者指出，大模型本身就是用網路上大量別人的內容訓練的。支持者則認為，用假帳號系統性地取走競爭對手的成果，性質不同。</p></article>
+      <article class="card"><span class="tag">中國政府的說法</span><h3>「中性技術，指控沒有根據」</h3><p>中國商務部 2026 年 7 月和 9 月兩度回應：美方的指控缺乏事實和法律依據；蒸餾是包括美國公司在內、全球都在用的中性做法；美方若以此為藉口打壓中國企業，中國會反制。被點名的公司本身大多沒有回應。</p></article>
       <article class="card"><span class="tag">安全與政策</span><h3>蒸餾也能繞過出口管制</h3><p>Anthropic 認為蒸餾會削弱晶片出口管制的效果，而且蒸餾出來的模型不一定保留原本的安全防護。這讓它從商業糾紛變成地緣政治議題。</p></article>
     </div>
     <div class="prose measure mt">
@@ -276,7 +284,7 @@
     </div>
     <div class="faq measure">
       <details open><summary>可以用，但要知道三件事</summary><div class="a">
-        <p><b>資料存在哪。</b>用中國公司自己的 App 或網站，對話通常存在中國的伺服器上，受中國法律管轄，依法可能要配合政府調查。台灣的政府機關 2025 年起就禁止公務使用 DeepSeek。</p>
+        <p><b>資料存在哪。</b>用中國公司自己的 App 或網站，對話通常存在中國的伺服器上，受中國法律管轄，依法可能要配合政府調查。台灣的政府機關 2025 年起就禁止公務使用 DeepSeek；美國國土安全部 2026 年 10 月也公布命令，要聯邦民用機關移除 DeepSeek 的產品。</p>
         <p><b>內容會被審查。</b>問到政治敏感的題目（例如台灣、天安門），回答常會迴避或照官方說法。查資料、學知識時，這類題目別只問它。</p>
         <p><b>App 和模型是兩回事。</b>很多中國模型是開放權重，可以由其他公司架在別的國家的伺服器上提供。這時資料不會經過原廠，但模型本身訓練出來的審查傾向還在。</p>
       </div></details>
@@ -294,6 +302,12 @@
       <a href="https://www.anthropic.com/news/updating-restrictions-of-sales-to-unsupported-regions">Anthropic · Updating restrictions of sales to unsupported regions（2025/09）</a>
       <a href="https://restofworld.org/2026/openai-deepseek-distillation-dispute-us-china/">Rest of World · OpenAI–DeepSeek distillation dispute（2026/02）</a>
       <a href="https://the-decoder.com/google-and-openai-complain-about-distillation-attacks-that-clone-their-ai-models-on-the-cheap/">The Decoder · Google and OpenAI on distillation attacks（2026/02）</a>
+      <a href="https://thenextweb.com/news/anthropic-accuses-alibaba-distillation-claude-qwen">The Next Web · Anthropic accuses Alibaba of running the largest distillation campaign yet（2026/06/24）</a>
+      <a href="https://cset.georgetown.edu/publication/china-mofcom-statement-model-distillation/">CSET · 中國商務部關於模型蒸餾的聲明（英譯，2026/07/27）</a>
+      <a href="https://www.implicator.ai/china-says-us-firms-distilled-chinese-models/">Implicator · China says US firms distilled Chinese models（2026/07，含 4/23 白宮備忘錄的報導）</a>
+      <a href="https://natlawreview.com/article/chinas-commerce-ministry-rejects-us-accusations-industrial-scale-ai-distillation">National Law Review · 中國商務部駁斥工業規模蒸餾指控（2026/09）</a>
+      <a href="https://scmp.com/economy/article/3367001/china-rejects-us-claims-industrial-scale-ai-model-distillation-warns-retaliation">SCMP · China rejects US claims of industrial-scale AI model distillation（2026/09/09）</a>
+      <a href="https://thehackernews.com/2026/10/us-orders-deepseek-removed-from-federal.html">The Hacker News · US orders DeepSeek removed from federal systems（2026/10）</a>
       <a href="https://arxiv.org/abs/2412.19437">DeepSeek-V3 Technical Report（arXiv 2412.19437）</a>
       <a href="https://arxiv.org/abs/2501.12948">DeepSeek-R1（arXiv 2501.12948）</a>
       <a href="https://media.defense.gov/2026/Sep/08/2003992823/-1/-1/1/CSA_CHINA_BASED_AI_COMPANIES_MALICIOUS_DISTILLATION_AGAINST_US.PDF">NSA · CISA · FBI · Joint advisory AA26-251A (2026/09/08)</a>

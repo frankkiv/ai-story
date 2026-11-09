@@ -24,6 +24,9 @@
 .part .go { font-weight: 600; color: var(--text); }
 .part .band { height: .4rem; border-radius: 999px; background: linear-gradient(90deg, var(--a), var(--b)); }
 .hero .stack-wrap { min-height: 20rem; }
+.share-row { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; margin-top: 1.25rem; }
+.share-row .btn { min-height: 44px; cursor: pointer; font: inherit; }
+.share-msg { color: var(--muted); font-size: .92rem; }
 </style>
 </head>
 <body>
@@ -57,24 +60,24 @@
       <div class="stack-wrap" id="stack" aria-hidden="true">
         <div class="stack" id="stackInner">
           <div class="layer model" style="--i:0"><span>model weights (fixed)</span></div>
-          <div class="layer" style="--i:1; --c: var(--l-tools)"><span>tools · MCP</span></div>
-          <div class="layer" style="--i:2; --c: var(--l-sys)"><span>system prompt</span></div>
+          <div class="layer" style="--i:1; --c: var(--l-tools)"><span>toolbox · tools · MCP</span></div>
+          <div class="layer" style="--i:2; --c: var(--l-sys)"><span>rules · system prompt</span></div>
           <div class="layer" style="--i:3; --c: var(--l-skills)"><span>skills</span></div>
-          <div class="layer" style="--i:4; --c: var(--l-mem)"><span>memory · CLAUDE.md</span></div>
+          <div class="layer" style="--i:4; --c: var(--l-mem)"><span>memory file · CLAUDE.md</span></div>
           <div class="layer" style="--i:5; --c: var(--l-hist)"><span>conversation history</span></div>
           <div class="layer" style="--i:6; --c: var(--l-new)"><span>the line you just typed</span></div>
         </div>
       </div>
-      <ol class="stack-legend" aria-label="What one request contains, top to bottom">
+      <ol class="stack-legend" aria-label="How one request is stacked; the top layer goes on last">
         <li><i style="--c:var(--l-new)"></i>The line you just typed</li>
         <li><i style="--c:var(--l-hist)"></i>The conversation so far</li>
-        <li><i style="--c:var(--l-mem)"></i>Memory file (CLAUDE.md)</li>
+        <li><i style="--c:var(--l-mem)"></i>Memory file, project settings (CLAUDE.md)</li>
         <li><i style="--c:var(--l-skills)"></i>List of skills</li>
         <li><i style="--c:var(--l-sys)"></i>System prompt (the rules)</li>
-        <li><i style="--c:var(--l-tools)"></i>Tool definitions (tools · MCP)</li>
+        <li><i style="--c:var(--l-tools)"></i>Toolbox descriptions (tools · MCP)</li>
         <li><i style="--c:var(--model-bg)"></i>The model itself (fixed)</li>
       </ol>
-      <p class="stack-cap">Every request stacks these layers and sends the whole bundle to the same fixed model.</p>
+      <p class="stack-cap">Every request stacks these layers like building blocks and sends the whole bundle to the same fixed model. The bundle is sent starting from the tool descriptions at the bottom, and the line you just typed comes last, so the model reads it and continues straight into its answer.</p>
     </div>
   </div>
 </header>
@@ -104,13 +107,13 @@
       <a class="part" href="china.html" style="--a: var(--l-mem); --b: var(--warn)">
         <span class="band"></span><span class="num">PART 4 · Catching up and distillation</span>
         <h2>How Chinese AI caught up, and how US labs push back</h2>
-        <p>How did Chinese models close the gap in two years? What distillation is, what the accusations say, and how model companies fight back.</p>
+        <p>How did Chinese models close the gap in two years? What distillation (training your own model on another model's answers) is, what the accusations say, and how model companies fight back.</p>
         <span class="go">Read →</span>
       </a>
       <a class="part" href="future.html" style="--a: var(--l-hist); --b: var(--l-mem)">
         <span class="band"></span><span class="num">PART 5 · The next bottleneck</span>
         <h2>Power, memory and storage</h2>
-        <p>Data center electricity, the HBM shortage, and the storage needs of video training, with a power converter and a KV cache calculator.</p>
+        <p>Data center electricity, the shortage of AI memory chips (HBM), and the storage needs of video training, with a power converter and a KV cache calculator that shows how much memory a model needs to "keep in mind" what came before.</p>
         <span class="go">Read →</span>
       </a>
     </div>
@@ -128,8 +131,13 @@
       <li><b>Don't paste in ID numbers, bank accounts or medical records</b><span>Everything you type is sent to the provider's servers. If you really need to, black out names and numbers first.</span></li>
       <li><b>Take a look at the privacy settings</b><span>Most apps let you opt out of having your chats used for training, and you can turn off memory too. It takes a minute, once.</span></li>
       <li><b>Double-check numbers, drug names and legal questions</b><span>Sounding confident doesn't make it right. For anything important, check two sources or ask a professional.</span></li>
-      <li><b>Be suspicious of "AI investing" or "AI trading" offers</b><span>Anything that promises guaranteed returns in the name of AI is almost always a scam. AI can also fake celebrity videos and voices. If a "friend" calls asking for money, hang up and call them back.</span></li>
+      <li><b>Be suspicious of "AI investing" or "AI trading" offers</b><span>Anything that promises guaranteed returns in the name of AI is almost always a scam. AI can also fake celebrity videos and voices. If a "friend" calls asking for money, hang up and call them back. In Taiwan, you can call the 165 anti-fraud hotline if anything seems off.</span></li>
     </ol>
+    <div class="share-row">
+      <button type="button" class="btn primary" id="copyTips">Copy these five tips</button>
+      <a class="btn" id="lineTips" href="https://line.me/R/share" target="_blank" rel="noopener">Share on LINE</a>
+      <span class="share-msg" id="copyMsg" aria-live="polite"></span>
+    </div>
   </div>
 </section>
 
@@ -142,7 +150,7 @@
     <div class="faq measure">
       <details>
         <summary>Does it remember me?</summary>
-        <div class="a"><p>The model doesn't. It "remembers" because the app saves the conversation and sends it again next time, or because a memory feature writes key points into notes that get included in new chats. Turn memory off and start a new chat, and it's meeting you for the first time.</p></div>
+        <div class="a"><p>The model doesn't. It "remembers" because the app saves the conversation and sends it again next time, or because a memory feature writes key points into notes that get included in new chats. Turn memory off and start a new chat, and the model won't know what you talked about before. That doesn't mean the record is gone: the provider's servers may still keep your chats, and any custom instructions you set are included every time. To get rid of the record, delete it in the settings.</p></div>
       </details>
       <details>
         <summary>If I teach it something, will it learn it?</summary>
@@ -155,6 +163,10 @@
       <details>
         <summary>Does it get dumber if we chat too long?</summary>
         <div class="a"><p>It can. The context has a limit, and when it's stuffed with unrelated material, important details are easier to miss. Very long chats get automatically summarized, and details can get lost. Starting a new chat with only what's needed is often more accurate.</p></div>
+      </details>
+      <details>
+        <summary>Why does it feel different lately?</summary>
+        <div class="a"><p>Usually not because of you. The model doesn't change because you chat with it, but the provider does change things: it ships new versions, swaps the default model, or rewrites the system prompt (the rules) that is included every time. New notes from a memory feature can also change its answers. So "the model hasn't changed a single bit" applies to the time you spend chatting with it; the provider can replace or adjust it at any time.</p></div>
       </details>
       <details>
         <summary>How can an AI assistant be tricked?</summary>
@@ -179,6 +191,35 @@
   if ("IntersectionObserver" in window && matchMedia("(hover: none)").matches) {
     new IntersectionObserver(function (es) { es.forEach(function (e) { wrap.classList.toggle("open", e.isIntersecting); }); }, { threshold: .6 }).observe(wrap);
   }
+})();
+</script>
+<script>
+(function () {
+  var list = document.querySelector("#tips .tips"), btn = document.getElementById("copyTips"), line = document.getElementById("lineTips"), msg = document.getElementById("copyMsg");
+  if (!list || !btn) return;
+  var HEAD = "Five tips for using AI safely", DONE = "Copied. Paste it into a message.", FAIL = "Couldn't copy automatically. Please select the text above.";
+  function text() {
+    var out = [HEAD];
+    [].forEach.call(list.children, function (li, i) {
+      var b = li.querySelector("b"), s = li.querySelector("span");
+      out.push((i + 1) + ". " + b.textContent + "\n" + s.textContent);
+    });
+    out.push(location.href.split("#")[0] + "#tips");
+    return out.join("\n\n");
+  }
+  line.addEventListener("click", function () { line.href = "https://line.me/R/share?text=" + encodeURIComponent(text()); });
+  btn.addEventListener("click", function () {
+    var t = text();
+    function ok() { msg.textContent = DONE; }
+    function fallback() {
+      var ta = document.createElement("textarea");
+      ta.value = t; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy") ? ok() : (msg.textContent = FAIL); } catch (e) { msg.textContent = FAIL; }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(t).then(ok, fallback); else fallback();
+  });
 })();
 </script>
 </body>

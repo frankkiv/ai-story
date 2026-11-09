@@ -62,24 +62,24 @@
       <div class="stack-wrap" id="stack" aria-hidden="true">
         <div class="stack" id="stackInner">
           <div class="layer model" style="--i:0"><span>模型權重（固定不變）</span></div>
-          <div class="layer" style="--i:1; --c: var(--l-tools)"><span>tools · MCP</span></div>
-          <div class="layer" style="--i:2; --c: var(--l-sys)"><span>system prompt</span></div>
-          <div class="layer" style="--i:3; --c: var(--l-skills)"><span>skills</span></div>
-          <div class="layer" style="--i:4; --c: var(--l-mem)"><span>memory · CLAUDE.md</span></div>
+          <div class="layer" style="--i:1; --c: var(--l-tools)"><span>工具 · tools · MCP</span></div>
+          <div class="layer" style="--i:2; --c: var(--l-sys)"><span>規則 · system prompt</span></div>
+          <div class="layer" style="--i:3; --c: var(--l-skills)"><span>技能 · skills</span></div>
+          <div class="layer" style="--i:4; --c: var(--l-mem)"><span>記憶檔 · CLAUDE.md</span></div>
           <div class="layer" style="--i:5; --c: var(--l-hist)"><span>對話紀錄</span></div>
           <div class="layer" style="--i:6; --c: var(--l-new)"><span>你剛打的這一句</span></div>
         </div>
       </div>
-            <ol class="stack-legend" aria-label="一次請求由上到下的內容">
+            <ol class="stack-legend" aria-label="一次請求疊起來的樣子，最上面是最後疊上去的">
         <li><i style="--c:var(--l-new)"></i>你剛打的這一句</li>
         <li><i style="--c:var(--l-hist)"></i>之前的對話紀錄</li>
-        <li><i style="--c:var(--l-mem)"></i>記憶檔（CLAUDE.md）</li>
-        <li><i style="--c:var(--l-skills)"></i>skills 清單</li>
+        <li><i style="--c:var(--l-mem)"></i>記憶檔、專案設定（CLAUDE.md）</li>
+        <li><i style="--c:var(--l-skills)"></i>技能清單（skills）</li>
         <li><i style="--c:var(--l-sys)"></i>system prompt（規則）</li>
-        <li><i style="--c:var(--l-tools)"></i>工具定義（tools · MCP）</li>
+        <li><i style="--c:var(--l-tools)"></i>工具箱說明（tools · MCP）</li>
         <li><i style="--c:var(--model-bg)"></i>模型本身（固定不變）</li>
       </ol>
-      <p class="stack-cap">每一次請求，都是把這幾層疊起來，整份送給同一個固定的模型。</p>
+      <p class="stack-cap">每一次請求，都是把這幾層像積木一樣疊起來，整份送給同一個固定的模型。實際送出時從最底層的工具說明開始，你剛打的這一句放在最後，模型讀到這裡，就順著往下寫回答。</p>
     </div>
   </div>
 </header>
@@ -116,7 +116,7 @@
       </article>
     </div>
     <div class="prose measure mt">
-      <p>模型本身是<strong>無狀態（stateless）</strong>的：API 不會幫你記得上一句。會感覺「它記得」，是因為客戶端（App、Claude Code）把整段對話存起來，下一輪連同新訊息一起再送一次。所謂「讓 AI 愈來愈懂你」，實際上是在<strong>改善每次送進去的 context</strong>：寫更好的 prompt、整理記憶檔、把常做的流程寫成 skill。這是工程，不是訓練。</p>
+      <p>模型本身是<strong>無狀態（stateless）</strong>的：模型不會記得上一句。會感覺「它記得」，是因為客戶端（App、Claude Code）把整段對話存起來，下一輪連同新訊息一起再送一次。有些 API（例如 OpenAI 的 Responses API）可以由伺服器幫你存對話，但那只是換成伺服器幫你保管紀錄，底層一樣是把歷史接回去、讓模型整段重讀。所謂「讓 AI 愈來愈懂你」，實際上是在<strong>改善每次送進去的 context</strong>：寫更好的 prompt、整理記憶檔、把常做的流程寫成 skill。這是工程，不是訓練。</p>
       <p class="elder"><b>白話說</b><span>AI 像一位記性只有一頓飯長的專家。每次見面，你都把「之前聊過什麼、家裡的狀況、你習慣怎麼做」整本筆記交給他重看一遍。他沒有變聰明，是你的筆記愈寫愈好。</span></p>
     </div>
   </div>
@@ -286,8 +286,8 @@
       <table>
         <thead><tr><th scope="col">工具</th><th scope="col">什麼時候壓</th><th scope="col">怎麼壓</th><th scope="col">壓完留下什麼</th></tr></thead>
         <tbody>
-          <tr><td>Claude Code</td><td>快滿時自動（約九成，會先扣掉留給輸出的空間）；也能手動打 <code>/compact</code>，後面加上要保留的重點</td><td>分層：先不用模型，把舊的工具結果清成一行「已清除」；還不夠，才請模型寫結構化摘要</td><td>摘要（目標、改過的檔案、錯誤、待辦、你說過的話等）＋重新讀回最近改過的檔案；CLAUDE.md 在 system 裡，不受影響</td></tr>
-          <tr><td>OpenAI Codex CLI</td><td>約九成時自動；手動 <code>/compact</code></td><td>請模型寫一則「交接摘要」；用 Codex 模型時，可以交給伺服器的 compact API，回傳一段加密內容</td><td>你說過的每句話原文保留；AI 的回覆和工具結果換成那則摘要</td></tr>
+          <tr><td>Claude Code</td><td>快滿時自動（約九成，會先扣掉留給輸出的空間）；也能手動打 <code>/compact</code>，後面加上要保留的重點</td><td>分層：先不用模型，把舊的工具結果清成一行「已清除」；還不夠，才請模型寫結構化摘要</td><td>摘要（目標、改過的檔案、錯誤、待辦、你說過的話等）＋重新讀回最近改過的檔案；CLAUDE.md 不會被摘要掉，壓縮後客戶端從硬碟重新讀進來，放回對話開頭</td></tr>
+          <tr><td>OpenAI Codex CLI</td><td>約九成時自動；手動 <code>/compact</code></td><td>請模型寫一則「交接摘要」；用 Codex 模型時，可以交給伺服器的 compact API，回傳一段加密內容</td><td>你最近說過的話保留原文（有 token 上限，太舊的會被截掉）；AI 的回覆和工具結果換成那則摘要</td></tr>
           <tr><td>Gemini CLI</td><td>預設用到一半左右就壓（可調）；手動 <code>/compress</code></td><td>先寫摘要，再請模型自己檢查一次有沒有漏</td><td>最近約 30% 的對話原文＋較舊部分的摘要</td></tr>
           <tr><td>OpenCode</td><td>約 96%–99% 才壓</td><td>先剪掉舊的工具輸出，不夠再寫摘要</td><td>最近約 4 萬 token 的工具輸出、最後兩輪你的訊息</td></tr>
           <tr><td>Anthropic API 的 context editing</td><td>開發者自己設定門檻</td><td>伺服器端自動把舊的工具結果清掉，不寫摘要</td><td>對話結構不變，只是舊工具結果變成「已清除」</td></tr>
@@ -299,7 +299,7 @@
       <article class="card"><span class="tag">取捨</span><h3>早壓還是晚壓？</h3><p>早壓（像 Gemini CLI）每次送得少、比較省，但摘要次數多，細節流失也多；晚壓（像 OpenCode）保留最多原文，但快滿時模型的注意力已經被稀釋。</p></article>
       <article class="card"><span class="tag">實用建議</span><h3>換題目就開新對話</h3><p>壓縮是不得已的補救。做完一件事、要換下一件時，直接開新 session，再讓 AI 讀 CLAUDE.md 或 spec 文件，通常比壓縮後繼續聊乾淨。</p></article>
     </div>
-    <p class="elder mt"><b>白話說</b><span>聊太久，筆記本寫滿了。有人把舊頁撕掉、只留重點（Claude Code）；有人留下你說過的每句話、其他的濃縮成一張交接單（Codex）；有人寫完重點還再對一次有沒有漏（Gemini）。哪種都會丟掉一些細節。</span></p>
+    <p class="elder mt"><b>白話說</b><span>聊太久，筆記本寫滿了。有人把舊頁撕掉、只留重點（Claude Code）；有人留下你最近說過的話、其他的濃縮成一張交接單（Codex）；有人寫完重點還再對一次有沒有漏（Gemini）。哪種都會丟掉一些細節。</span></p>
     <p class="caveat mt">門檻與細節會隨版本改變。Claude Code 的內部做法來自社群的分析文章（它不是開源的），其餘參考各工具的說明文件與 2026 年 4 月的比較文章（Daniel Vaughan〈Context Compaction Showdown〉、Justin3go〈Context Compaction in Codex, Claude Code, and OpenCode〉）。</p>
   </div>
 </section>
@@ -695,7 +695,7 @@
       var users = S.hist.filter(function (b) { return b.role === "user" && b.chat; }).map(relabel);
       request([blk("new", "（自動）請寫交接摘要", 80, "user", "（自動）請寫一份交接摘要")], blk("out", "assistant：交接摘要", 700, "assistant", "（交接摘要）"));
       S.hist = users.concat([blk("hist", "交接摘要", 700, "assistant", "📝 交接摘要：寫給接手的自己")]);
-      msg = "Codex：你說過的話全部原文留下，AI 回覆和工具結果拿掉，換成一則「交接摘要」。用 Codex 模型時也能交給伺服器的 compact API，拿回一段加密內容。";
+      msg = "Codex：你說過的話保留原文（有上限，太舊的截掉），AI 回覆和工具結果拿掉，換成一則「交接摘要」。用 Codex 模型時也能交給伺服器的 compact API，拿回一段加密內容。";
     } else if (CMODE === "gemini") {
       var keep = [], acc = 0;
       for (var i = S.hist.length - 1; i >= 0; i--) {

@@ -126,7 +126,7 @@
       <p class="caveat">估算假設：全年滿載運轉（實際通常較低）；台灣全年用電以約 2,800 億度（280 TWh）、一般家庭一年約 4,000 度計。數字只用來感受規模。現在業界已經在蓋 1–5 GW 等級的園區。</p>
     </div>
     <div class="prose measure mt">
-      <p class="elder"><b>白話說</b><span>一座大型 AI 資料中心，用電量可以抵得上一兩百萬戶人家。所以現在蓋 AI 機房，第一個問題常常不是買不買得到晶片，而是電從哪裡來。</span></p>
+      <p class="elder"><b>白話說</b><span>一座 1 GW 等級的大型 AI 資料中心，滿載一整年的用電量抵得上兩百多萬戶人家（約 219 萬戶）。所以現在蓋 AI 機房，第一個問題常常不是買不買得到晶片，而是電從哪裡來。</span></p>
     </div>
   </div>
 </section>
@@ -172,7 +172,7 @@
       <div class="col">
         <div><div class="codehead"><span>KV cache 大小怎麼算</span><span>formula</span></div>
         <p class="formula">每個 token = 2 (K,V) × 層數 × KV heads × head 維度 × 每數值位元組</p></div>
-        <p style="color:var(--muted);font-size:.95rem">以公開架構的 Llama 3 70B 為例（80 層、8 個 KV head、維度 128、BF16 每數值 2 bytes），每個 token 約 0.31 MB。</p>
+        <p style="color:var(--muted);font-size:.95rem">以公開架構的 Llama 3 70B 為例（80 層、8 個 KV head、維度 128、BF16 每數值 2 bytes），每個 token 約 0.33 MB（327,680 bytes，用十進位計算，和下面計算器的 GB 一致）。</p>
       </div>
     </div>
 
@@ -236,6 +236,7 @@
     <div class="s-head measure"><span class="eyebrow">資料來源</span></div>
     <div class="sources measure">
       <a href="https://www.iea.org/reports/energy-and-ai">IEA · Energy and AI（2025/4）</a>
+      <a href="https://www.iea.org/reports/key-questions-on-energy-and-ai">IEA · Key Questions on Energy and AI（2026/4，2026 年更新的原始報告）</a>
       <a href="https://www.enlit.world/library/ai-and-data-centre-electricity-use-continue-to-surge-iea-finds">Enlit · IEA 2026 年更新報導（2026/4）</a>
       <a href="https://www.networkworld.com/article/4113772/samsung-warns-of-memory-shortages-driving-industry-wide-price-surge-in-2026.html">Network World · Samsung warns of memory shortages（2026/1）</a>
       <a href="https://www.gadgetreview.com/hard-drives-are-sold-out-for-2026-and-ai-data-centers-are-to-blame">GadgetReview · Hard drives are sold out for 2026（2026/2）</a>

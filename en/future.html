@@ -126,7 +126,7 @@
       <p class="caveat">Assumptions: running at full load all year (real usage is usually lower); Taiwan's annual electricity use taken as about 280 TWh, and a typical household as about 4,000 kWh a year. The numbers are only for a sense of scale. The industry is already building 1–5 GW campuses.</p>
     </div>
     <div class="prose measure mt">
-      <p class="elder"><b>In plain words</b><span>One large AI data center can use as much electricity as one or two million homes. So when building AI facilities today, the first question is often not whether you can buy the chips, but where the power will come from.</span></p>
+      <p class="elder"><b>In plain words</b><span>A large 1 GW AI data center running flat out for a year uses as much electricity as over two million homes (about 2.19 million). So when building AI facilities today, the first question is often not whether you can buy the chips, but where the power will come from.</span></p>
     </div>
   </div>
 </section>
@@ -172,7 +172,7 @@
       <div class="col">
         <div><div class="codehead"><span>How KV cache size is calculated</span><span>formula</span></div>
         <p class="formula">per token = 2 (K,V) × layers × KV heads × head dim × bytes per value</p></div>
-        <p style="color:var(--muted);font-size:.95rem">Taking the openly documented Llama 3 70B as an example (80 layers, 8 KV heads, dimension 128, BF16 at 2 bytes per value), each token takes about 0.31 MB.</p>
+        <p style="color:var(--muted);font-size:.95rem">Taking the openly documented Llama 3 70B as an example (80 layers, 8 KV heads, dimension 128, BF16 at 2 bytes per value), each token takes about 0.33 MB (327,680 bytes, counted in decimal units to match the GB in the calculator below).</p>
       </div>
     </div>
 
@@ -236,6 +236,7 @@
     <div class="s-head measure"><span class="eyebrow">Sources</span></div>
     <div class="sources measure">
       <a href="https://www.iea.org/reports/energy-and-ai">IEA · Energy and AI (2025/4)</a>
+      <a href="https://www.iea.org/reports/key-questions-on-energy-and-ai">IEA · Key Questions on Energy and AI (2026/4, the original 2026 update)</a>
       <a href="https://www.enlit.world/library/ai-and-data-centre-electricity-use-continue-to-surge-iea-finds">Enlit · Coverage of the IEA 2026 update (2026/4)</a>
       <a href="https://www.networkworld.com/article/4113772/samsung-warns-of-memory-shortages-driving-industry-wide-price-surge-in-2026.html">Network World · Samsung warns of memory shortages (2026/1)</a>
       <a href="https://www.gadgetreview.com/hard-drives-are-sold-out-for-2026-and-ai-data-centers-are-to-blame">GadgetReview · Hard drives are sold out for 2026 (2026/2)</a>
