@@ -170,7 +170,7 @@
     <div class="s-head measure">
       <span class="eyebrow">03 · What one request looks like</span>
       <h2>You type "look at this bug", and a whole bundle goes out</h2>
-      <p class="lead">Taking Claude Code as the example, each round sends these layers to the API, in this order (Anthropic's cache matches prefixes in tools → system → messages order). The order matters; the cache section uses it.</p>
+      <p class="lead">Taking Claude Code as the example, each round sends these layers to the API, in this order (Anthropic's cache matches prefixes of the tools, system and messages sections, in that order). The order matters; the cache section uses it.</p>
       <p class="jlink"><a href="journey.html#j-pack">Watch it: how this package is assembled on your computer and sent out →</a></p>
     </div>
     <div class="grid2">
@@ -183,7 +183,8 @@
         <li style="--c: var(--l-new)"><div><b>This round's new message</b><span>What you just typed. Often it's the only new thing in the whole bundle.</span></div></li>
       </ol>
       <div class="col">
-        <div><div class="codehead"><span>POST /v1/messages (simplified)</span><span>JSON</span></div>
+        <details class="more"><summary>Engineering detail: the JSON that is actually sent</summary><div class="more-body">
+<div><div class="codehead"><span>POST /v1/messages (simplified)</span><span>JSON</span></div>
 <pre><code>{
   <span class="k">"model"</span>: <span class="s">"claude-…"</span>,
   <span class="k">"tools"</span>: [ <span class="c">// each tool's schema (cache matching starts here)</span>
@@ -202,6 +203,7 @@
     { <span class="k">"role"</span>: <span class="s">"user"</span>,      <span class="k">"content"</span>: <span class="p">"OK, fix it"</span> }  <span class="c">// ← new</span>
   ]
 }</code></pre></div>
+</div></details>
       </div>
     </div>
   </div>
@@ -283,7 +285,8 @@
       <h3>How does each tool compact? It's different everywhere</h3>
       <p>The model doesn't deal with "the conversation is too long". Compaction is a strategy the client (or API service) decides on, so every vendor does it differently. Switch "Compaction style" in the simulator above to see how three approaches change the context.</p>
     </div>
-    <div class="log-wrap modes">
+    <details class="more"><summary>Engineering detail: how five tools compact, compared</summary><div class="more-body">
+<div class="log-wrap modes">
       <table>
         <thead><tr><th scope="col">Tool</th><th scope="col">When it compacts</th><th scope="col">How</th><th scope="col">What's left afterwards</th></tr></thead>
         <tbody>
@@ -295,6 +298,7 @@
         </tbody>
       </table>
     </div>
+</div></details>
     <div class="grid3 mt">
       <article class="card"><span class="tag">The shared cost</span><h3>The cache misses once</h3><p>Compaction rewrites the conversation history, so the next request can only hit the cache for the tools and system at the front; the rest is written again. So compacting more often isn't better.</p></article>
       <article class="card"><span class="tag">The trade-off</span><h3>Compact early or late?</h3><p>Compacting early (like Gemini CLI) sends less each time and costs less, but summarizes more often and loses more detail. Compacting late (like OpenCode) keeps the most original text, but by the time it's nearly full, the model's attention is already diluted.</p></article>
@@ -354,7 +358,8 @@
         <li><div><span class="who">MODEL → USER</span><b>stop_reason: end_turn</b><span>Final reply: "Fixed it. Changed two places, tests pass."</span></div></li>
       </ol>
       <div class="col">
-        <div><div class="codehead"><span>agent loop (pseudocode)</span><span>python</span></div>
+        <details class="more"><summary>Engineering detail: the loop as pseudocode</summary><div class="more-body">
+<div><div class="codehead"><span>agent loop (pseudocode)</span><span>python</span></div>
 <pre><code>messages.append(user(<span class="s">"fix the login bug"</span>))
 <span class="k">while</span> <span class="y">True</span>:
     resp = model.create(system, tools, messages)  <span class="c"># resend everything</span>
@@ -363,6 +368,7 @@
         <span class="k">break</span>                                     <span class="c"># done</span>
     result = run_tool_locally(resp.tool_use)      <span class="c"># the client runs it</span>
     messages.append(tool_result(result))</code></pre></div>
+</div></details>
         <div class="card">
           <span class="tag">Much of the progress in recent years happened in this loop</span>
           <ul class="kv">
@@ -476,7 +482,8 @@
       <article class="card"><span class="tag">2025–2026 · Built into the tool</span><h3>Subagents, then Projects</h3><p>Claude Code first added subagents: the main agent hands a subtask to a small agent with its own context, which returns only the result. Projects (beta), launched on September 17, 2026, goes further: one Claude directly manages several full sessions running in parallel.</p></article>
     </div>
 
-    <div class="grid2 mt">
+    <details class="more"><summary>Engineering detail: how Projects works, and three approaches compared</summary><div class="more-body">
+<div class="grid2 mt">
       <article class="card auto-card">
         <span class="tag">How Projects works</span>
         <h3>One switchboard, plus many threads each doing their own job</h3>
@@ -509,6 +516,7 @@
         </tbody>
       </table>
     </div>
+</div></details>
 
     <div class="grid3 mt">
       <article class="card"><span class="tag">Watch out</span><h3>It burns through usage faster</h3><p>Every thread is a full session, and the coordinator uses tokens too, so the same plan's limits get used up faster. There's also a daily cap on new threads.</p></article>
@@ -527,7 +535,8 @@
       <h2>"It gets easier the more I use it" comes from local text files</h2>
       <p class="lead">Everything you and the AI work out together ends up in a few files on your computer. They're read into the context the next time you start, so it looks like it "learned".</p>
     </div>
-    <div class="grid2">
+    <details class="more"><summary>Engineering detail: where these files live, and what a skill file looks like</summary><div class="more-body">
+<div class="grid2">
       <div class="col">
         <div><div class="codehead"><span>Your project and home directory</span><span>tree</span></div>
 <pre class="tree"><code>my-project/
@@ -553,6 +562,7 @@
 4. <span class="p">Don't list internal refactors</span>   <span class="c"># ← added after last week's chat</span></code></pre></div>
       </div>
     </div>
+</div></details>
     <div class="grid3 mt">
       <article class="card">
         <span class="tag">Progressive loading</span>
@@ -561,7 +571,7 @@
       </article>
       <article class="card">
         <span class="tag">How it "improves"</span>
-        <h3>Chat → spot a problem → edit the file</h3>
+        <h3>Spot a problem while chatting, then edit the file</h3>
         <p>The output listed something it shouldn't, so you say "don't list internal refactors from now on". Write that line back into SKILL.md, and any future conversation that loads it follows the new rule.</p>
       </article>
       <article class="card hl">
@@ -791,6 +801,10 @@
 
   reset(); render("Press \"Next\" to start. We'll simulate fixing a login page bug in Claude Code, in 8 steps.");
 })();
+</script>
+<script>
+/* engineering details start collapsed on phones and open on wide screens */
+if (matchMedia("(min-width: 900px)").matches) document.querySelectorAll("details.more").forEach(function (d) { d.open = true; });
 </script>
 </body>
 </html>

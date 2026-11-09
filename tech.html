@@ -169,7 +169,7 @@
     <div class="s-head measure">
       <span class="eyebrow">03 · 一次請求長什麼樣子</span>
       <h2>你打一句「幫我看這個 bug」，送出去的是一整包</h2>
-      <p class="lead">以 Claude Code 為例，每一輪送到 API 的內容依序是這幾層（Anthropic 的 cache 依 tools → system → messages 的順序比對前綴）。順序很重要，下一節的 cache 會用到。</p>
+      <p class="lead">以 Claude Code 為例，每一輪送到 API 的內容依序是這幾層（Anthropic 的 cache 依序比對 tools、system、messages 這三段的前綴）。順序很重要，下一節的 cache 會用到。</p>
       <p class="jlink"><a href="journey.html#j-pack">看動畫：這一包在你的電腦上怎麼組合、怎麼送出去 →</a></p>
     </div>
     <div class="grid2">
@@ -182,7 +182,8 @@
         <li style="--c: var(--l-new)"><div><b>這一輪的新訊息</b><span>你剛打的那句。整包裡常常只有它是新的。</span></div></li>
       </ol>
       <div class="col">
-        <div><div class="codehead"><span>POST /v1/messages（簡化）</span><span>JSON</span></div>
+        <details class="more"><summary>工程細節：實際送出的 JSON 長這樣</summary><div class="more-body">
+<div><div class="codehead"><span>POST /v1/messages（簡化）</span><span>JSON</span></div>
 <pre><code>{
   <span class="k">"model"</span>: <span class="s">"claude-…"</span>,
   <span class="k">"tools"</span>: [ <span class="c">// 每個工具的 schema（cache 比對從這裡開始）</span>
@@ -201,6 +202,7 @@
     { <span class="k">"role"</span>: <span class="s">"user"</span>,      <span class="k">"content"</span>: <span class="p">"那幫我修好"</span> }  <span class="c">// ← 新的</span>
   ]
 }</code></pre></div>
+</div></details>
       </div>
     </div>
   </div>
@@ -282,7 +284,8 @@
       <h3>各家怎麼壓縮？做法其實不一樣</h3>
       <p>模型本身不管「對話太長」這件事，壓縮是客戶端（或 API 服務）自己決定的策略，所以每家都不同。上面模擬器的「壓縮方式」可以切換三種做法，看 context 怎麼變。</p>
     </div>
-    <div class="log-wrap modes">
+    <details class="more"><summary>工程細節：五種工具的壓縮做法比較</summary><div class="more-body">
+<div class="log-wrap modes">
       <table>
         <thead><tr><th scope="col">工具</th><th scope="col">什麼時候壓</th><th scope="col">怎麼壓</th><th scope="col">壓完留下什麼</th></tr></thead>
         <tbody>
@@ -294,6 +297,7 @@
         </tbody>
       </table>
     </div>
+</div></details>
     <div class="grid3 mt">
       <article class="card"><span class="tag">共同的代價</span><h3>cache 會失效一次</h3><p>壓縮等於改寫了對話歷史，下一次請求只有最前面的 tools、system 還能命中 cache，後面要重新寫入。所以壓縮不是愈常做愈好。</p></article>
       <article class="card"><span class="tag">取捨</span><h3>早壓還是晚壓？</h3><p>早壓（像 Gemini CLI）每次送得少、比較省，但摘要次數多，細節流失也多；晚壓（像 OpenCode）保留最多原文，但快滿時模型的注意力已經被稀釋。</p></article>
@@ -353,7 +357,8 @@
         <li><div><span class="who">MODEL → USER</span><b>stop_reason: end_turn</b><span>最後回覆：「修好了，改了兩個地方，測試都過。」</span></div></li>
       </ol>
       <div class="col">
-        <div><div class="codehead"><span>agent loop（虛擬碼）</span><span>python</span></div>
+        <details class="more"><summary>工程細節：迴圈的虛擬碼</summary><div class="more-body">
+<div><div class="codehead"><span>agent loop（虛擬碼）</span><span>python</span></div>
 <pre><code>messages.append(user(<span class="s">"修好登入的 bug"</span>))
 <span class="k">while</span> <span class="y">True</span>:
     resp = model.create(system, tools, messages)  <span class="c"># 整包重送</span>
@@ -362,6 +367,7 @@
         <span class="k">break</span>                                     <span class="c"># 做完了</span>
     result = run_tool_locally(resp.tool_use)      <span class="c"># 客戶端執行</span>
     messages.append(tool_result(result))</code></pre></div>
+</div></details>
         <div class="card">
           <span class="tag">這幾年很多進化，都發生在這個迴圈上</span>
           <ul class="kv">
@@ -475,7 +481,8 @@
       <article class="card"><span class="tag">2025–2026 · 工具內建</span><h3>Subagents，然後是 Projects</h3><p>Claude Code 先加入 subagents：主 agent 把子任務交給一個有獨立 context 的小 agent，做完只回傳結果。2026 年 9 月 17 日推出的 Projects（beta）更進一步：直接由一個 Claude 管理好幾個並行的完整 session。</p></article>
     </div>
 
-    <div class="grid2 mt">
+    <details class="more"><summary>工程細節：Projects 怎麼運作、三種做法比較</summary><div class="more-body">
+<div class="grid2 mt">
       <article class="card auto-card">
         <span class="tag">Projects 怎麼運作</span>
         <h3>一個總機，加上很多條各做各的 thread</h3>
@@ -508,6 +515,7 @@
         </tbody>
       </table>
     </div>
+</div></details>
 
     <div class="grid3 mt">
       <article class="card"><span class="tag">要注意</span><h3>額度燒得比較快</h3><p>每條 thread 都是完整的 session，協調者本身也在用 token，所以同樣的方案額度會用得比較快。每天新開的 thread 數量也有上限。</p></article>
@@ -526,7 +534,8 @@
       <h2>「愈用愈順手」靠的是本地的文字檔</h2>
       <p class="lead">跟 AI 磨合出來的東西，最後都落在你電腦上的幾個檔案裡。下次開工時被讀進 context，所以它看起來「學會了」。</p>
     </div>
-    <div class="grid2">
+    <details class="more"><summary>工程細節：這些檔案放在哪、skill 檔長什麼樣子</summary><div class="more-body">
+<div class="grid2">
       <div class="col">
         <div><div class="codehead"><span>你的專案與家目錄</span><span>tree</span></div>
 <pre class="tree"><code>my-project/
@@ -552,6 +561,7 @@
 4. <span class="p">不要列出內部重構</span>   <span class="c"># ← 上週聊完補上的</span></code></pre></div>
       </div>
     </div>
+</div></details>
     <div class="grid3 mt">
       <article class="card">
         <span class="tag">漸進載入</span>
@@ -560,7 +570,7 @@
       </article>
       <article class="card">
         <span class="tag">怎麼「精進」</span>
-        <h3>聊天 → 發現問題 → 改檔案</h3>
+        <h3>聊天時發現問題，就改檔案</h3>
         <p>輸出列了不該列的東西，你說「以後不要列內部重構」。把這句寫回 SKILL.md，下次任何對話載入它，都會照新規則做。</p>
       </article>
       <article class="card hl">
@@ -792,6 +802,10 @@
 
   reset(); render("按「下一步」開始。我們會模擬你在 Claude Code 裡修一個登入頁的 bug，總共 8 步。");
 })();
+</script>
+<script>
+/* engineering details start collapsed on phones and open on wide screens */
+if (matchMedia("(min-width: 900px)").matches) document.querySelectorAll("details.more").forEach(function (d) { d.open = true; });
 </script>
 </body>
 </html>

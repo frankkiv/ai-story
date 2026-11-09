@@ -423,3 +423,9 @@ body:has(.tl-now) .totop { bottom: calc(3.75rem + env(safe-area-inset-bottom, 0p
 .next .card:hover { border-color: var(--text); }
 .next a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .next a:only-child { grid-column: 1 / -1; }
+
+/* collapsible engineering details (tech.html) */
+details.more { min-width: 0; margin-top: 1rem; }
+details.more > summary { color: var(--muted); font-size: .95rem; }
+details.more[open] > summary { color: var(--text); }
+details.more > .more-body { padding-bottom: 1.1rem; display: grid; gap: 1rem; min-width: 0; }
