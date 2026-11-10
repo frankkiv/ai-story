@@ -177,7 +177,7 @@
       <ol class="anatomy">
         <li style="--c: var(--l-tools)"><div><b>Tool definitions</b><span>Each tool's name, description and JSON schema. Tools from MCP servers are here too; with many tools this can be tens of thousands of tokens. Anthropic's cache prefix starts from this layer.</span></div></li>
         <li style="--c: var(--l-sys)"><div><b>System prompt</b><span>Who the model is, the rules, environment info. The same every round.</span></div></li>
-        <li style="--c: var(--l-skills)"><div><b>List of skills</b><span>Inside the system prompt: just each skill's name and a one-line description. The full text loads only when needed.</span></div></li>
+        <li style="--c: var(--l-skills)"><div><b>List of skills</b><span>Sent after the system rules: just each skill's name and a one-line description. The full text loads only when needed. Exactly where Claude Code puts it has changed between versions.</span></div></li>
         <li style="--c: var(--l-mem)"><div><b>Memory file</b><span>CLAUDE.md, project conventions, your preferences. Claude Code reads it at the start and puts it in the first message of the conversation.</span></div></li>
         <li style="--c: var(--l-hist)"><div><b>Conversation history</b><span>Every earlier user and assistant message, every tool call and result, attached as is.</span></div></li>
         <li style="--c: var(--l-new)"><div><b>This round's new message</b><span>What you just typed. Often it's the only new thing in the whole bundle.</span></div></li>
@@ -191,7 +191,7 @@
     { <span class="k">"name"</span>: <span class="s">"Read"</span>, <span class="k">"input_schema"</span>: { <span class="y">…</span> } },
     { <span class="k">"name"</span>: <span class="s">"Bash"</span>, <span class="k">"input_schema"</span>: { <span class="y">…</span> } }
   ],
-  <span class="k">"system"</span>: [ <span class="c">// rules + list of skills</span>
+  <span class="k">"system"</span>: [ <span class="c">// rules, environment info</span>
     { <span class="k">"type"</span>: <span class="s">"text"</span>, <span class="k">"text"</span>: <span class="s">"You are Claude Code…"</span>,
       <span class="k">"cache_control"</span>: { <span class="k">"type"</span>: <span class="s">"ephemeral"</span> } }
   ],
@@ -280,12 +280,12 @@
         </label>
       </div>
     </div>
-    <p class="note measure">Numbers are illustrative. Cost units: regular input = 1, cache read = 0.1, cache write = 1.25, output = 5, proportional to Anthropic's published 5-minute cache pricing.</p>
+    <p class="note measure">Numbers are illustrative. Cost units: regular input = 1, cache read = 0.1, cache write = 1.25, output = 5, proportional to Anthropic's published 5-minute cache pricing. The simulator uses the API default of 5 minutes; a Claude Code subscription within plan usage gets 1 hour, so you would have to be away longer for it to expire.</p>
     <div class="prose measure mt" id="compact">
       <h3>How does each tool compact? It's different everywhere</h3>
       <p>The model doesn't deal with "the conversation is too long". Compaction is a strategy the client (or API service) decides on, so every vendor does it differently. Switch "Compaction style" in the simulator above to see how three approaches change the context.</p>
     </div>
-    <details class="more"><summary>Engineering detail: how five tools compact, compared</summary><div class="more-body">
+    <details class="more"><summary>Engineering detail: how different tools compact, compared</summary><div class="more-body">
 <div class="log-wrap modes">
       <table>
         <thead><tr><th scope="col">Tool</th><th scope="col">When it compacts</th><th scope="col">How</th><th scope="col">What's left afterwards</th></tr></thead>
@@ -295,6 +295,7 @@
           <tr><td>Gemini CLI</td><td>By default at about half full (adjustable); manually with <code>/compress</code></td><td>Writes a summary, then has the model check it once for omissions</td><td>The most recent ~30% of the conversation verbatim, plus a summary of the older part</td></tr>
           <tr><td>OpenCode</td><td>Only at about 96%–99%</td><td>First prunes old tool output, then summarizes if still needed</td><td>The last ~40,000 tokens of tool output and your last two turns</td></tr>
           <tr><td>Anthropic API context editing</td><td>A threshold the developer sets</td><td>The server automatically clears old tool results, with no summary</td><td>The conversation's structure is unchanged; old tool results just become "cleared"</td></tr>
+          <tr><td>Anthropic API compaction (beta)</td><td>The developer asks for it, or sets a token threshold that triggers it</td><td>On the server, Claude writes the older turns up as a summary</td><td>One summary, plus the conversation after it</td></tr>
         </tbody>
       </table>
     </div>
@@ -331,7 +332,7 @@
       <article class="card">
         <span class="tag">Lifetime and price</span>
         <h3>5 minutes by default, reads at about 10%</h3>
-        <p>Anthropic's cache lives 5 minutes by default, resetting on each hit, with a 1-hour option. Reads cost about 10% of the regular input price; writes cost a bit more. Step away too long and the first round has to recompute everything.</p>
+        <p>The Anthropic API's cache lives 5 minutes by default, resetting on each hit, with a 1-hour option. Reads cost about 10% of the regular input price; writes cost a bit more. Step away too long and the first round has to recompute everything. When Claude Code runs on a subscription within the plan's included usage, the main conversation uses 1 hour by default.</p>
       </article>
     </div>
     <div class="prose measure mt">
@@ -491,7 +492,7 @@
           <li><b>You only talk to the project chat</b><span>The Claude there is the coordinator. It decides whether to answer a message itself or start a new thread to do the work.</span></li>
           <li><b>Each thread is its own session</b><span>With its own context window and cloud container, it clones the project's repos, works on its own branch, and opens a PR when needed. Five things can run at once without their contexts crowding each other.</span></li>
           <li><b>Report back when done</b><span>A thread replies to you in its own thread. The coordinator sees every thread's replies, and when you add a follow-up, it forwards your exact words rather than paraphrasing them.</span></li>
-          <li><b>Back to your computer when needed</b><span>A thread can run on your computer through Remote Control, using your local tools and sign-ins. That's how this website was pushed to GitHub.</span></li>
+          <li><b>Back to your computer when needed</b><span>A thread can run on your computer through Remote Control, using your local tools and sign-ins (the computer has to stay on). At the 9/17 launch Anthropic said this was "coming very soon"; by late September the docs listed it as available. That's how this website was pushed to GitHub.</span></li>
         </ol>
       </article>
       <article class="card auto-card">
@@ -519,7 +520,7 @@
 </div></details>
 
     <div class="grid3 mt">
-      <article class="card"><span class="tag">Watch out</span><h3>It burns through usage faster</h3><p>Every thread is a full session, and the coordinator uses tokens too, so the same plan's limits get used up faster. There's also a daily cap on new threads.</p></article>
+      <article class="card"><span class="tag">Watch out</span><h3>It burns through usage faster</h3><p>Every thread is a full session, and the coordinator uses tokens too, so the same plan's limits get used up faster. New threads are also capped per day: the official docs say 200 across all your projects.</p></article>
       <article class="card"><span class="tag">Still in beta</span><h3>Things may change at any time</h3><p>Opened to some Pro and Max users in September 2026, expanding gradually. Team and Enterprise plans and the terminal CLI can't use it yet.</p></article>
       <article class="card"><span class="tag">Same as BMAD</span><h3>Documentation is still key</h3><p>The AI that picks up the work doesn't remember the past; it relies on CLAUDE.md, spec docs and project memory in the repo. That's why this website's repo has docs/SPEC.md.</p></article>
     </div>
@@ -595,7 +596,7 @@
 <section class="s gutter">
   <div class="frame">
     <div class="next">
-      <a href="bench.html"><article class="card"><span class="tag">PART 3 · Model benchmarks →</span><h3>Now that you know how it works, who is strongest?</h3><p>How to read the scores, which ones not to trust, 14 leading models in one table, and how the Chinese line caught up.</p></article></a>
+      <a href="bench.html"><article class="card"><span class="tag">PART 3 · Model benchmarks →</span><h3>Now that you know how it works, who is strongest?</h3><p>How to read the scores, which ones not to trust, 15 leading models in one table, and how the Chinese line caught up.</p></article></a>
     </div>
   </div>
 </section>
@@ -694,7 +695,7 @@
     request([blk("skills", "full skill: release-notes/SKILL.md", 1800, "tool", "📄 Full SKILL.md (1,800 tokens)")], blk("out", "assistant: output following the skill", 600, "assistant", "(output following the skill's steps)"));
     return "Normally the context holds only the skill's name and description. Only when it's needed does the AI read the whole SKILL.md. That's how AI \"learns\" a new workflow: by reading a text file, not by changing the model.";
   }
-  function wait() { S.clock += 6; return "You stepped away for 6 minutes. Look on the right: the server keeps the cache for only 5 minutes, and it has now expired. The model and the history on your computer are still there; only the cache is gone. Ask something next and see what happens."; }
+  function wait() { S.clock += 6; return "You stepped away for 6 minutes. Look on the right: the server keeps the cache for only 5 minutes (the API default; a Claude Code subscription gets 1 hour), and it has now expired. The model and the history on your computer are still there; only the cache is gone. Ask something next and see what happens."; }
   var CMODE = "cc";
   function relabel(b) { return blk("hist", b.label, b.t, b.role, b.chat); }
   function compact() {

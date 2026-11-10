@@ -353,7 +353,7 @@
                 <div class="zl"><b>Package</b>POST /v1/messages</div>
                 <ol class="bars">
                   <li class="bar" style="--c:var(--l-tools)">tools: tool manuals (incl. web search)<em class="badge">hit</em></li>
-                  <li class="bar" style="--c:var(--l-sys)">system: rules, skills, today's date<em class="badge">hit</em></li>
+                  <li class="bar" style="--c:var(--l-sys)">system: rules, today's date<em class="badge">hit</em></li>
                   <li class="bar" style="--c:var(--l-mem)">memory: CLAUDE.md<em class="badge">hit</em></li>
                   <li class="bar" style="--c:var(--l-hist)">history<em class="badge">hit</em></li>
                   <li class="bar" style="--c:var(--l-new)">new: What is AI, really?<em class="badge new">new</em></li>
@@ -393,19 +393,19 @@
                 <div class="chips tk"><span class="chip" style="--c:var(--l-out)">3923</span><span class="chip" style="--c:var(--l-out)">374</span><span class="chip" style="--c:var(--l-out)">15592</span><span class="chip" style="--c:var(--l-out)">11</span><span class="chip" style="--c:var(--l-out)">2216</span><span class="chip" style="--c:var(--l-out)">30</span></div>
               </div>
               <div class="box hotable" id="cache">
-                <div class="zl"><b>Prompt cache</b>lives about 5 minutes</div>
+                <div class="zl"><b>Prompt cache</b>lives 5 minutes to 1 hour</div>
                 <div class="chips">
                   <span class="chip" style="--c:var(--l-skills)">Same prefix as last time: reuse</span>
                   <span class="chip" style="--c:var(--l-new)">New part: compute now</span>
                 </div>
               </div>
               <div class="box hotable" id="kv">
-                <div class="zl"><b>Read the package</b>model on GPUs · prefill</div>
+                <div class="zl"><b>Read the package</b>model on GPUs · reading phase</div>
                 <div class="chips kvs"><span class="chip" style="--c:var(--l-tools)">tools</span><span class="chip" style="--c:var(--l-sys)">system</span><span class="chip" style="--c:var(--l-mem)">memory</span><span class="chip" style="--c:var(--l-hist)">history</span><span class="chip" style="--c:var(--l-new)">new</span></div>
                 <div class="kvn">Each token leaves a note: <b>KV cache</b></div>
               </div>
               <div class="box hotable" id="layers">
-                <div class="zl"><b>Layer by layer</b>one model, dozens of layers (illustrative)</div>
+                <div class="zl"><b>Layer by layer</b>one model, dozens to a hundred-plus layers (illustrative)</div>
                 <ol class="lys">
                   <li style="--i:3">Layer N: ready to pick the next word</li>
                   <li class="dots">⋮</li>
@@ -502,7 +502,7 @@
         <div class="card">
           <span class="eyebrow">Step 3</span>
           <h3>Packed into one package, in a fixed order</h3>
-          <p>The order is tool descriptions (web search is one of them), system rules (with the skills list and today's date), memory, conversation history, and only then the line you just typed. The whole package is written as one JSON document, ready for the API's <code>/v1/messages</code>. Things that rarely change go first; the cache in the next chapter relies on that order.</p>
+          <p>The order is tool descriptions (web search is one of them), system rules and today's date, the skills list (exactly where it goes varies by version), memory, conversation history, and only then the line you just typed. The whole package is written as one JSON document, ready for the API's <code>/v1/messages</code>. Things that rarely change go first; the cache in the next chapter relies on that order.</p>
         </div>
       </section>
 
@@ -543,7 +543,7 @@
         <div class="card">
           <span class="eyebrow">Step 8</span>
           <h3>Whatever matches last time is reused</h3>
-          <p>The server compares this package with the last one, from the start, character by character. For the identical prefix it reuses the stored computation (the prompt cache); only the new part is computed now. By default the cache lives about 5 minutes; leave it too long and the whole package is computed again.</p>
+          <p>The server compares this package with the last one, from the start, character by character. For the identical prefix it reuses the stored computation (the prompt cache); only the new part is computed now. By default the API cache lives 5 minutes (1 hour for a Claude Code subscription within plan usage); leave it too long and the whole package is computed again.</p>
           <p class="elder"><b>In plain words</b><span>A regular who orders again within five minutes doesn't make the kitchen prep from scratch. What it remembers is the prepped ingredients; the chef's skill hasn't changed.</span></p>
         </div>
       </section>
@@ -551,7 +551,7 @@
         <div class="card">
           <span class="eyebrow">Step 9</span>
           <h3>The model reads the whole package first</h3>
-          <p>The package goes into the model running on GPUs (chips that are good at doing huge numbers of calculations at once). The model first reads every token in one pass; this is called prefill. Each token it reads leaves behind an intermediate result called the KV cache. Every time a new word is written, the model looks back at these notes instead of rereading everything. The prompt cache in the last step stores exactly this kind of note.</p>
+          <p>The package goes into the model running on GPUs (chips that are good at doing huge numbers of calculations at once). The model first reads every token in one pass; this is called the reading phase (prompt processing). Each token it reads leaves behind an intermediate result called the KV cache. Every time a new word is written, the model looks back at these notes instead of rereading everything. The prompt cache in the last step stores exactly this kind of note.</p>
           <p class="elder"><b>In plain words</b><span>Before an exam you read the questions and the reference material once and jot the key points on a card; while answering you just check the card.</span></p>
         </div>
       </section>
@@ -559,7 +559,7 @@
         <div class="card">
           <span class="eyebrow">Step 10</span>
           <h3>One model, worked through layer by layer</h3>
-          <p>The answer is not pieced together by several models. It is one model with dozens of identical layers stacked inside it (most companies don't publish the exact number; the picture is illustrative).</p>
+          <p>The answer is not pieced together by several models. It is one model with dozens to over a hundred identical layers stacked inside it (most companies don't publish the exact number; the picture is illustrative).</p>
           <p>Each layer looks back at every token before it, works out which ones matter most right now (this is called attention), and passes its understanding up to the next layer. Higher layers are generally thought to handle more abstract things, like "this asks for a definition". The labels on each layer in the picture are only to help you imagine it; you can't actually read a layer like that.</p>
           <p class="elder"><b>In plain words</b><span>Like a memo signed off up a chain of managers: each one adds a bit of judgment, and the last one makes the call.</span></p>
         </div>
@@ -696,9 +696,9 @@
     {"ch": 2, "name": "Across the ocean", "sub": "The package <em>crosses the ocean</em>", "note": "About 10,000 km one way, 0.1–0.2 s round trip", "you": "Still “Thinking…”", "wait": true, "hot": ["#pipe"], "cam": ["#pipe", "#srv-ico"], "tour": ["#wp1", "#wp2", "#wp3", "#wp4", "#srv-ico"], "beam": ["pipe"], "lit": "z-srv", "kind": "lock", "st": F, "term": ["Data center", "a remote building full of servers and GPUs"]},
     {"ch": 2, "name": "Front desk", "sub": "The front desk <em>checks who you are</em>", "note": "Account and quota, then a free GPU machine", "you": "Still “Thinking…”", "wait": true, "hot": ["#front"], "pk": "#front", "cam": ["#front", "#tok"], "kind": "ctx", "st": F, "term": ["API", "the agreed intake window between programs"]},
     {"ch": 2, "name": "Tokenize", "sub": "Text becomes <em>tokens</em>", "note": "The split and IDs are illustrative", "you": "Still “Thinking…”", "wait": true, "hot": ["#tok"], "pk": "#tok", "kind": "ctx", "st": F + " tokens", "term": ["token", "the smallest unit of text a model handles"]},
-    {"ch": 2, "name": "Match the cache", "sub": "Matching parts <em>come from the cache</em>", "note": "The cache lasts about 5 minutes", "you": "Still “Thinking…”", "wait": true, "hot": ["#cache", "#pack"], "pk": "#cache", "kind": "ctx", "st": F + " tokens hit", "term": ["prompt cache", "the server keeps a read prefix for about 5 minutes"]},
+    {"ch": 2, "name": "Match the cache", "sub": "Matching parts <em>come from the cache</em>", "note": "The cache lasts 5 minutes to 1 hour", "you": "Still “Thinking…”", "wait": true, "hot": ["#cache", "#pack"], "pk": "#cache", "kind": "ctx", "st": F + " tokens hit", "term": ["prompt cache", "the server keeps a read prefix for 5 minutes to 1 hour"]},
     {"ch": 2, "name": "Read it all", "sub": "The model <em>reads the whole package</em>", "note": "What each token leaves behind is the KV cache", "you": "Still “Thinking…”", "wait": true, "hot": ["#kv"], "pk": "#kv", "kind": "ctx", "st": F + " tokens kv-on", "term": ["KV cache", "notes left by every token, checked again while writing"]},
-    {"ch": 2, "name": "Layer by layer", "sub": "One model, <em>layer by layer</em>", "note": "Dozens of layers in one model, not several models", "you": "Still “Thinking…”", "wait": true, "hot": ["#layers"], "st": F + " tokens kv-on layers", "term": ["attention", "each layer looks back and picks what matters most"]},
+    {"ch": 2, "name": "Layer by layer", "sub": "One model, <em>layer by layer</em>", "note": "Dozens to 100+ layers in one model, not several models", "you": "Still “Thinking…”", "wait": true, "hot": ["#layers"], "st": F + " tokens kv-on layers", "term": ["attention", "each layer looks back and picks what matters most"]},
     {"ch": 2, "name": "Next word", "sub": "It <em>guesses the next word</em>, again and again", "note": "Odds are illustrative; the weights never change", "you": "Still “Thinking…”, almost there", "wait": true, "hot": ["#cand"], "st": F + " tokens kv-on cand gen-on", "term": ["Inference", "fixed weights work out one token at a time"]},
     {"ch": 3, "name": "Search or not", "sub": "Search the web? <em>The model decides</em>", "note": "Training covers this; today's news would need a search", "you": "Still “Thinking…”, almost there", "wait": true, "hot": ["#web"], "cam": ["#cand", "#web"], "st": F + " tokens kv-on cand gen-on", "term": ["Tool call", "the model asks to use a tool"]},
     {"ch": 3, "name": "If it searches", "sub": "If it searches, <em>results join the package</em>", "note": "Not needed here; this is the extra loop for news", "you": "For news you'd see “Searching…”", "wait": true, "hot": ["#web", "#kv"], "pk": "#kv", "kind": "search", "st": F + " tokens kv-on cand gen-on search", "term": ["Web search tool", "the server searches and adds excerpts to context"]},

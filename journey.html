@@ -351,7 +351,7 @@
                 <div class="zl"><b>打包</b>POST /v1/messages</div>
                 <ol class="bars">
                   <li class="bar" style="--c:var(--l-tools)">tools：工具說明書（含網路搜尋）<em class="badge">命中</em></li>
-                  <li class="bar" style="--c:var(--l-sys)">system：規則、skills 清單、今天日期<em class="badge">命中</em></li>
+                  <li class="bar" style="--c:var(--l-sys)">system：規則、今天日期<em class="badge">命中</em></li>
                   <li class="bar" style="--c:var(--l-mem)">記憶：CLAUDE.md<em class="badge">命中</em></li>
                   <li class="bar" style="--c:var(--l-hist)">對話紀錄<em class="badge">命中</em></li>
                   <li class="bar" style="--c:var(--l-new)">新訊息：AI 究竟是什麼？<em class="badge new">新算</em></li>
@@ -391,19 +391,19 @@
                 <div class="chips tk"><span class="chip" style="--c:var(--l-out)">15836</span><span class="chip" style="--c:var(--l-out)">40217</span><span class="chip" style="--c:var(--l-out)">3221</span><span class="chip" style="--c:var(--l-out)">9047</span><span class="chip" style="--c:var(--l-out)">30</span></div>
               </div>
               <div class="box hotable" id="cache">
-                <div class="zl"><b>Prompt cache</b>存活約 5 分鐘</div>
+                <div class="zl"><b>Prompt cache</b>存活 5 分鐘到 1 小時</div>
                 <div class="chips">
                   <span class="chip" style="--c:var(--l-skills)">前綴跟上次一樣：直接用</span>
                   <span class="chip" style="--c:var(--l-new)">新的部分：現算</span>
                 </div>
               </div>
               <div class="box hotable" id="kv">
-                <div class="zl"><b>讀整包</b>GPU 上的模型 · prefill</div>
+                <div class="zl"><b>讀整包</b>GPU 上的模型 · 讀入階段</div>
                 <div class="chips kvs"><span class="chip" style="--c:var(--l-tools)">tools</span><span class="chip" style="--c:var(--l-sys)">system</span><span class="chip" style="--c:var(--l-mem)">記憶</span><span class="chip" style="--c:var(--l-hist)">紀錄</span><span class="chip" style="--c:var(--l-new)">新訊息</span></div>
                 <div class="kvn">每個 token 留一份筆記：<b>KV cache</b></div>
               </div>
               <div class="box hotable" id="layers">
-                <div class="zl"><b>一層一層算</b>同一個模型，數十層（示意）</div>
+                <div class="zl"><b>一層一層算</b>同一個模型，數十到上百層（示意）</div>
                 <ol class="lys">
                   <li style="--i:3">第 N 層：準備挑下一個字</li>
                   <li class="dots">⋮</li>
@@ -500,7 +500,7 @@
         <div class="card">
           <span class="eyebrow">第 3 步</span>
           <h3>照固定順序，打包成一整包</h3>
-          <p>順序是工具說明（其中一項是網路搜尋）、系統規則（含 skills 清單和今天的日期）、記憶、對話紀錄，最後才是你剛打的那句。整包寫成一份 JSON，準備送到 API 的 <code>/v1/messages</code>。不常變的放前面，下一章的快取會用到這個順序。</p>
+          <p>順序是工具說明（其中一項是網路搜尋）、系統規則和今天的日期、skills 清單（實際放在哪一段隨版本不同）、記憶、對話紀錄，最後才是你剛打的那句。整包寫成一份 JSON，準備送到 API 的 <code>/v1/messages</code>。不常變的放前面，下一章的快取會用到這個順序。</p>
         </div>
       </section>
 
@@ -541,7 +541,7 @@
         <div class="card">
           <span class="eyebrow">第 8 步</span>
           <h3>跟上次一樣的部分，直接用存好的</h3>
-          <p>伺服器會從頭比對這一包跟上一輪送來的是否一字不差。相同的前綴，直接拿暫存的計算結果（prompt cache），只有新的部分要現算。快取預設存活約 5 分鐘，太久沒用就要整包重算。</p>
+          <p>伺服器會從頭比對這一包跟上一輪送來的是否一字不差。相同的前綴，直接拿暫存的計算結果（prompt cache），只有新的部分要現算。API 的快取預設存活 5 分鐘（Claude Code 訂閱方案在額度內是 1 小時），太久沒用就要整包重算。</p>
           <p class="elder"><b>白話說</b><span>熟客五分鐘內再點，廚房不用重新備料。記得的是備好的料，廚師的手藝沒變。</span></p>
         </div>
       </section>
@@ -549,7 +549,7 @@
         <div class="card">
           <span class="eyebrow">第 9 步</span>
           <h3>模型先把整包讀一遍</h3>
-          <p>整包被送進 GPU（擅長同時做大量計算的晶片）上的模型。模型先把所有 token 一口氣讀過一遍，這叫 prefill。每個 token 讀完都會留下一份中間結果，叫 KV cache；之後每生出一個新字，都要回頭查這些筆記，不必從頭重讀。上一步的 prompt cache，存的就是這種筆記。</p>
+          <p>整包被送進 GPU（擅長同時做大量計算的晶片）上的模型。模型先把所有 token 一口氣讀過一遍，這叫讀入階段（prompt processing）。每個 token 讀完都會留下一份中間結果，叫 KV cache；之後每生出一個新字，都要回頭查這些筆記，不必從頭重讀。上一步的 prompt cache，存的就是這種筆記。</p>
           <p class="elder"><b>白話說</b><span>考試前先把題目和參考資料全看一遍，重點抄在便條上，作答時看便條就好。</span></p>
         </div>
       </section>
@@ -557,7 +557,7 @@
         <div class="card">
           <span class="eyebrow">第 10 步</span>
           <h3>同一個模型，一層一層往上算</h3>
-          <p>回答不是好幾個模型合作拼出來的。它是一個模型，裡面疊了數十層結構相同的計算層（各家實際層數多半沒公開，圖上是示意）。</p>
+          <p>回答不是好幾個模型合作拼出來的。它是一個模型，裡面疊了數十到上百層結構相同的計算層（各家實際層數多半沒公開，圖上是示意）。</p>
           <p>每一層都會回頭看前文所有 token，判斷哪些跟現在最相關（這叫 attention），再把理解往上一層傳。一般認為越上面的層處理越抽象的東西，像是「這句在問定義」。圖上每層寫的內容只是幫助想像，實際上沒辦法這樣一層一層讀出來。</p>
           <p class="elder"><b>白話說</b><span>像公文一層層往上簽，每一關都加一點判斷，最後一關才拍板。</span></p>
         </div>
@@ -694,9 +694,9 @@
     {"ch": 2, "name": "跨海到機房", "sub": "整包<em>跨海</em>到遠端機房", "note": "單程約 1 萬公里，來回約 0.1–0.2 秒", "you": "還在「思考中…」", "wait": true, "hot": ["#pipe"], "cam": ["#pipe", "#srv-ico"], "tour": ["#wp1", "#wp2", "#wp3", "#wp4", "#srv-ico"], "beam": ["pipe"], "lit": "z-srv", "kind": "lock", "st": F, "term": ["資料中心", "放滿伺服器和 GPU 的遠端機房"]},
     {"ch": 2, "name": "前台驗證", "sub": "前台先<em>驗明正身</em>", "note": "確認帳號和額度，再分一台 GPU 機器", "you": "還在「思考中…」", "wait": true, "hot": ["#front"], "pk": "#front", "cam": ["#front", "#tok"], "kind": "ctx", "st": F, "term": ["API", "程式之間講好的收件窗口"]},
     {"ch": 2, "name": "切成 token", "sub": "文字切成 <em>token</em>", "note": "切法與編號為示意", "you": "還在「思考中…」", "wait": true, "hot": ["#tok"], "pk": "#tok", "kind": "ctx", "st": F + " tokens", "term": ["token", "模型處理文字的最小單位"]},
-    {"ch": 2, "name": "比對快取", "sub": "一樣的部分<em>直接用快取</em>", "note": "快取約存 5 分鐘，太久要整包重算", "you": "還在「思考中…」", "wait": true, "hot": ["#cache", "#pack"], "pk": "#cache", "kind": "ctx", "st": F + " tokens hit", "term": ["prompt cache", "伺服器暫存讀過的前綴，約 5 分鐘"]},
+    {"ch": 2, "name": "比對快取", "sub": "一樣的部分<em>直接用快取</em>", "note": "快取存 5 分鐘到 1 小時，太久要整包重算", "you": "還在「思考中…」", "wait": true, "hot": ["#cache", "#pack"], "pk": "#cache", "kind": "ctx", "st": F + " tokens hit", "term": ["prompt cache", "伺服器暫存讀過的前綴，5 分鐘到 1 小時"]},
     {"ch": 2, "name": "讀整包", "sub": "模型先把<em>整包讀一遍</em>", "note": "每個 token 留下的中間結果，就是 KV cache", "you": "還在「思考中…」", "wait": true, "hot": ["#kv"], "pk": "#kv", "kind": "ctx", "st": F + " tokens kv-on", "term": ["KV cache", "讀過每個 token 留下的筆記，生成時一直回頭查"]},
-    {"ch": 2, "name": "一層一層算", "sub": "同一個模型，<em>一層一層</em>往上算", "note": "數十層疊在一起，不是好幾個模型拼起來", "you": "還在「思考中…」", "wait": true, "hot": ["#layers"], "st": F + " tokens kv-on layers", "term": ["attention", "每一層回頭看前文，挑出最相關的部分"]},
+    {"ch": 2, "name": "一層一層算", "sub": "同一個模型，<em>一層一層</em>往上算", "note": "數十到上百層疊在一起，不是好幾個模型拼起來", "you": "還在「思考中…」", "wait": true, "hot": ["#layers"], "st": F + " tokens kv-on layers", "term": ["attention", "每一層回頭看前文，挑出最相關的部分"]},
     {"ch": 2, "name": "猜下一個字", "sub": "最後<em>猜下一個字</em>，再接著猜", "note": "機率為示意；模型的權重全程不會改變", "you": "還在「思考中…」，快好了", "wait": true, "hot": ["#cand"], "kind": "ctx", "st": F + " tokens kv-on cand gen-on", "term": ["推論", "用固定的權重，一次算出一個 token"]},
     {"ch": 3, "name": "要不要上網查", "sub": "要不要<em>上網查</em>？模型自己判斷", "note": "這題學過的就夠；問今天的新聞才需要查", "you": "還在「思考中…」，快好了", "wait": true, "hot": ["#web"], "cam": ["#cand", "#web"], "st": F + " tokens kv-on cand gen-on", "term": ["工具呼叫", "模型輸出「我要用某個工具」的請求"]},
     {"ch": 3, "name": "如果要查", "sub": "要查的話，<em>搜尋結果加進整包</em>", "note": "這題用不到；這是問新聞時多走的一圈", "you": "問新聞時，會顯示「正在搜尋…」", "wait": true, "hot": ["#web", "#kv"], "pk": "#kv", "kind": "search", "st": F + " tokens kv-on cand gen-on search", "term": ["網路搜尋工具", "伺服器代為搜尋，網頁摘要放回 context"]},

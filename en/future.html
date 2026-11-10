@@ -106,7 +106,7 @@
       </div>
       <div class="prose">
         <ul class="facts">
-          <li style="--c: var(--l-skills)"><div><b>Data center electricity grew 17% in 2025</b><span>AI-focused data centers grew 50%, while total global electricity use grew only about 3% over the same period.</span></div></li>
+          <li style="--c: var(--l-skills)"><div><b>Data center electricity grew 17% in 2025</b><span>Electricity use at AI-focused data centers grew even faster, by 50%.</span></div></li>
           <li style="--c: var(--l-skills)"><div><b>Racks are getting "hotter"</b><span>The IEA notes the power density of AI servers rose about 11× from 2020 to 2025. Fans can't keep up, so liquid cooling has become standard.</span></div></li>
           <li style="--c: var(--accent)"><div><b>But energy per task is falling fast</b><span>The IEA's 2026 update says the energy to complete the same AI task drops by at least an order of magnitude each year. Total use keeps rising because users and tasks grow even faster.</span></div></li>
           <li style="--c: var(--l-tools)"><div><b>Tech companies are sourcing their own power</b><span>Microsoft signed with Constellation to restart Three Mile Island Unit 1 (835 MW); Google with Kairos and Amazon with X-energy invest in small modular reactors (SMRs); Meta announced nuclear deals of up to 6.6 GW.</span></div></li>
@@ -172,7 +172,7 @@
       <div class="col">
         <div><div class="codehead"><span>How KV cache size is calculated</span><span>formula</span></div>
         <p class="formula">per token = 2 (K,V) × layers × KV heads × head dim × bytes per value</p></div>
-        <p style="color:var(--muted);font-size:.95rem">Taking the openly documented Llama 3 70B as an example (80 layers, 8 KV heads, dimension 128, BF16 at 2 bytes per value), each token takes about 0.33 MB (327,680 bytes, counted in decimal units to match the GB in the calculator below).</p>
+        <p style="color:var(--muted);font-size:.95rem">Taking the openly documented Llama 3.1 70B as an example (80 layers, 8 KV heads, dimension 128, BF16 at 2 bytes per value), each token takes about 0.33 MB (327,680 bytes, counted in decimal units to match the GB in the calculator below). This model actually supports up to 128K; taking the calculator to 1M only illustrates how much memory a longer context would need.</p>
       </div>
     </div>
 
@@ -270,7 +270,7 @@
   }
   gw.addEventListener("input", power); power();
 
-  /* KV cache: Llama 3 70B — 80 layers, 8 KV heads, head dim 128, bf16 */
+  /* KV cache: Llama 3.1 70B — 80 layers, 8 KV heads, head dim 128, bf16 */
   var PER_TOKEN = 2 * 80 * 8 * 128 * 2; /* bytes */
   var CTX = [8192, 32768, 65536, 131072, 262144, 1048576], CTXL = ["8K", "32K", "64K", "128K", "256K", "1M"];
   var ctx = document.getElementById("ctx"), users = document.getElementById("users");

@@ -89,7 +89,7 @@
     <div class="hero-copy measure">
       <span class="pill">PART 4 · <b>追趕與蒸餾</b></span>
       <h1>中國 AI 怎麼追上來，<br><em>美國廠商怎麼防</em></h1>
-      <p class="sub">2024 年底，中國最好的模型在寫程式考試上還落後美國旗艦一大截；到 2026 年，在這份快被考滿的考卷上差距只剩幾分，而且多數是開放權重、價格便宜很多。換成更難的考試，差距還很明顯：SWE-bench Pro 上 Qwen3.8 Max 是 67.7%、Opus 5.5 是 89.9%，第三方綜合指數最好的中國模型 46.5、Opus 5.5 是 59.1（見<a href="bench.html#matrix">模型評比</a>）。工程創新是主因之一，「蒸餾」別人的模型則是最有爭議的那一個。</p>
+      <p class="sub">2024 年底，中國最好的模型在寫程式考試上還落後美國旗艦一大截；到 2026 年，在這份快被考滿的考卷上差距只剩幾分，而且多數是開放權重、價格便宜很多。換成更難的考試，差距還很明顯：SWE-bench Pro 上 Qwen3.8 Max 是 67.7%、Opus 5.5 是 89.9%，第三方綜合指數最好的中國模型 46.5，美國最好的 Fable 5.2 是 64.6（見<a href="bench.html#matrix">模型評比</a>）。工程創新是主因之一，「蒸餾」別人的模型則是最有爭議的那一個。</p>
     </div>
   </div>
 </header>
@@ -174,7 +174,7 @@
       <li><span class="d">2026.02.12</span><b>OpenAI 給美國眾議院中國特別委員會的備忘錄</b><span>指 DeepSeek 相關人員開發繞過存取限制的方法，透過「遮蔽來源的第三方 router」取用美國模型的輸出。</span></li>
       <li><span class="d">2026.02</span><b>Google</b><span>表示曾有單一行動對 Gemini 送出超過 10 萬個 prompt 試圖複製模型，稱之為智慧財產竊取。</span></li>
       <li><span class="d">2026.02.23</span><b>Anthropic 發布報告，點名 DeepSeek、Moonshot、MiniMax</b><span>約 2.4 萬個詐欺帳號、超過 1,600 萬次對話。依 Anthropic 統計：MiniMax 超過 1,300 萬次、Moonshot 超過 340 萬次、DeepSeek 超過 15 萬次。目標是 agent 寫程式、工具使用、推理，DeepSeek 還被指拿 Claude 當強化學習的評分者。</span></li>
-      <li><span class="d">2026.04.23</span><b>白宮科技政策辦公室備忘錄</b><span>據報導，這份備忘錄已經用「蓄意、工業規模」形容中國的蒸餾行動。本頁沒有看到備忘錄原文。</span></li>
+      <li><span class="d">2026.04.23</span><b>白宮科技政策辦公室備忘錄 NSTM-4</b><span>〈Adversarial Distillation of American AI Models〉，由白宮科技政策辦公室主任 Michael Kratsios 署名，發給所有聯邦機關首長。原文說，主要位於中國的外國實體正在進行「蓄意、工業規模」（deliberate, industrial-scale）的行動來蒸餾美國前沿 AI，利用數以萬計的代理帳號和越獄手法。備忘錄沒有點名特定公司，列出的對策是和美國 AI 公司分享情報、協助業者協調防禦、共同訂出最佳做法，並研究追究責任的方法。</span></li>
       <li><span class="d">2026.06</span><b>Anthropic 指控阿里巴巴</b><span>Anthropic 在 6/10 寫給美國參議員和白宮官員的信（6/24 經媒體披露）說，與阿里巴巴 Qwen 團隊有關的人用將近 2.5 萬個詐欺帳號，在 4/22 到 6/5 之間和 Claude 對話約 2,880 萬次，是它遇過最大的一次蒸餾攻擊。阿里巴巴表示不予置評。</span></li>
       <li class="reply"><span class="d">2026.07.27</span><b>中國商務部第一次回應</b><span>美方官員指控月之暗面蒸餾美國模型做出 Kimi K3、並揚言調查和制裁之後，商務部發言人表示這些指控缺乏事實證據和法律依據。</span></li>
       <li><span class="d">2026.09.08</span><b>美國 NSA、CISA、FBI 聯合警示</b><span>點名 DeepSeek、月之暗面、阿里巴巴、MiniMax、階躍星辰、智譜六家，說它們從 2024 年起從美國模型取走數十億 token。這是美國情報與資安機關第一次聯合點名六家；在這之前，白宮的備忘錄和官員發言已經公開指控過。</span></li>
@@ -207,7 +207,7 @@
       <div class="duel-row">
         <div class="side atk"><span class="tag">ATTACK · 套推理</span><b>要求模型寫出完整思考過程</b><span>設計 prompt 讓模型把推理一步步寫出來，或事後重建推理軌跡，因為這是最有教學價值的部分。</span></div>
         <div class="vs">vs</div>
-        <div class="side def"><span class="tag">DEFENSE · 推理不外流</span><b>只給摘要、限制推理去向</b><span>把推理過程摘要後才顯示，或只讓發出請求的組織看到。Anthropic 的實驗：用完整推理訓練的學生 SWE-bench 80.4%，只用摘要則掉到 71.8%。</span></div>
+        <div class="side def"><span class="tag">DEFENSE · 推理不外流</span><b>只給摘要、限制推理去向</b><span>把推理過程摘要後才顯示，或只讓發出請求的組織看到。Anthropic 的實驗：拿 Claude Opus 4.8 的對話紀錄去訓練一個預訓練好的 Claude 模型，用完整推理訓練的 SWE-bench Verified 80.4%，只用摘要則掉到 71.8%。</span></div>
       </div>
       <div class="duel-row">
         <div class="side atk"><span class="tag">ATTACK · 針對能力</span><b>只抄最貴的那幾項</b><span>大量集中在 agent 寫程式、工具使用、電腦操作、評分這類最難自己做資料的能力。</span></div>
@@ -227,7 +227,7 @@
         <div class="sb"><span>用完整推理訓練</span><span class="track"><span class="fill" style="width:80.4%; --c: var(--warn)"></span></span><span class="v">80.4%</span></div>
         <div class="sb"><span>只用推理摘要訓練</span><span class="track"><span class="fill" style="width:71.8%; --c: var(--accent)"></span></span><span class="v">71.8%</span></div>
       </div>
-      <p class="caveat">學生模型在 SWE-bench Verified 的分數。刻度 0–100%。</p>
+      <p class="caveat">老師是 Claude Opus 4.8，學生是 Anthropic 自己一個預訓練好的 Claude 模型；數字是學生在 SWE-bench Verified 的分數，出自 Anthropic 10/12 報告原文（廠商自報）。刻度 0–100%。</p>
     </div>
   </div>
 </section>
@@ -304,7 +304,8 @@
       <a href="https://the-decoder.com/google-and-openai-complain-about-distillation-attacks-that-clone-their-ai-models-on-the-cheap/">The Decoder · Google and OpenAI on distillation attacks（2026/02）</a>
       <a href="https://thenextweb.com/news/anthropic-accuses-alibaba-distillation-claude-qwen">The Next Web · Anthropic accuses Alibaba of running the largest distillation campaign yet（2026/06/24）</a>
       <a href="https://cset.georgetown.edu/publication/china-mofcom-statement-model-distillation/">CSET · 中國商務部關於模型蒸餾的聲明（英譯，2026/07/27）</a>
-      <a href="https://www.implicator.ai/china-says-us-firms-distilled-chinese-models/">Implicator · China says US firms distilled Chinese models（2026/07，含 4/23 白宮備忘錄的報導）</a>
+      <a href="https://www.whitehouse.gov/wp-content/uploads/2026/04/NSTM-4.pdf">White House OSTP · NSTM-4: Adversarial Distillation of American AI Models（2026/04/23，備忘錄原文）</a>
+      <a href="https://www.implicator.ai/china-says-us-firms-distilled-chinese-models/">Implicator · China says US firms distilled Chinese models（2026/07）</a>
       <a href="https://natlawreview.com/article/chinas-commerce-ministry-rejects-us-accusations-industrial-scale-ai-distillation">National Law Review · 中國商務部駁斥工業規模蒸餾指控（2026/09）</a>
       <a href="https://scmp.com/economy/article/3367001/china-rejects-us-claims-industrial-scale-ai-model-distillation-warns-retaliation">SCMP · China rejects US claims of industrial-scale AI model distillation（2026/09/09）</a>
       <a href="https://thehackernews.com/2026/10/us-orders-deepseek-removed-from-federal.html">The Hacker News · US orders DeepSeek removed from federal systems（2026/10）</a>

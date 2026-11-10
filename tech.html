@@ -176,7 +176,7 @@
       <ol class="anatomy">
         <li style="--c: var(--l-tools)"><div><b>Tools 定義</b><span>每個工具的名稱、說明、JSON schema。MCP server 提供的工具也在這裡，工具一多可以上萬 token。Anthropic 的 cache 前綴就是從這層開始算。</span></div></li>
         <li style="--c: var(--l-sys)"><div><b>System prompt</b><span>模型是誰、規則、環境資訊。每輪都一樣。</span></div></li>
-        <li style="--c: var(--l-skills)"><div><b>Skills 清單</b><span>放在 system prompt 裡，只有每個 skill 的名稱和一句描述，全文用到時才載入。</span></div></li>
+        <li style="--c: var(--l-skills)"><div><b>Skills 清單</b><span>接在系統規則之後送進去，只有每個 skill 的名稱和一句描述，全文用到時才載入。Claude Code 實際把它放在哪一段，隨版本變過。</span></div></li>
         <li style="--c: var(--l-mem)"><div><b>記憶檔</b><span>CLAUDE.md、專案規範、你的偏好。Claude Code 開工時把它讀進來，放在對話最前面的訊息裡。</span></div></li>
         <li style="--c: var(--l-hist)"><div><b>對話紀錄</b><span>之前每一句 user / assistant 訊息、每次工具呼叫和結果，原樣附上。</span></div></li>
         <li style="--c: var(--l-new)"><div><b>這一輪的新訊息</b><span>你剛打的那句。整包裡常常只有它是新的。</span></div></li>
@@ -190,7 +190,7 @@
     { <span class="k">"name"</span>: <span class="s">"Read"</span>, <span class="k">"input_schema"</span>: { <span class="y">…</span> } },
     { <span class="k">"name"</span>: <span class="s">"Bash"</span>, <span class="k">"input_schema"</span>: { <span class="y">…</span> } }
   ],
-  <span class="k">"system"</span>: [ <span class="c">// 規則 + skills 清單</span>
+  <span class="k">"system"</span>: [ <span class="c">// 規則、環境資訊</span>
     { <span class="k">"type"</span>: <span class="s">"text"</span>, <span class="k">"text"</span>: <span class="s">"You are Claude Code…"</span>,
       <span class="k">"cache_control"</span>: { <span class="k">"type"</span>: <span class="s">"ephemeral"</span> } }
   ],
@@ -279,12 +279,12 @@
         </label>
       </div>
     </div>
-    <p class="note measure">數字為示意。成本單位：一般 input = 1、cache 讀取 = 0.1、cache 寫入 = 1.25、output = 5，比例參考 Anthropic 公開的 5 分鐘 cache 計價。</p>
+    <p class="note measure">數字為示意。成本單位：一般 input = 1、cache 讀取 = 0.1、cache 寫入 = 1.25、output = 5，比例參考 Anthropic 公開的 5 分鐘 cache 計價。模擬器用 API 預設的 5 分鐘；Claude Code 訂閱方案在額度內是 1 小時，要離開更久才會過期。</p>
     <div class="prose measure mt" id="compact">
       <h3>各家怎麼壓縮？做法其實不一樣</h3>
       <p>模型本身不管「對話太長」這件事，壓縮是客戶端（或 API 服務）自己決定的策略，所以每家都不同。上面模擬器的「壓縮方式」可以切換三種做法，看 context 怎麼變。</p>
     </div>
-    <details class="more"><summary>工程細節：五種工具的壓縮做法比較</summary><div class="more-body">
+    <details class="more"><summary>工程細節：各種工具的壓縮做法比較</summary><div class="more-body">
 <div class="log-wrap modes">
       <table>
         <thead><tr><th scope="col">工具</th><th scope="col">什麼時候壓</th><th scope="col">怎麼壓</th><th scope="col">壓完留下什麼</th></tr></thead>
@@ -294,6 +294,7 @@
           <tr><td>Gemini CLI</td><td>預設用到一半左右就壓（可調）；手動 <code>/compress</code></td><td>先寫摘要，再請模型自己檢查一次有沒有漏</td><td>最近約 30% 的對話原文＋較舊部分的摘要</td></tr>
           <tr><td>OpenCode</td><td>約 96%–99% 才壓</td><td>先剪掉舊的工具輸出，不夠再寫摘要</td><td>最近約 4 萬 token 的工具輸出、最後兩輪你的訊息</td></tr>
           <tr><td>Anthropic API 的 context editing</td><td>開發者自己設定門檻</td><td>伺服器端自動把舊的工具結果清掉，不寫摘要</td><td>對話結構不變，只是舊工具結果變成「已清除」</td></tr>
+          <tr><td>Anthropic API 的 compaction（beta）</td><td>開發者手動要求，或設定 token 門檻自動觸發</td><td>伺服器端請 Claude 把較舊的回合寫成摘要</td><td>一段摘要，加上之後的對話</td></tr>
         </tbody>
       </table>
     </div>
@@ -330,7 +331,7 @@
       <article class="card">
         <span class="tag">時效與價格</span>
         <h3>預設 5 分鐘，讀取約 1 折</h3>
-        <p>Anthropic 的 cache 預設存活 5 分鐘，每次命中重新計時，也可以選 1 小時。讀取約是一般 input 價格的 10%，寫入稍貴。離開太久再回來，第一輪要整包重算。</p>
+        <p>Anthropic API 的 cache 預設存活 5 分鐘，每次命中重新計時，也可以選 1 小時。讀取約是一般 input 價格的 10%，寫入稍貴。離開太久再回來，第一輪要整包重算。Claude Code 用訂閱方案、還在方案額度內時，主對話預設改用 1 小時。</p>
       </article>
     </div>
     <div class="prose measure mt">
@@ -490,7 +491,7 @@
           <li><b>你只跟專案對話講話</b><span>那裡的 Claude 是協調者。它判斷一則訊息要自己回答，還是開一條新的 thread 去做。</span></li>
           <li><b>每條 thread 是獨立的 session</b><span>有自己的 context window 和雲端容器，會 clone 專案裡的 repo，在自己的分支上工作，需要時開 PR。五件事同時做，context 也不會互相塞爆。</span></li>
           <li><b>做完回報</b><span>thread 在自己的串裡回覆你。協調者看得到每條 thread 的回覆，你後來補充的要求，它會把你的原話附上轉交，而不是自己轉述。</span></li>
-          <li><b>需要時回到你的電腦</b><span>thread 可以透過 Remote Control 在你的電腦上跑，用你本機的工具和登入狀態。這個網站推上 GitHub，就是這樣做的。</span></li>
+          <li><b>需要時回到你的電腦</b><span>thread 可以透過 Remote Control 在你的電腦上跑，用你本機的工具和登入狀態（電腦要開著）。9/17 推出時官方說「很快會支援」，9 月底起文件已列為可用。這個網站推上 GitHub，就是這樣做的。</span></li>
         </ol>
       </article>
       <article class="card auto-card">
@@ -518,7 +519,7 @@
 </div></details>
 
     <div class="grid3 mt">
-      <article class="card"><span class="tag">要注意</span><h3>額度燒得比較快</h3><p>每條 thread 都是完整的 session，協調者本身也在用 token，所以同樣的方案額度會用得比較快。每天新開的 thread 數量也有上限。</p></article>
+      <article class="card"><span class="tag">要注意</span><h3>額度燒得比較快</h3><p>每條 thread 都是完整的 session，協調者本身也在用 token，所以同樣的方案額度會用得比較快。每天新開的 thread 也有上限：官方文件寫的是所有專案合計 200 條。</p></article>
       <article class="card"><span class="tag">還是 beta</span><h3>功能可能隨時改</h3><p>2026 年 9 月先開放給部分 Pro、Max 用戶，逐步擴大。Team、Enterprise 方案和終端機版 CLI 還不能用。</p></article>
       <article class="card"><span class="tag">跟 BMAD 一樣</span><h3>文件還是關鍵</h3><p>接手的 AI 不記得過去，靠的是 repo 裡的 CLAUDE.md、spec 文件和專案記憶。這也是這個網站的 repo 裡有 docs/SPEC.md 的原因。</p></article>
     </div>
@@ -594,7 +595,7 @@
 <section class="s gutter">
   <div class="frame">
     <div class="next">
-      <a href="bench.html"><article class="card"><span class="tag">PART 3 · 模型評比 →</span><h3>知道它怎麼運作之後，來看誰比較強</h3><p>分數怎麼看、哪些分數不能全信、14 個主力模型同一張表比，還有中國模型那條線怎麼一路追上來。</p></article></a>
+      <a href="bench.html"><article class="card"><span class="tag">PART 3 · 模型評比 →</span><h3>知道它怎麼運作之後，來看誰比較強</h3><p>分數怎麼看、哪些分數不能全信、15 個主力模型同一張表比，還有中國模型那條線怎麼一路追上來。</p></article></a>
     </div>
   </div>
 </section>
@@ -695,7 +696,7 @@
     request([blk("skills", "skill 全文：release-notes/SKILL.md", 1800, "tool", "📄 SKILL.md 全文（1,800 token）")], blk("out", "assistant：照 skill 步驟產出", 600, "assistant", "（照 skill 步驟產出）"));
     return "平常 context 裡只放 skill 的名稱和描述。用得到時，AI 才把整份 SKILL.md 讀進來。這就是 AI「學會」新流程的方式：讀一份文字檔，不是改模型。";
   }
-  function wait() { S.clock += 6; return "你離開 6 分鐘。看右邊：伺服器上的暫存只保留 5 分鐘，現在已經過期。模型、你電腦上的紀錄都還在，只有暫存沒了。下一步問一句看看會怎樣。"; }
+  function wait() { S.clock += 6; return "你離開 6 分鐘。看右邊：伺服器上的暫存只保留 5 分鐘（API 預設；Claude Code 訂閱方案是 1 小時），現在已經過期。模型、你電腦上的紀錄都還在，只有暫存沒了。下一步問一句看看會怎樣。"; }
   var CMODE = "cc";
   function relabel(b) { return blk("hist", b.label, b.t, b.role, b.chat); }
   function compact() {

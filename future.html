@@ -106,7 +106,7 @@
       </div>
       <div class="prose">
         <ul class="facts">
-          <li style="--c: var(--l-skills)"><div><b>2025 年資料中心用電成長 17%</b><span>AI 為主的資料中心成長 50%，同期全球總用電只成長約 3%。</span></div></li>
+          <li style="--c: var(--l-skills)"><div><b>2025 年資料中心用電成長 17%</b><span>AI 為主的資料中心用電更是成長 50%。</span></div></li>
           <li style="--c: var(--l-skills)"><div><b>機櫃愈來愈「燙」</b><span>IEA 指出 AI 伺服器的功率密度從 2020 到 2025 年增加約 11 倍，風扇散熱撐不住，液冷變成標配。</span></div></li>
           <li style="--c: var(--accent)"><div><b>但每個任務的耗電在快速下降</b><span>IEA 2026 年更新提到，完成同一個 AI 任務的耗電每年至少降一個數量級。總用電還在漲，是因為用的人和任務成長得更快。</span></div></li>
           <li style="--c: var(--l-tools)"><div><b>科技公司開始自己找電</b><span>Microsoft 與 Constellation 簽約重啟三哩島 1 號機（835 MW）；Google 與 Kairos、Amazon 與 X-energy 投資小型模組化核反應爐（SMR）；Meta 宣布最高 6.6 GW 的核能合作。</span></div></li>
@@ -172,7 +172,7 @@
       <div class="col">
         <div><div class="codehead"><span>KV cache 大小怎麼算</span><span>formula</span></div>
         <p class="formula">每個 token = 2 (K,V) × 層數 × KV heads × head 維度 × 每數值位元組</p></div>
-        <p style="color:var(--muted);font-size:.95rem">以公開架構的 Llama 3 70B 為例（80 層、8 個 KV head、維度 128、BF16 每數值 2 bytes），每個 token 約 0.33 MB（327,680 bytes，用十進位計算，和下面計算器的 GB 一致）。</p>
+        <p style="color:var(--muted);font-size:.95rem">以公開架構的 Llama 3.1 70B 為例（80 層、8 個 KV head、維度 128、BF16 每數值 2 bytes），每個 token 約 0.33 MB（327,680 bytes，用十進位計算，和下面計算器的 GB 一致）。這個模型實際最長支援 128K，計算器拉到 1M 只是示意更長的 context 要多少記憶體。</p>
       </div>
     </div>
 
@@ -270,7 +270,7 @@
   }
   gw.addEventListener("input", power); power();
 
-  /* KV cache: Llama 3 70B — 80 layers, 8 KV heads, head dim 128, bf16 */
+  /* KV cache: Llama 3.1 70B — 80 layers, 8 KV heads, head dim 128, bf16 */
   var PER_TOKEN = 2 * 80 * 8 * 128 * 2; /* bytes */
   var CTX = [8192, 32768, 65536, 131072, 262144, 1048576], CTXL = ["8K", "32K", "64K", "128K", "256K", "1M"];
   var ctx = document.getElementById("ctx"), users = document.getElementById("users");

@@ -160,7 +160,7 @@
 
     <div class="grid3 mt">
       <article class="card"><span class="tag">What to look at</span><h3>How fast the lines climb</h3><p>At the end of 2024 the best publicly available model fixed about half the problems; by 2026 every lab's flagship was above 80%. This is exactly when agent tools took off, and the two fed each other.</p></article>
-      <article class="card"><span class="tag">What to look at</span><h3>How far behind China's line is</h3><p>Chinese models started far behind, but from 2025 the gap on this exam closed quickly, and most of them are open-weight. This exam is nearly maxed out, though. On the harder SWE-bench Pro or the third-party composite index, the gap is still large (see the table below). How the gap closed is covered on the <a href="china.html">Catching up and distillation</a> page.</p></article>
+      <article class="card"><span class="tag">What to look at</span><h3>How far behind China's line is</h3><p>Chinese models started far behind, but from 2025 the gap on this exam closed quickly, and most of them are open-weight. In April 2026 the DeepSeek V4 Pro preview self-reported 80.6%, while Claude Opus 4.7, out the same month, reported 87.6%. This exam is nearly maxed out, though. On the harder SWE-bench Pro or the third-party composite index, the gap is still large (see the table below). How the gap closed is covered on the <a href="china.html">Catching up and distillation</a> page.</p></article>
       <article class="card"><span class="tag">Note</span><h3>These are vendor-reported scores</h3><p>Each lab tests with different settings (thinking budget, agent harness, retries), so points can't be compared precisely. Just read the trend. Third-party reruns usually come out a few points lower, and this exam is nearly maxed out, so newer comparisons use Pro.</p></article>
     </div>
     <p class="caveat mt" id="chartsrc"></p>
@@ -192,13 +192,13 @@
         <dt>User votes</dt><dd>LMArena shows users answers from two anonymous models side by side, has them pick the better one, and converts the results into a chess-like rating. It measures "which one people prefer", not correctness.</dd>
         <dt>Price</dt><dd>API pricing in US dollars. Subscription plans (such as $20 a month) are separate.</dd>
       </dl>
-      <p class="caveat">A snapshot from early November 2026. Numbers come from the public Artificial Analysis and LMArena leaderboards, as compiled by sites such as felloai.com, kingy.ai and handicraftm.com. The sites differ by 1–3 points, and rankings change all the time. "—" means the item wasn't in the data we found. Green tags mark open-weight models.</p>
+      <p class="caveat">Copied directly from the original leaderboards on 2026/11/10. The composite index (v5.0.1) and Terminal-Bench 4.0 come from Artificial Analysis, using each model's best-scoring reasoning setting (usually max or high). User votes come from the LMArena text leaderboard, taking the highest entry when a model has several settings. Prices are the API prices Artificial Analysis lists (Gemini 4 Argon uses Google's promo price). Rankings change all the time. "—" means the original leaderboard doesn't have the item. Green tags mark open-weight models.</p>
     </div>
 
     <div class="s-head measure mt2">
       <span class="eyebrow">For comparison · The vendor's own table</span>
       <h3 class="h2s">The same models, in the vendor's own table</h3>
-      <p class="lead">Below is the table from Anthropic's Opus 5.5 announcement. On the same Terminal-Bench 4.0, Opus 5.5 self-reports 66.4%, while third-party reruns put it around 60%. Of the five exams on the table, Opus 5.5 leads three; GPT-6 Astra leads the other two (AutomationBench and Terminal-Bench-Science).</p>
+      <p class="lead">Below is the table from Anthropic's Opus 5.5 announcement (9/22, before Fable 5.2). On the same Terminal-Bench 4.0, Opus 5.5 self-reports 66.4%, while third-party reruns put it around 60%. Of the five exams on the table, Opus 5.5 leads three; GPT-6 Astra leads the other two (AutomationBench and Terminal-Bench-Science).</p>
     </div>
     <div class="mx-scroll"><table class="mx vt">
       <thead><tr><th scope="col">Exam</th><th scope="col" class="num">Opus 5.5</th><th scope="col" class="num">Fable 5.1</th><th scope="col" class="num">Opus 5</th><th scope="col" class="num">GPT-6 Astra</th><th scope="col" class="num">GPT-5.6 Sol</th></tr></thead>
@@ -210,7 +210,7 @@
         <tr><td>Terminal-Bench-Science</td><td class="num">58.7%</td><td class="num">52.6%</td><td class="num">29.0%</td><td class="num"><b>64.6%</b></td><td class="num">22.4%</td></tr>
       </tbody>
     </table></div>
-    <p class="caveat">Source: Anthropic, "Claude Opus 5.5" (2026/9/22). The GPT columns are numbers OpenAI published, as cited by Anthropic.</p>
+    <p class="caveat">Source: Anthropic, "Claude Opus 5.5" (2026/9/22). The GPT columns are numbers OpenAI published, as cited by Anthropic. The 11/9 Fable 5.2 announcement self-reports 51.4% on AutomationBench and 74.6% on Terminal-Bench-Science, both above GPT-6 Astra in this table.</p>
   </div>
 </section>
 
@@ -222,15 +222,15 @@
       <p class="lead">Based on the third-party numbers above, the vendors' own tables, and reviews from several evaluation sites (November 2026). This is general direction, not a verdict.</p>
     </div>
     <div class="good">
-      <article class="card" style="--c:var(--l-skills)"><span class="tag">Coding and long-running agent work</span><h3>Claude Opus 5.5</h3><p>Several review sites rate it the strongest overall and best coding model publicly available; its third-party composite index is the highest among publicly available models. About 40% cheaper than Opus 5. <b>To save money</b>, try Sonnet 5.5 first: it scores even higher on terminal tasks at half the price.</p></article>
-      <article class="card" style="--c:var(--text)"><span class="tag">The hardest reasoning, math and science</span><h3>GPT-6 Astra</h3><p>Third parties measured 95% on ARC-AGI-2 (abstract reasoning puzzles), and it leads on OpenAI's self-reported hard math tests; several sites call it the first choice for "the hardest reasoning problems". Priced like Fable, so on the expensive side. For everyday coding, GPT-6.1 Sol costs a fifth as much.</p></article>
+      <article class="card" style="--c:var(--l-skills)"><span class="tag">Coding and long-running agent work</span><h3>Claude Opus 5.5</h3><p>Several review sites rate it among the best coding models publicly available; on the third-party composite index it trails only Fable 5.2, released in November, and Gemini 4 Carbon, which isn't public yet, at half Fable 5.2's price. <b>To save money</b>, try Sonnet 5.5 first: it scores even higher on terminal tasks at half the price.</p></article>
+      <article class="card" style="--c:var(--text)"><span class="tag">The hardest reasoning, math and science</span><h3>GPT-6 Astra</h3><p>Third parties measured 95% on ARC-AGI-2 (abstract reasoning puzzles), and it leads on OpenAI's self-reported hard math tests; several sites call it the first choice for "the hardest reasoning problems". Priced a little above Fable 5.2. For everyday coding, GPT-6.1 Sol costs a fifth as much.</p></article>
       <article class="card" style="--c:var(--l-hist)"><span class="tag">Long documents, video, general preference</span><h3>Gemini 4 Argon</h3><p>Ranked first among public models in LMArena user votes, meaning ordinary people most often prefer its answers. Long documents, long videos, and financial or legal documents are its recommended strengths. The promotional price ($2 input / $10 output per million tokens) only runs until 11/30. From 12/1 it is $4 / $20, the same as Opus 5.5.</p></article>
-      <article class="card" style="--c:var(--l-skills)"><span class="tag">Writing</span><h3>Claude Fable 5.1</h3><p>Several sites rate it the best writer, suited to long, style-heavy text. But it's Anthropic's most expensive tier, its third-party composite index is actually below Opus 5.5, and you usually don't need it for coding.</p></article>
-      <article class="card" style="--c:var(--l-new)"><span class="tag">High-volume, low-cost everyday tasks</span><h3>GPT-6 Luna, DeepSeek V4.1 Flash, Gemini 3.8 Flash</h3><p>GPT-6 Luna and DeepSeek V4.1 Flash cost roughly a tenth to a hundredth of a flagship. Gemini 3.8 Flash costs more: about a fifth of Opus 5.5, or a third of Gemini 4 Argon's promo price. All are suited to classification, summarization and translation: lots of volume, not much difficulty. Cursor's Auto mode routes simple requests to this tier.</p></article>
+      <article class="card" style="--c:var(--l-skills)"><span class="tag">The hardest tasks, writing</span><h3>Claude Fable 5.2</h3><p>Released 11/9, it is now first on the third-party composite index (64.6) and ties Opus 5.5 on terminal tasks. The previous version, Fable 5.1, was rated the best writer by several sites. Its price dropped to $8 / $40 per million tokens, still twice Opus 5.5, so you usually don't need it for everyday coding.</p></article>
+      <article class="card" style="--c:var(--l-new)"><span class="tag">High-volume, low-cost everyday tasks</span><h3>GPT-6 Luna, Claude Haiku 5.5, DeepSeek V4.1 Flash, Gemini 3.8 Flash</h3><p>GPT-6 Luna, Claude Haiku 5.5 (both $0.10 / $0.50 per million tokens) and DeepSeek V4.1 Flash cost roughly a tenth to a hundredth of a flagship. Gemini 3.8 Flash costs more: about a fifth of Opus 5.5, or a third of Gemini 4 Argon's promo price. All are suited to classification, summarization and translation: lots of volume, not much difficulty. Cursor's Auto mode routes simple requests to this tier.</p></article>
       <article class="card" style="--c:var(--l-mem)"><span class="tag">Self-hosting, open weights</span><h3>Kimi K3.1 Pro, GLM-5.3, DeepSeek V4</h3><p>You can download the weights and run them on your own servers. Kimi K3.1 Pro has the highest terminal-task score (67.2) in the whole comparison table. Watch out for data storage and censorship issues; see the <a href="china.html#faq">Catching up and distillation</a> page.</p></article>
     </div>
     <p class="elder mt"><b>In plain words</b><span>It's like choosing a doctor: no one is best at everything, so first decide which specialty you need. For home use, the free versions of Claude, ChatGPT and Gemini are close; pick whichever feels comfortable.</span></p>
-    <p class="caveat mt">There are two models most people can't use. Google's Gemini 4 Carbon is available only to selected security partners. Anthropic's Mythos is not a separate, stronger model than Fable: according to Anthropic, they are the same underlying model, and Fable adds an extra layer of safeguards for biology, cybersecurity and requests that look like frontier AI development. Mythos, without that layer, is only for security partners.</p>
+    <p class="caveat mt">There are two models most people can't use. Google's Gemini 4 Carbon (released 10/28) is so far available only to selected cyber defenders; Google says it will open it up as soon as possible. Anthropic's Mythos is not a separate, stronger model than Fable: according to Anthropic, they are the same underlying model, and Fable adds an extra layer of safeguards for biology, cybersecurity and requests that look like frontier AI development. Mythos, without that layer, is only for security partners.</p>
   </div>
 </section>
 
@@ -244,11 +244,11 @@
     </div>
     <div class="names">
       <article class="nm" style="--c:var(--l-skills)"><span class="who">Anthropic · Claude</span>
-        <dl><dt>Fable</dt><dd>Added June 2026, currently the top tier</dd><dt>Opus</dt><dd>Large flagship, the workhorse for coding and agents</dd><dt>Sonnet</dt><dd>Mid-size, balancing speed and price</dd><dt>Haiku</dt><dd>Small, fastest and cheapest</dd><dt>Mythos</dt><dd>The same model as Fable without one layer of safeguards; security partners only</dd></dl></article>
+        <dl><dt>Fable</dt><dd>Added June 2026, currently the top tier; the latest is Fable 5.2 (November)</dd><dt>Opus</dt><dd>Large flagship, the workhorse for coding and agents</dd><dt>Sonnet</dt><dd>Mid-size, balancing speed and price</dd><dt>Haiku</dt><dd>Small, fastest and cheapest</dd><dt>Mythos</dt><dd>The same model as Fable without one layer of safeguards; security partners only</dd></dl></article>
       <article class="nm" style="--c:var(--text)"><span class="who">OpenAI · GPT</span>
         <dl><dt>Sol</dt><dd>Top of the three tiers from GPT-5.6; with GPT-6, Astra sits above it</dd><dt>Terra</dt><dd>The middle tier, the everyday workhorse</dd><dt>Luna</dt><dd>The fast, cheap tier</dd><dt>Astra</dt><dd>GPT-6's flagship (September 2026)</dd><dt>o series</dt><dd>Reasoning models of 2024–2025 (o1, o3)</dd></dl></article>
       <article class="nm" style="--c:var(--l-hist)"><span class="who">Google · Gemini</span>
-        <dl><dt>Pro</dt><dd>Flagship</dd><dt>Flash</dt><dd>Fast and cheap</dd><dt>Gemini 4 Argon</dt><dd>The new top model of September 2026</dd></dl></article>
+        <dl><dt>Pro</dt><dd>The flagship up to Gemini 3</dd><dt>Flash</dt><dd>Fast and cheap, still used in the Gemini 4 era (for example 3.8 Flash)</dd><dt>Argon · Carbon</dt><dd>From Gemini 4, flagships are named after elements: Argon (September) is the top tier, and Carbon (October) sits above it as Google's strongest model</dd></dl></article>
       <article class="nm" style="--c:var(--l-mem)"><span class="who">Chinese labs</span>
         <dl><dt>DeepSeek</dt><dd>V series general, R series reasoning; V4 comes in Pro and Flash</dd><dt>Kimi</dt><dd>Moonshot AI, the K series</dd><dt>Qwen</dt><dd>Alibaba; Max is the largest tier</dd><dt>GLM · MiniMax</dt><dd>Zhipu and MiniMax, focused on agents</dd></dl></article>
     </div>
@@ -265,7 +265,7 @@
       </div>
       <div class="roster-head" aria-hidden="true"><span>Model</span><span>Released</span><span>Verified</span><span>Pro</span></div>
       <ol class="roster" id="roster"></ol>
-      <p class="caveat"><b>Verified</b>: the 500-question exam above. <b>Pro</b>: a newer exam from Scale AI, with longer, harder problems that models are less likely to have "memorized"; the same model usually scores 10–20 points lower. In February 2026 OpenAI said it would stop reporting Verified because the questions had leaked into training data and some tests were wrong, and switched to Pro. So OpenAI's 2026 models only have Pro scores, and the GPT-6 family mainly reported other exams, so both columns show "—".</p>
+      <p class="caveat"><b>Verified</b>: the 500-question exam above. <b>Pro</b>: a newer exam from Scale AI, with longer, harder problems that models are less likely to have "memorized"; the same model usually scores 10–20 points lower. In February 2026 OpenAI said it would stop reporting Verified because the questions had leaked into training data and some tests were wrong, and switched to Pro. So OpenAI's 2026 models only have Pro scores, and the GPT-6 family mainly reported other exams, so both columns show "—". Most models from fall 2026 on (Sonnet 5.5, Haiku 5.5, Fable 5.2, Gemini 4, Kimi K3.1 Pro and others) also report other exams instead.</p>
     </div>
 
   </div>
@@ -276,10 +276,11 @@
     <div class="s-head"><span class="eyebrow">06 · Sources</span><h2>Where the numbers come from</h2></div>
     <ul class="refs">
       <li>Lab announcements and model cards (OpenAI, Anthropic, Google, DeepSeek, Moonshot, Alibaba, Zhipu, MiniMax), 2024–2026.</li>
-      <li>Anthropic, "Claude Opus 4.6" (2026/2/5), "Claude Opus 4.7" (2026/4/16), "Claude Opus 4.8" (2026/5/28), "Claude Opus 5" (2026/7/24), "Claude Opus 5.5" (2026/9/22).</li>
+      <li>Anthropic, "Claude Opus 4.6" (2026/2/5), "Project Glasswing" (2026/4/7), "Claude Opus 4.7" (2026/4/16), "Claude Opus 4.8" (2026/5/28), "Claude Opus 5" (2026/7/24), "Claude Opus 5.5" (2026/9/22), "Claude Sonnet 5.5" (2026/9/28), "Claude Haiku 5.5" (2026/10/7), "Claude Fable 5.2 and Claude Mythos 5.2" (2026/11/9); Anthropic models overview page (checked 2026/11/10).</li>
+      <li>DeepSeek API news: V4 preview (2026/4/24), V4-Pro general release (2026/8/13), V4.1-Flash (2026/9/10), V4.1-Flash-1017 (2026/10/17). Google, "Gemini 4 Carbon" (2026/10/28). Release dates for other Chinese models come from coverage of Moonshot, Alibaba and MiniMax announcements (TestingCatalog, CnTechPost, Gigazine, Digital Applied) and from Artificial Analysis listing dates.</li>
       <li>OpenAI, "Introducing GPT-5.2" (2025/12/11), "Why we no longer evaluate SWE-bench Verified" (2026/2/23).</li>
       <li>vals.ai third-party SWE-bench Verified reruns (updates stopped 2026/9/1); Scale AI SWE-bench Pro.</li>
-      <li>Original leaderboards: <a href="https://artificialanalysis.ai/leaderboards/models">Artificial Analysis composite index and Terminal-Bench</a>, <a href="https://lmarena.ai/leaderboard/text">LMArena text leaderboard</a>. This snapshot (early 2026/11) was compiled from copies on felloai.com, kingy.ai, handicraftm.com and onyx.app and has not yet been checked item by item against the original leaderboards; the next monthly update will copy the original pages directly, with the date checked.</li>
+      <li>Comparison table: <a href="https://artificialanalysis.ai/leaderboards/models">Artificial Analysis composite index</a>, <a href="https://artificialanalysis.ai/evaluations/terminalbench-4-0">Artificial Analysis Terminal-Bench 4.0</a>, <a href="https://lmarena.ai/leaderboard/text">LMArena text leaderboard</a>, copied directly from the original pages on 2026/11/10.</li>
       <li>Roster scores compiled from llm-stats.com, benchlm.ai and morphllm.com (checked 2026/11).</li>
     </ul>
   </div>
@@ -305,7 +306,7 @@
     {"key": "a", "name": "Anthropic", "color": "var(--l-skills)", "pts": [["Claude 3.5 Sonnet (new)", "2024-10", 49.0], ["Claude 3.7 Sonnet", "2025-02", 62.3], ["Claude Opus 4", "2025-05", 72.5], ["Claude Opus 4.1", "2025-08", 74.5], ["Claude Sonnet 4.5", "2025-09", 77.2], ["Claude Opus 4.5", "2025-11", 80.9], ["Claude Opus 4.6", "2026-02", 80.8], ["Claude Opus 4.8", "2026-05", 88.6], ["Claude Fable 5", "2026-06", 95.0]]},
     {"key": "o", "name": "OpenAI", "color": "var(--text)", "dy": -10, "pts": [["o1", "2024-12", 48.9], ["o3", "2025-04", 69.1], ["GPT-5", "2025-08", 74.9], ["GPT-5.1", "2025-11", 76.3], ["GPT-5.2", "2025-12", 80.0]]},
     {"key": "g", "name": "Google", "color": "var(--l-hist)", "dy": 14, "pts": [["Gemini 2.5 Pro", "2025-03", 63.8], ["Gemini 3 Pro", "2025-11", 76.2], ["Gemini 3.1 Pro", "2026-02", 80.6]]},
-    {"key": "c", "name": "Best of China", "color": "var(--l-mem)", "dy": -2, "pts": [["DeepSeek V3", "2024-12", 42.0], ["DeepSeek R1", "2025-01", 49.2], ["Kimi K2", "2025-07", 65.8], ["Kimi K2 Thinking", "2025-11", 71.3], ["GLM-5", "2026-01", 77.8, 1], ["MiniMax M3", "2026-05", 80.5, 1], ["DeepSeek V4 Pro", "2026-08", 80.6, 1]]}
+    {"key": "c", "name": "Best of China", "color": "var(--l-mem)", "dy": -2, "pts": [["DeepSeek V3", "2024-12", 42.0], ["DeepSeek R1", "2025-01", 49.2], ["Kimi K2", "2025-07", 65.8], ["Kimi K2 Thinking", "2025-11", 71.3], ["GLM-5", "2026-02", 77.8], ["DeepSeek V4 Pro", "2026-04", 80.6]]}
   ];
   var EVENTS = [["2024-11", "MCP"], ["2025-01", "DeepSeek R1"], ["2025-05", "Claude Code GA"], ["2026-02", "OpenAI drops Verified"]];
   /* roster: [vendor, name, date label, sortKey, tier, verified|null, pro|null, note] */
@@ -322,10 +323,13 @@
     ["a","Claude Opus 4.8","2026.05","2026-05","Flagship",88.6,69.2,""],
     ["a","Claude Fable 5","2026.06","2026-06","Top tier",95.0,80.0,"Same model as Mythos 5 with extra safeguards; paused from 6/12 under an export-control order, resumed 7/1"],
     ["a","Claude Fable 5.1","2026.09","2026-09","Top tier",null,null,"Released with Mythos 5.1 (around 9/1)"],
+    ["a","Claude Fable 5.2","2026.11","2026-11","Top tier",null,null,"Released 11/9 with Mythos 5.2; mainly reported other exams; API price cut to $8 / $40 per million tokens"],
     ["a","Claude Sonnet 5","2026.06","2026-06","Mid-size",85.2,63.2,""],
     ["a","Claude Opus 5","2026.07","2026-07","Flagship",null,79.2,"Compiled Verified figures disagree, so none is listed"],
     ["a","Claude Opus 5.5","2026.09","2026-09","Flagship",null,89.9,"Released the same day as GPT-6 Sol and Luna"],
-    ["a","Claude Mythos Preview","2026.04","2026-04","Partners only",93.9,77.8,"Security partners only; from June the same class of model became generally available as Fable 5"],
+    ["a","Claude Sonnet 5.5","2026.09","2026-09","Mid-size",null,null,"Released 9/28; mainly reported other exams"],
+    ["a","Claude Haiku 5.5","2026.10","2026-10","Small",null,null,"Released 10/7; mainly reported other exams"],
+    ["a","Claude Mythos Preview","2026.04","2026-04","Partners only",93.9,77.8,"Announced 4/7 with Project Glasswing, security partners only; from 6/9 the same class of model became generally available as Fable 5"],
     ["o","o1","2024.12","2024-12","Reasoning",48.9,null,""],
     ["o","o3","2025.04","2025-04","Reasoning",69.1,null,""],
     ["o","GPT-5","2025.08","2025-08","Flagship",74.9,null,""],
@@ -344,20 +348,25 @@
     ["g","Gemini 3 Pro","2025.11","2025-11","Flagship",76.2,null,""],
     ["g","Gemini 3 Flash","2025.12","2025-12","Fast & cheap",78.0,null,""],
     ["g","Gemini 3.1 Pro","2026.02","2026-02","Flagship",80.6,54.2,""],
+    ["g","Gemini 3.8 Flash","2026.09","2026-09","Fast & cheap",null,null,"Mainly reported other exams"],
     ["g","Gemini 4 Argon","2026.09","2026-09","Top tier",null,null,"Released 9/30; mainly reported other exams"],
+    ["g","Gemini 4 Carbon","2026.10","2026-10","Strongest tier",null,null,"Released 10/28; so far only for selected cyber defenders"],
     ["c","DeepSeek V3","2024.12","2024-12","General",42.0,null,"Open weights"],
     ["c","DeepSeek R1","2025.01","2025-01","Reasoning",49.2,null,"Open weights"],
     ["c","Kimi K2","2025.07","2025-07","General",65.8,null,"Open weights"],
     ["c","Kimi K2 Thinking","2025.11","2025-11","Reasoning",71.3,null,"Open weights"],
-    ["c","GLM-5","2026","2026-01","Flagship",77.8,null,"Open weights; month unconfirmed"],
-    ["c","Kimi K2.6","2026","2026-05","Flagship",80.2,58.6,"Open weights; month unconfirmed"],
-    ["c","Qwen3.7 Max","2026","2026-05","Flagship",80.4,60.6,"Not open-weight (the Max line never has been); month unconfirmed"],
-    ["c","MiniMax M3","2026","2026-05","Flagship",80.5,59.0,"Open weights; month unconfirmed"],
-    ["c","DeepSeek V4 Pro","2026.08","2026-08","Flagship",80.6,55.4,"Open weights; month estimated from version"],
-    ["c","Qwen3.8 Max","2026","2026-09","Flagship",null,67.7,"Not open-weight; month unconfirmed"]
+    ["c","GLM-5","2026.02","2026-02","Flagship",77.8,null,"Open weights (2/11)"],
+    ["c","Kimi K2.6","2026.04","2026-04","Flagship",80.2,58.6,"Open weights (4/20)"],
+    ["c","Qwen3.7 Max","2026.05","2026-05","Flagship",80.4,60.6,"Not open-weight (the Max line never has been); launched 5/20 at the Alibaba Cloud summit"],
+    ["c","MiniMax M3","2026.06","2026-06","Flagship",80.5,59.0,"Open weights, released a little after the model; launched 5/31 US time, 6/1 China time"],
+    ["c","DeepSeek V4 Pro","2026.04","2026-04","Flagship",80.6,55.4,"Open weights; preview released 4/24 (scores self-reported then), general release 8/13"],
+    ["c","Qwen3.8 Max","2026.08","2026-08","Flagship",null,67.7,"Released 8/3, updated 9/2; Alibaba said it would open the weights, but Artificial Analysis still lists it as not open-weight"],
+    ["c","GLM-5.3","2026.08","2026-08","Flagship",null,null,"Open weights; mainly reported other exams"],
+    ["c","DeepSeek V4.1 Flash","2026.09","2026-09","Fast & cheap",null,null,"Open weights; released 9/10, updated 10/17"],
+    ["c","Kimi K3.1 Pro","2026.10","2026-10","Flagship",null,null,"Open weights; mainly reported other exams"]
   ];
   var VN = { a: "Anthropic", o: "OpenAI", g: "Google", c: "China" };
-  var SRC = "Sources: Verified scores are as published by each lab at launch (vendor-reported, not third-party reruns). 2024–2025 from lab announcements and model cards; 2026 compiled from llm-stats.com, benchlm.ai and morphllm.com, OpenAI's \"Why we no longer evaluate SWE-bench Verified\" (2026/2/23), and launch coverage of GPT-5.6, GPT-6, Opus 5.5 and Gemini 4 Argon (checked 2026/11). Pro scores are mostly measured by vendors with their own agent harnesses, so they are only roughly comparable. The curve only plots flagships with a vendor-published Verified score; hollow circles mark unconfirmed months, estimated from version numbers or surrounding releases. The vertical axis starts at 30%.";
+  var SRC = "Sources: Verified scores are as published by each lab at launch (vendor-reported, not third-party reruns). 2024–2025 from lab announcements and model cards; 2026 compiled from llm-stats.com, benchlm.ai and morphllm.com, OpenAI's \"Why we no longer evaluate SWE-bench Verified\" (2026/2/23), and launch coverage of GPT-5.6, GPT-6, Opus 5.5 and Gemini 4 Argon (checked 2026/11). Pro scores are mostly measured by vendors with their own agent harnesses, so they are only roughly comparable. The curve only plots flagships with a vendor-published Verified score and a confirmed release month; the China line follows whichever Chinese model scored highest at the time. The vertical axis starts at 30%.";
   var svg = document.getElementById("chart"), NS = "http://www.w3.org/2000/svg";
   var W = 900, H = 460, m = { l: 56, r: 130, t: 24, b: 48 };
   var t0 = mon("2024-07"), t1 = mon("2026-12"), y0 = 30, y1 = 100;
@@ -428,7 +437,7 @@
 
 
   /* matrix */
-  var MX = [["a", "Claude Opus 5.5", "Flagship", 59.1, 59.6, 1509, 4, 20, 0, ""], ["a", "Claude Fable 5.1", "Top tier", 49.7, 55.1, 1501, 10, 50, 0, ""], ["a", "Claude Sonnet 5.5", "Mid-size", null, 63.6, null, 2, 10, 0, ""], ["o", "GPT-6 Astra", "Flagship", 56.9, 59.6, 1476, 10, 50, 0, ""], ["o", "GPT-6.1 Sol", "Mid-tier", 54.6, 56.1, null, 2, 10, 0, ""], ["o", "GPT-6.1 Terra", "Middle tier", 51.0, 55.6, null, 1, 5, 0, ""], ["o", "GPT-6 Luna", "Small", 27.9, null, null, 0.1, 0.5, 0, ""], ["g", "Gemini 4 Argon", "Top tier", 50.4, 57.1, 1520, 2, 10, 0, "Promo price until 11/30, then $4 / $20"], ["g", "Gemini 4 Carbon", "Limited", 60.0, 65.2, 1528, null, null, 0, "Not publicly available yet"], ["g", "Gemini 3.8 Flash", "Fast & cheap", 30.8, 19.7, null, 0.75, 3.75, 0, "Promo price"], ["c", "Kimi K3.1 Pro", "Flagship", 46.5, 67.2, null, 2, 10, 1, ""], ["c", "Qwen3.8 Max", "Flagship", 33.6, null, 1481, 2, 6, 0, ""], ["c", "DeepSeek V4.1 Flash", "Fast & cheap", 32.6, 33.8, null, 0.3, 1.2, 1, ""], ["c", "GLM-5.3", "Flagship", 31.7, 41.9, null, 1.4, 4.4, 1, ""]];
+  var MX = [["a", "Claude Fable 5.2", "Top tier", 64.6, 59.6, null, 8, 40, 0, "Released 11/9; not yet ranked on LMArena"], ["a", "Claude Opus 5.5", "Flagship", 59.1, 59.6, 1506, 4, 20, 0, ""], ["a", "Claude Sonnet 5.5", "Mid-size", 54.5, 63.6, 1472, 2, 10, 0, ""], ["a", "Claude Haiku 5.5", "Small", 36.5, 32.8, null, 0.1, 0.5, 0, "$0.5 / $2.5 for prompts over 100K tokens"], ["o", "GPT-6 Astra", "Flagship", 56.9, 59.1, 1474, 10, 50, 0, ""], ["o", "GPT-6.1 Sol", "Mid-tier", 54.6, 56.1, 1482, 2, 10, 0, ""], ["o", "GPT-6.1 Terra", "Middle tier", 51.3, 55.6, null, 1, 5, 0, ""], ["o", "GPT-6 Luna", "Small", 27.9, 12.6, null, 0.1, 0.5, 0, ""], ["g", "Gemini 4 Argon", "Top tier", 50.4, 57.1, 1522, 2, 10, 0, "Promo price until 11/30, then $4 / $20"], ["g", "Gemini 4 Carbon", "Strongest tier", 60.0, 65.2, 1526, null, null, 0, "Only for selected cyber defenders"], ["g", "Gemini 3.8 Flash", "Fast & cheap", 30.8, 19.7, 1497, 0.75, 3.75, 0, ""], ["c", "Kimi K3.1 Pro", "Flagship", 46.5, 67.2, 1483, 2, 10, 1, ""], ["c", "Qwen3.8 Max", "Flagship", 33.7, 38.9, 1484, 2, 6, 0, ""], ["c", "DeepSeek V4.1 Flash", "Fast & cheap", 32.6, 33.8, 1475, 0.3, 1.2, 1, "AA tested the 10/17 update"], ["c", "GLM-5.3", "Flagship", 31.7, 41.9, 1483, 1.4, 4.4, 1, ""]];
   var CC = {a:"var(--l-skills)",o:"var(--text)",g:"var(--l-hist)",c:"var(--l-mem)"};
   var mxBody = document.querySelector("#mx tbody"), sortK = 3;
   var best = {}; [3,4,5].forEach(function (k) { best[k] = Math.max.apply(null, MX.map(function (r) { return r[k] || 0; })); });

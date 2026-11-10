@@ -89,7 +89,7 @@
     <div class="hero-copy measure">
       <span class="pill">PART 4 · <b>Catching up and distillation</b></span>
       <h1>How Chinese AI caught up,<br><em>and how US labs push back</em></h1>
-      <p class="sub">At the end of 2024, China's best models still trailed US flagships by a wide margin on coding exams. By 2026 the gap on that nearly maxed-out exam had shrunk to a few points, and most of them are open-weight and much cheaper. On harder exams the gap is still clear: on SWE-bench Pro, Qwen3.8 Max scores 67.7% to Opus 5.5's 89.9%, and on the third-party composite index the best Chinese model scores 46.5 to Opus 5.5's 59.1 (see <a href="bench.html#matrix">Benchmarks</a>). Engineering innovation is one of the main reasons; "distilling" other companies' models is the most controversial one.</p>
+      <p class="sub">At the end of 2024, China's best models still trailed US flagships by a wide margin on coding exams. By 2026 the gap on that nearly maxed-out exam had shrunk to a few points, and most of them are open-weight and much cheaper. On harder exams the gap is still clear: on SWE-bench Pro, Qwen3.8 Max scores 67.7% to Opus 5.5's 89.9%, and on the third-party composite index the best Chinese model scores 46.5 to the best US model, Fable 5.2, at 64.6 (see <a href="bench.html#matrix">Benchmarks</a>). Engineering innovation is one of the main reasons; "distilling" other companies' models is the most controversial one.</p>
     </div>
   </div>
 </header>
@@ -174,7 +174,7 @@
       <li><span class="d">2026.02.12</span><b>OpenAI's memo to the US House Select Committee on China</b><span>Says people linked to DeepSeek developed ways around access restrictions, getting US model outputs through "third-party routers that mask the source".</span></li>
       <li><span class="d">2026.02</span><b>Google</b><span>Says a single campaign sent Gemini more than 100,000 prompts trying to replicate the model, calling it intellectual property theft.</span></li>
       <li><span class="d">2026.02.23</span><b>Anthropic's report names DeepSeek, Moonshot and MiniMax</b><span>About 24,000 fraudulent accounts and over 16 million conversations. By Anthropic's count: MiniMax over 13 million, Moonshot over 3.4 million, DeepSeek over 150,000. Targets were agentic coding, tool use and reasoning, and DeepSeek is also said to have used Claude as a grader for reinforcement learning.</span></li>
-      <li><span class="d">2026.04.23</span><b>White House OSTP memo</b><span>According to press reports, this memo already described China's distillation operations as "deliberate, industrial-scale campaigns". This page has not seen the memo itself.</span></li>
+      <li><span class="d">2026.04.23</span><b>White House OSTP memo NSTM-4</b><span>"Adversarial Distillation of American AI Models", signed by OSTP Director Michael Kratsios and sent to the heads of all federal agencies. It says foreign entities, principally based in China, are engaged in "deliberate, industrial-scale campaigns" to distill US frontier AI, using tens of thousands of proxy accounts and jailbreaking. The memo names no specific companies. Its listed responses are sharing information with US AI companies, helping industry coordinate defenses, developing best practices together, and exploring ways to hold foreign actors accountable.</span></li>
       <li><span class="d">2026.06</span><b>Anthropic accuses Alibaba</b><span>In a June 10 letter to US senators and White House officials (reported on 6/24), Anthropic said operators linked to Alibaba's Qwen lab used nearly 25,000 fraudulent accounts for about 28.8 million exchanges with Claude between 4/22 and 6/5, the largest distillation attack it had seen. Alibaba declined to comment.</span></li>
       <li class="reply"><span class="d">2026.07.27</span><b>China's Commerce Ministry responds for the first time</b><span>After US officials accused Moonshot AI of distilling US models to build Kimi K3 and threatened investigations and sanctions, a ministry spokesperson said the accusations lacked factual evidence and legal basis.</span></li>
       <li><span class="d">2026.09.08</span><b>Joint NSA, CISA and FBI advisory</b><span>Names six labs (DeepSeek, Moonshot AI, Alibaba, MiniMax, StepFun and Zhipu) and says they have taken billions of tokens from US models since 2024. It is the first time US intelligence and cybersecurity agencies jointly named six labs; before this, a White House memo and officials' statements had already made the accusation publicly.</span></li>
@@ -207,7 +207,7 @@
       <div class="duel-row">
         <div class="side atk"><span class="tag">ATTACK · Extracting reasoning</span><b>Asking the model to write out its full thinking</b><span>Prompts designed to make the model spell out its reasoning step by step, or to reconstruct reasoning traces afterwards, because that's the most instructive part.</span></div>
         <div class="vs">vs</div>
-        <div class="side def"><span class="tag">DEFENSE · Reasoning stays in</span><b>Show only summaries, limit where reasoning goes</b><span>Show the reasoning only as a summary, or only to the organization that made the request. Anthropic's experiment: a student trained on full reasoning scored 80.4% on SWE-bench; trained on summaries only, it dropped to 71.8%.</span></div>
+        <div class="side def"><span class="tag">DEFENSE · Reasoning stays in</span><b>Show only summaries, limit where reasoning goes</b><span>Show the reasoning only as a summary, or only to the organization that made the request. Anthropic's experiment: it trained a pretrained Claude model on Claude Opus 4.8 transcripts. Trained on full reasoning it scored 80.4% on SWE-bench Verified; trained on summaries only, it dropped to 71.8%.</span></div>
       </div>
       <div class="duel-row">
         <div class="side atk"><span class="tag">ATTACK · Targeted skills</span><b>Copy only the most expensive skills</b><span>Heavily concentrated on agentic coding, tool use, computer use and grading: the capabilities whose data is hardest to produce yourself.</span></div>
@@ -227,7 +227,7 @@
         <div class="sb"><span>Trained on full reasoning</span><span class="track"><span class="fill" style="width:80.4%; --c: var(--warn)"></span></span><span class="v">80.4%</span></div>
         <div class="sb"><span>Trained on reasoning summaries only</span><span class="track"><span class="fill" style="width:71.8%; --c: var(--accent)"></span></span><span class="v">71.8%</span></div>
       </div>
-      <p class="caveat">The student model's SWE-bench Verified score. Scale 0–100%.</p>
+      <p class="caveat">The teacher is Claude Opus 4.8 and the student is one of Anthropic's own pretrained Claude models; the numbers are the student's SWE-bench Verified scores, from the text of Anthropic's 10/12 report (self-reported). Scale 0–100%.</p>
     </div>
   </div>
 </section>
@@ -304,7 +304,8 @@
       <a href="https://the-decoder.com/google-and-openai-complain-about-distillation-attacks-that-clone-their-ai-models-on-the-cheap/">The Decoder · Google and OpenAI on distillation attacks (2026/02)</a>
       <a href="https://thenextweb.com/news/anthropic-accuses-alibaba-distillation-claude-qwen">The Next Web · Anthropic accuses Alibaba of running the largest distillation campaign yet (2026/06/24)</a>
       <a href="https://cset.georgetown.edu/publication/china-mofcom-statement-model-distillation/">CSET · China MOFCOM statement on model distillation (translation, 2026/07/27)</a>
-      <a href="https://www.implicator.ai/china-says-us-firms-distilled-chinese-models/">Implicator · China says US firms distilled Chinese models (2026/07, incl. report of the 4/23 OSTP memo)</a>
+      <a href="https://www.whitehouse.gov/wp-content/uploads/2026/04/NSTM-4.pdf">White House OSTP · NSTM-4: Adversarial Distillation of American AI Models (2026/04/23, original memo)</a>
+      <a href="https://www.implicator.ai/china-says-us-firms-distilled-chinese-models/">Implicator · China says US firms distilled Chinese models (2026/07)</a>
       <a href="https://natlawreview.com/article/chinas-commerce-ministry-rejects-us-accusations-industrial-scale-ai-distillation">National Law Review · China's Commerce Ministry rejects US accusations (2026/09)</a>
       <a href="https://scmp.com/economy/article/3367001/china-rejects-us-claims-industrial-scale-ai-model-distillation-warns-retaliation">SCMP · China rejects US claims of industrial-scale AI model distillation (2026/09/09)</a>
       <a href="https://thehackernews.com/2026/10/us-orders-deepseek-removed-from-federal.html">The Hacker News · US orders DeepSeek removed from federal systems (2026/10)</a>

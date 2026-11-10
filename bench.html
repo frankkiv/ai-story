@@ -160,7 +160,7 @@
 
     <div class="grid3 mt">
       <article class="card"><span class="tag">看什麼</span><h3>線往上的速度</h3><p>2024 年底公開可用的最好模型修得好大約一半的題目，到 2026 年各家旗艦都在八成以上。這段時間正好是 agent 工具爆發的時候，兩件事互相推動。</p></article>
-      <article class="card"><span class="tag">看什麼</span><h3>中國那條線的距離</h3><p>中國模型一開始落後一大截，2025 年起在這份考卷上差距快速縮小，多數還是開放權重。但這份考卷快被考滿了，換成更難的 SWE-bench Pro 或第三方綜合指數，差距還很明顯（見下面的對照表）。差距怎麼縮小的，見<a href="china.html">追趕與蒸餾</a>那頁。</p></article>
+      <article class="card"><span class="tag">看什麼</span><h3>中國那條線的距離</h3><p>中國模型一開始落後一大截，2025 年起在這份考卷上差距快速縮小，多數還是開放權重。2026 年 4 月 DeepSeek V4 Pro 預覽版自報 80.6%，同月 Claude Opus 4.7 是 87.6%。但這份考卷快被考滿了，換成更難的 SWE-bench Pro 或第三方綜合指數，差距還很明顯（見下面的對照表）。差距怎麼縮小的，見<a href="china.html">追趕與蒸餾</a>那頁。</p></article>
       <article class="card"><span class="tag">注意</span><h3>這是廠商自己報的分數</h3><p>各家測的設定不同（思考預算、agent 外殼、重試次數），不能逐點精確比較，看趨勢就好。第三方重測通常會低幾分，而這份考卷已經快被考滿，新的比較改看 Pro。</p></article>
     </div>
     <p class="caveat mt" id="chartsrc"></p>
@@ -192,13 +192,13 @@
         <dt>使用者投票</dt><dd>LMArena 讓使用者同時看兩個匿名模型的回答，選比較好的，再換算成類似棋賽的積分。量的是「人覺得哪個好」，不是對錯。</dd>
         <dt>價格</dt><dd>API 定價，美元。訂閱方案（例如每月 20 美元）另計。</dd>
       </dl>
-      <p class="caveat">2026 年 11 月初的快照。數字取自 Artificial Analysis、LMArena 公開榜單，經 felloai.com、kingy.ai、handicraftm.com 等網站彙整轉載，各站之間有 1–3 分的落差，排名隨時在變。「—」表示查到的資料裡沒有這一項。綠色標記為開放權重模型。</p>
+      <p class="caveat">2026/11/10 直接從原始榜單抄錄：綜合指數（v5.0.1）和 Terminal-Bench 4.0 來自 Artificial Analysis，取各模型分數最高的推理設定（多半是 max 或 high）；使用者投票來自 LMArena 文字排行，同一模型有多個設定時取最高的一筆。價格是 Artificial Analysis 列的 API 定價（Gemini 4 Argon 用 Google 公布的優惠價）。排名隨時在變。「—」表示原榜單沒有這一項。綠色標記為開放權重模型。</p>
     </div>
 
     <div class="s-head measure mt2">
       <span class="eyebrow">對照 · 廠商自己的表</span>
       <h3 class="h2s">同一批模型，換成廠商自己出的表</h3>
-      <p class="lead">下面是 Anthropic 在 Opus 5.5 發表文裡放的表。同樣是 Terminal-Bench 4.0，Opus 5.5 自報 66.4%，第三方重測大約 60%。表上挑的五項考試，Opus 5.5 領先三項，另外兩項（AutomationBench、Terminal-Bench-Science）是 GPT-6 Astra 領先。</p>
+      <p class="lead">下面是 Anthropic 在 Opus 5.5 發表文裡放的表（9/22，比 Fable 5.2 早）。同樣是 Terminal-Bench 4.0，Opus 5.5 自報 66.4%，第三方重測大約 60%。表上挑的五項考試，Opus 5.5 領先三項，另外兩項（AutomationBench、Terminal-Bench-Science）是 GPT-6 Astra 領先。</p>
     </div>
     <div class="mx-scroll"><table class="mx vt">
       <thead><tr><th scope="col">考試</th><th scope="col" class="num">Opus 5.5</th><th scope="col" class="num">Fable 5.1</th><th scope="col" class="num">Opus 5</th><th scope="col" class="num">GPT-6 Astra</th><th scope="col" class="num">GPT-5.6 Sol</th></tr></thead>
@@ -210,7 +210,7 @@
         <tr><td>Terminal-Bench-Science</td><td class="num">58.7%</td><td class="num">52.6%</td><td class="num">29.0%</td><td class="num"><b>64.6%</b></td><td class="num">22.4%</td></tr>
       </tbody>
     </table></div>
-    <p class="caveat">來源：Anthropic〈Claude Opus 5.5〉（2026/9/22）。GPT 欄位是 Anthropic 引用 OpenAI 公布的數字。</p>
+    <p class="caveat">來源：Anthropic〈Claude Opus 5.5〉（2026/9/22）。GPT 欄位是 Anthropic 引用 OpenAI 公布的數字。11/9 的 Fable 5.2 發表文自報 AutomationBench 51.4%、Terminal-Bench-Science 74.6%，這兩項都超過表上的 GPT-6 Astra。</p>
   </div>
 </section>
 
@@ -222,15 +222,15 @@
       <p class="lead">綜合上面的第三方數字、廠商自己的表，以及多個評測網站的評語（2026 年 11 月）。這是大方向，不是定論。</p>
     </div>
     <div class="good">
-      <article class="card" style="--c:var(--l-skills)"><span class="tag">寫程式、長時間的 agent 工作</span><h3>Claude Opus 5.5</h3><p>多個評測網站評為目前綜合最強、寫程式最好的公開模型；第三方綜合指數在公開可用的模型裡最高。比上一代 Opus 5 便宜約四成。<b>想省錢</b>可以先試 Sonnet 5.5，終端機任務分數甚至更高，價格只要一半。</p></article>
-      <article class="card" style="--c:var(--text)"><span class="tag">最難的推理、數學、科學</span><h3>GPT-6 Astra</h3><p>ARC-AGI-2（抽象推理謎題）第三方測到 95%，OpenAI 自報的高難度數學測驗也領先；多個網站評它是「最難的推理題」首選。價格和 Fable 同級，偏貴。日常寫程式可改用 GPT-6.1 Sol，價格五分之一。</p></article>
+      <article class="card" style="--c:var(--l-skills)"><span class="tag">寫程式、長時間的 agent 工作</span><h3>Claude Opus 5.5</h3><p>多個評測網站評為寫程式最好的公開模型之一；第三方綜合指數只輸給 11 月剛推出的 Fable 5.2 和還沒公開的 Gemini 4 Carbon，價格是 Fable 5.2 的一半。<b>想省錢</b>可以先試 Sonnet 5.5，終端機任務分數甚至更高，價格只要一半。</p></article>
+      <article class="card" style="--c:var(--text)"><span class="tag">最難的推理、數學、科學</span><h3>GPT-6 Astra</h3><p>ARC-AGI-2（抽象推理謎題）第三方測到 95%，OpenAI 自報的高難度數學測驗也領先；多個網站評它是「最難的推理題」首選。價格比 Fable 5.2 還貴一點。日常寫程式可改用 GPT-6.1 Sol，價格五分之一。</p></article>
       <article class="card" style="--c:var(--l-hist)"><span class="tag">長文件、影片、一般使用者喜好</span><h3>Gemini 4 Argon</h3><p>LMArena 使用者投票在公開模型裡排第一，代表一般人最常覺得它的回答比較好；長文件、長影片、財務法律類文件是它被推薦的強項。優惠價（每百萬 token 輸入 $2／輸出 $10）只到 11/30，12/1 起是 $4／$20，跟 Opus 5.5 一樣。</p></article>
-      <article class="card" style="--c:var(--l-skills)"><span class="tag">寫作</span><h3>Claude Fable 5.1</h3><p>多個網站評為寫作最好的模型，適合長篇、重風格的文字工作。但它是 Anthropic 最貴的一級，第三方綜合指數反而不如 Opus 5.5，寫程式通常不必用到它。</p></article>
-      <article class="card" style="--c:var(--l-new)"><span class="tag">大量、便宜的日常任務</span><h3>GPT-6 Luna、DeepSeek V4.1 Flash、Gemini 3.8 Flash</h3><p>GPT-6 Luna 和 DeepSeek V4.1 Flash 的價格只有旗艦的十幾分之一到幾十分之一；Gemini 3.8 Flash 貴一些，大約是 Opus 5.5 的五分之一、Gemini 4 Argon 優惠價的三分之一。適合分類、摘要、翻譯這種量大但不難的工作。Cursor 的 Auto 模式就是把簡單請求派給這一級。</p></article>
+      <article class="card" style="--c:var(--l-skills)"><span class="tag">最難的任務、寫作</span><h3>Claude Fable 5.2</h3><p>11/9 剛推出，第三方綜合指數目前第一（64.6），終端機任務和 Opus 5.5 同分。前一版 Fable 5.1 被多個網站評為寫作最好的模型。價格降到每百萬 token $8／$40，仍是 Opus 5.5 的兩倍，日常寫程式通常不必用到它。</p></article>
+      <article class="card" style="--c:var(--l-new)"><span class="tag">大量、便宜的日常任務</span><h3>GPT-6 Luna、Claude Haiku 5.5、DeepSeek V4.1 Flash、Gemini 3.8 Flash</h3><p>GPT-6 Luna、Claude Haiku 5.5（兩者都是每百萬 token $0.10／$0.50）和 DeepSeek V4.1 Flash 的價格只有旗艦的十幾分之一到幾十分之一；Gemini 3.8 Flash 貴一些，大約是 Opus 5.5 的五分之一、Gemini 4 Argon 優惠價的三分之一。適合分類、摘要、翻譯這種量大但不難的工作。Cursor 的 Auto 模式就是把簡單請求派給這一級。</p></article>
       <article class="card" style="--c:var(--l-mem)"><span class="tag">想自己架、要開放權重</span><h3>Kimi K3.1 Pro、GLM-5.3、DeepSeek V4</h3><p>可以下載權重放在自己的伺服器上。Kimi K3.1 Pro 的終端機任務分數（67.2）是整張對照表第一。要注意資料存放和內容審查的問題，見<a href="china.html#faq">追趕與蒸餾</a>那頁。</p></article>
     </div>
     <p class="elder mt"><b>白話說</b><span>就像找醫生：沒有一位什麼都最強，先想清楚要看哪一科。一般家用，免費版的 Claude、ChatGPT、Gemini 差距不大，挑一個用得順手的就好。</span></p>
-    <p class="caveat mt">還有兩個一般人用不到的模型。Google 的 Gemini 4 Carbon 只開放給特定的資安合作夥伴。Anthropic 的 Mythos 不是比 Fable 更強的另一個模型：依 Anthropic 的說明，兩者是同一個底層模型，Fable 在生物、資安和疑似開發前沿 AI 的請求上多加了一層防護；沒有這層防護的 Mythos 只開放給資安合作夥伴。</p>
+    <p class="caveat mt">還有兩個一般人用不到的模型。Google 的 Gemini 4 Carbon（10/28 發表）目前只開放給部分資安防禦者，Google 說會盡快全面開放。Anthropic 的 Mythos 不是比 Fable 更強的另一個模型：依 Anthropic 的說明，兩者是同一個底層模型，Fable 在生物、資安和疑似開發前沿 AI 的請求上多加了一層防護；沒有這層防護的 Mythos 只開放給資安合作夥伴。</p>
   </div>
 </section>
 
@@ -244,11 +244,11 @@
     </div>
     <div class="names">
       <article class="nm" style="--c:var(--l-skills)"><span class="who">Anthropic · Claude</span>
-        <dl><dt>Fable</dt><dd>2026 年 6 月新增，目前最高的一級</dd><dt>Opus</dt><dd>大型旗艦，寫程式和 agent 的主力</dd><dt>Sonnet</dt><dd>中型，速度和價格平衡</dd><dt>Haiku</dt><dd>小型，最快最便宜</dd><dt>Mythos</dt><dd>和 Fable 同一個模型，少了一層防護，只開放給資安合作夥伴</dd></dl></article>
+        <dl><dt>Fable</dt><dd>2026 年 6 月新增，目前最高的一級；最新是 11 月的 Fable 5.2</dd><dt>Opus</dt><dd>大型旗艦，寫程式和 agent 的主力</dd><dt>Sonnet</dt><dd>中型，速度和價格平衡</dd><dt>Haiku</dt><dd>小型，最快最便宜</dd><dt>Mythos</dt><dd>和 Fable 同一個模型，少了一層防護，只開放給資安合作夥伴</dd></dl></article>
       <article class="nm" style="--c:var(--text)"><span class="who">OpenAI · GPT</span>
         <dl><dt>Sol</dt><dd>GPT-5.6 起的三級之首，最強；到 GPT-6 時，上面多了 Astra</dd><dt>Terra</dt><dd>中間一級，日常主力</dd><dt>Luna</dt><dd>快又便宜的一級</dd><dt>Astra</dt><dd>GPT-6 的旗艦（2026 年 9 月）</dd><dt>o 系列</dt><dd>2024–2025 年的推理模型（o1、o3）</dd></dl></article>
       <article class="nm" style="--c:var(--l-hist)"><span class="who">Google · Gemini</span>
-        <dl><dt>Pro</dt><dd>旗艦</dd><dt>Flash</dt><dd>快又便宜</dd><dt>Gemini 4 Argon</dt><dd>2026 年 9 月的新一代頂級模型</dd></dl></article>
+        <dl><dt>Pro</dt><dd>Gemini 3 以前的旗艦</dd><dt>Flash</dt><dd>快又便宜，Gemini 4 時代仍沿用（例如 3.8 Flash）</dd><dt>Argon · Carbon</dt><dd>Gemini 4 起旗艦改用元素名：Argon（9 月）是頂級，Carbon（10 月）在 Argon 之上，是 Google 目前最強的模型</dd></dl></article>
       <article class="nm" style="--c:var(--l-mem)"><span class="who">中國各家</span>
         <dl><dt>DeepSeek</dt><dd>V 系列通用、R 系列推理；V4 分 Pro 和 Flash</dd><dt>Kimi</dt><dd>月之暗面，K 系列</dd><dt>Qwen</dt><dd>阿里巴巴，Max 是最大的一級</dd><dt>GLM · MiniMax</dt><dd>智譜、MiniMax，主打 agent</dd></dl></article>
     </div>
@@ -265,7 +265,7 @@
       </div>
       <div class="roster-head" aria-hidden="true"><span>模型</span><span>發表</span><span>Verified</span><span>Pro</span></div>
       <ol class="roster" id="roster"></ol>
-      <p class="caveat"><b>Verified</b>：上面那份 500 題考卷。<b>Pro</b>：Scale AI 出的新考卷，題目更長、更難，也比較不會被模型「背過」，同一個模型的分數通常低一二十分。2026 年 2 月 OpenAI 宣布不再公布 Verified 分數，理由是題目已經洩漏進訓練資料、部分測試本身有錯，改報 Pro。所以 OpenAI 2026 年的模型只有 Pro 分數，GPT-6 系列則主要公布其他考試，這兩欄都是「—」。</p>
+      <p class="caveat"><b>Verified</b>：上面那份 500 題考卷。<b>Pro</b>：Scale AI 出的新考卷，題目更長、更難，也比較不會被模型「背過」，同一個模型的分數通常低一二十分。2026 年 2 月 OpenAI 宣布不再公布 Verified 分數，理由是題目已經洩漏進訓練資料、部分測試本身有錯，改報 Pro。所以 OpenAI 2026 年的模型只有 Pro 分數，GPT-6 系列則主要公布其他考試，這兩欄都是「—」。2026 年秋天以後的新模型（Sonnet 5.5、Haiku 5.5、Fable 5.2、Gemini 4、Kimi K3.1 Pro 等）多半也改報其他考試。</p>
     </div>
 
   </div>
@@ -276,10 +276,11 @@
     <div class="s-head"><span class="eyebrow">06 · 資料來源</span><h2>數字從哪來</h2></div>
     <ul class="refs">
       <li>各家發表文章與模型卡（OpenAI、Anthropic、Google、DeepSeek、Moonshot、Alibaba、Zhipu、MiniMax），2024–2026。</li>
-      <li>Anthropic〈Claude Opus 4.6〉（2026/2/5）、〈Claude Opus 4.7〉（2026/4/16）、〈Claude Opus 4.8〉（2026/5/28）、〈Claude Opus 5〉（2026/7/24）、〈Claude Opus 5.5〉（2026/9/22）。</li>
+      <li>Anthropic〈Claude Opus 4.6〉（2026/2/5）、〈Project Glasswing〉（2026/4/7）、〈Claude Opus 4.7〉（2026/4/16）、〈Claude Opus 4.8〉（2026/5/28）、〈Claude Opus 5〉（2026/7/24）、〈Claude Opus 5.5〉（2026/9/22）、〈Claude Sonnet 5.5〉（2026/9/28）、〈Claude Haiku 5.5〉（2026/10/7）、〈Claude Fable 5.2 and Claude Mythos 5.2〉（2026/11/9）；Anthropic 模型總覽頁（2026/11/10 查詢）。</li>
+      <li>DeepSeek API 公告：V4 預覽版（2026/4/24）、V4-Pro 正式版（2026/8/13）、V4.1-Flash（2026/9/10）、V4.1-Flash-1017（2026/10/17）。Google〈Gemini 4 Carbon〉（2026/10/28）。中國其他模型的發表日期取自 Moonshot、阿里巴巴、MiniMax 公告的報導（TestingCatalog、CnTechPost、Gigazine、Digital Applied），以及 Artificial Analysis 的收錄日期。</li>
       <li>OpenAI〈Introducing GPT-5.2〉（2025/12/11）、〈Why we no longer evaluate SWE-bench Verified〉（2026/2/23）。</li>
       <li>vals.ai SWE-bench Verified 第三方重測（2026/9/1 停止更新）；Scale AI SWE-bench Pro。</li>
-      <li>原始榜單：<a href="https://artificialanalysis.ai/leaderboards/models">Artificial Analysis 綜合指數與 Terminal-Bench</a>、<a href="https://lmarena.ai/leaderboard/text">LMArena 文字排行</a>。這次快照（2026/11 初）是從 felloai.com、kingy.ai、handicraftm.com、onyx.app 的轉載整理而來，還沒有逐項回原始榜單核對；下次每月更新時改為直接抄原頁並寫上查詢日期。</li>
+      <li>對照表：<a href="https://artificialanalysis.ai/leaderboards/models">Artificial Analysis 綜合指數</a>、<a href="https://artificialanalysis.ai/evaluations/terminalbench-4-0">Artificial Analysis Terminal-Bench 4.0</a>、<a href="https://lmarena.ai/leaderboard/text">LMArena 文字排行</a>，2026/11/10 直接從原頁抄錄。</li>
       <li>名冊分數彙整：llm-stats.com、benchlm.ai、morphllm.com（2026/11 查詢）。</li>
     </ul>
   </div>
@@ -305,7 +306,7 @@
     {"key": "a", "name": "Anthropic", "color": "var(--l-skills)", "pts": [["Claude 3.5 Sonnet（新版）", "2024-10", 49.0], ["Claude 3.7 Sonnet", "2025-02", 62.3], ["Claude Opus 4", "2025-05", 72.5], ["Claude Opus 4.1", "2025-08", 74.5], ["Claude Sonnet 4.5", "2025-09", 77.2], ["Claude Opus 4.5", "2025-11", 80.9], ["Claude Opus 4.6", "2026-02", 80.8], ["Claude Opus 4.8", "2026-05", 88.6], ["Claude Fable 5", "2026-06", 95.0]]},
     {"key": "o", "name": "OpenAI", "color": "var(--text)", "dy": -10, "pts": [["o1", "2024-12", 48.9], ["o3", "2025-04", 69.1], ["GPT-5", "2025-08", 74.9], ["GPT-5.1", "2025-11", 76.3], ["GPT-5.2", "2025-12", 80.0]]},
     {"key": "g", "name": "Google", "color": "var(--l-hist)", "dy": 14, "pts": [["Gemini 2.5 Pro", "2025-03", 63.8], ["Gemini 3 Pro", "2025-11", 76.2], ["Gemini 3.1 Pro", "2026-02", 80.6]]},
-    {"key": "c", "name": "中國最佳", "color": "var(--l-mem)", "dy": -2, "pts": [["DeepSeek V3", "2024-12", 42.0], ["DeepSeek R1", "2025-01", 49.2], ["Kimi K2", "2025-07", 65.8], ["Kimi K2 Thinking", "2025-11", 71.3], ["GLM-5", "2026-01", 77.8, 1], ["MiniMax M3", "2026-05", 80.5, 1], ["DeepSeek V4 Pro", "2026-08", 80.6, 1]]}
+    {"key": "c", "name": "中國最佳", "color": "var(--l-mem)", "dy": -2, "pts": [["DeepSeek V3", "2024-12", 42.0], ["DeepSeek R1", "2025-01", 49.2], ["Kimi K2", "2025-07", 65.8], ["Kimi K2 Thinking", "2025-11", 71.3], ["GLM-5", "2026-02", 77.8], ["DeepSeek V4 Pro", "2026-04", 80.6]]}
   ];
   var EVENTS = [["2024-11", "MCP"], ["2025-01", "DeepSeek R1"], ["2025-05", "Claude Code 正式版"], ["2026-02", "OpenAI 停報 Verified"]];
   /* roster: [vendor, name, date label, sortKey, tier, verified|null, pro|null, note] */
@@ -322,10 +323,13 @@
     ["a","Claude Opus 4.8","2026.05","2026-05","旗艦",88.6,69.2,""],
     ["a","Claude Fable 5","2026.06","2026-06","最高一級",95.0,80.0,"與 Mythos 5 同一個模型、多一層防護；6/12 起因出口管制命令暫停，7/1 恢復"],
     ["a","Claude Fable 5.1","2026.09","2026-09","最高一級",null,null,"與 Mythos 5.1 同時推出（9/1 前後）"],
+    ["a","Claude Fable 5.2","2026.11","2026-11","最高一級",null,null,"11/9 與 Mythos 5.2 同時發表，主要公布其他考試；API 降價為每百萬 token $8／$40"],
     ["a","Claude Sonnet 5","2026.06","2026-06","中型",85.2,63.2,""],
     ["a","Claude Opus 5","2026.07","2026-07","旗艦",null,79.2,"Verified 各家彙整說法不一，這裡不列"],
     ["a","Claude Opus 5.5","2026.09","2026-09","旗艦",null,89.9,"與 GPT-6 Sol、Luna 同一天發表"],
-    ["a","Claude Mythos Preview","2026.04","2026-04","限合作夥伴",93.9,77.8,"只開放給資安合作夥伴；6 月起同一級模型以 Fable 5 開放一般使用"],
+    ["a","Claude Sonnet 5.5","2026.09","2026-09","中型",null,null,"9/28 發表，主要公布其他考試"],
+    ["a","Claude Haiku 5.5","2026.10","2026-10","小型",null,null,"10/7 發表，主要公布其他考試"],
+    ["a","Claude Mythos Preview","2026.04","2026-04","限合作夥伴",93.9,77.8,"4/7 隨 Project Glasswing 公布，只開放給資安合作夥伴；6/9 起同一級模型以 Fable 5 開放一般使用"],
     ["o","o1","2024.12","2024-12","推理",48.9,null,""],
     ["o","o3","2025.04","2025-04","推理",69.1,null,""],
     ["o","GPT-5","2025.08","2025-08","旗艦",74.9,null,""],
@@ -344,20 +348,25 @@
     ["g","Gemini 3 Pro","2025.11","2025-11","旗艦",76.2,null,""],
     ["g","Gemini 3 Flash","2025.12","2025-12","快又便宜",78.0,null,""],
     ["g","Gemini 3.1 Pro","2026.02","2026-02","旗艦",80.6,54.2,""],
+    ["g","Gemini 3.8 Flash","2026.09","2026-09","快又便宜",null,null,"主要公布其他考試"],
     ["g","Gemini 4 Argon","2026.09","2026-09","頂級",null,null,"9/30 發表，主要公布其他考試"],
+    ["g","Gemini 4 Carbon","2026.10","2026-10","最強一級",null,null,"10/28 發表，先只開放給部分資安防禦者"],
     ["c","DeepSeek V3","2024.12","2024-12","通用",42.0,null,"開放權重"],
     ["c","DeepSeek R1","2025.01","2025-01","推理",49.2,null,"開放權重"],
     ["c","Kimi K2","2025.07","2025-07","通用",65.8,null,"開放權重"],
     ["c","Kimi K2 Thinking","2025.11","2025-11","推理",71.3,null,"開放權重"],
-    ["c","GLM-5","2026","2026-01","旗艦",77.8,null,"開放權重，月份未確認"],
-    ["c","Kimi K2.6","2026","2026-05","旗艦",80.2,58.6,"開放權重，月份未確認"],
-    ["c","Qwen3.7 Max","2026","2026-05","旗艦",80.4,60.6,"不開放權重（Max 系列一向如此），月份未確認"],
-    ["c","MiniMax M3","2026","2026-05","旗艦",80.5,59.0,"開放權重，月份未確認"],
-    ["c","DeepSeek V4 Pro","2026.08","2026-08","旗艦",80.6,55.4,"開放權重，月份由版本號推估"],
-    ["c","Qwen3.8 Max","2026","2026-09","旗艦",null,67.7,"不開放權重，月份未確認"]
+    ["c","GLM-5","2026.02","2026-02","旗艦",77.8,null,"開放權重（2/11）"],
+    ["c","Kimi K2.6","2026.04","2026-04","旗艦",80.2,58.6,"開放權重（4/20）"],
+    ["c","Qwen3.7 Max","2026.05","2026-05","旗艦",80.4,60.6,"不開放權重（Max 系列一向如此）；5/20 阿里雲峰會發表"],
+    ["c","MiniMax M3","2026.06","2026-06","旗艦",80.5,59.0,"開放權重，但權重比發表晚一步釋出；美國時間 5/31、中國時間 6/1 發表"],
+    ["c","DeepSeek V4 Pro","2026.04","2026-04","旗艦",80.6,55.4,"開放權重；4/24 發表預覽版（分數是當時自報），8/13 推出正式版"],
+    ["c","Qwen3.8 Max","2026.08","2026-08","旗艦",null,67.7,"8/3 發表，9/2 更新版；阿里巴巴說會開放權重，Artificial Analysis 目前仍標為不開放"],
+    ["c","GLM-5.3","2026.08","2026-08","旗艦",null,null,"開放權重；主要公布其他考試"],
+    ["c","DeepSeek V4.1 Flash","2026.09","2026-09","快又便宜",null,null,"開放權重；9/10 發表，10/17 更新版"],
+    ["c","Kimi K3.1 Pro","2026.10","2026-10","旗艦",null,null,"開放權重；主要公布其他考試"]
   ];
   var VN = { a: "Anthropic", o: "OpenAI", g: "Google", c: "中國" };
-  var SRC = "資料來源：Verified 分數為各家發表時公布（廠商自報，非第三方重測）。2024–2025 年取自各家發表文章與模型卡；2026 年取自 llm-stats.com、benchlm.ai、morphllm.com 彙整，OpenAI〈Why we no longer evaluate SWE-bench Verified〉（2026/2/23），以及 GPT-5.6、GPT-6、Opus 5.5、Gemini 4 Argon 的發表報導（2026/11 查詢）。Pro 分數多為廠商用自家 agent 外殼測的，彼此只能大致比較。曲線只畫有廠商公布 Verified 分數的旗艦；空心圓表示月份未確認，依版本號或前後發表推估。縱軸從 30% 起。";
+  var SRC = "資料來源：Verified 分數為各家發表時公布（廠商自報，非第三方重測）。2024–2025 年取自各家發表文章與模型卡；2026 年取自 llm-stats.com、benchlm.ai、morphllm.com 彙整，OpenAI〈Why we no longer evaluate SWE-bench Verified〉（2026/2/23），以及 GPT-5.6、GPT-6、Opus 5.5、Gemini 4 Argon 的發表報導（2026/11 查詢）。Pro 分數多為廠商用自家 agent 外殼測的，彼此只能大致比較。曲線只畫有廠商公布 Verified 分數、發表月份確定的旗艦；中國最佳那條線取當時分數最高的中國模型。縱軸從 30% 起。";
   var svg = document.getElementById("chart"), NS = "http://www.w3.org/2000/svg";
   var W = 900, H = 460, m = { l: 56, r: 130, t: 24, b: 48 };
   var t0 = mon("2024-07"), t1 = mon("2026-12"), y0 = 30, y1 = 100;
@@ -428,7 +437,7 @@
 
 
   /* matrix */
-  var MX = [["a", "Claude Opus 5.5", "旗艦", 59.1, 59.6, 1509, 4, 20, 0, ""], ["a", "Claude Fable 5.1", "最高一級", 49.7, 55.1, 1501, 10, 50, 0, ""], ["a", "Claude Sonnet 5.5", "中型", null, 63.6, null, 2, 10, 0, ""], ["o", "GPT-6 Astra", "旗艦", 56.9, 59.6, 1476, 10, 50, 0, ""], ["o", "GPT-6.1 Sol", "中階", 54.6, 56.1, null, 2, 10, 0, ""], ["o", "GPT-6.1 Terra", "中間一級", 51.0, 55.6, null, 1, 5, 0, ""], ["o", "GPT-6 Luna", "小型", 27.9, null, null, 0.1, 0.5, 0, ""], ["g", "Gemini 4 Argon", "頂級", 50.4, 57.1, 1520, 2, 10, 0, "優惠價到 11/30，之後 $4／$20"], ["g", "Gemini 4 Carbon", "限量", 60.0, 65.2, 1528, null, null, 0, "尚未公開提供"], ["g", "Gemini 3.8 Flash", "快又便宜", 30.8, 19.7, null, 0.75, 3.75, 0, "優惠價"], ["c", "Kimi K3.1 Pro", "旗艦", 46.5, 67.2, null, 2, 10, 1, ""], ["c", "Qwen3.8 Max", "旗艦", 33.6, null, 1481, 2, 6, 0, ""], ["c", "DeepSeek V4.1 Flash", "快又便宜", 32.6, 33.8, null, 0.3, 1.2, 1, ""], ["c", "GLM-5.3", "旗艦", 31.7, 41.9, null, 1.4, 4.4, 1, ""]];
+  var MX = [["a", "Claude Fable 5.2", "最高一級", 64.6, 59.6, null, 8, 40, 0, "11/9 發表，LMArena 還沒排名"], ["a", "Claude Opus 5.5", "旗艦", 59.1, 59.6, 1506, 4, 20, 0, ""], ["a", "Claude Sonnet 5.5", "中型", 54.5, 63.6, 1472, 2, 10, 0, ""], ["a", "Claude Haiku 5.5", "小型", 36.5, 32.8, null, 0.1, 0.5, 0, "提示超過 10 萬 token 時 $0.5／$2.5"], ["o", "GPT-6 Astra", "旗艦", 56.9, 59.1, 1474, 10, 50, 0, ""], ["o", "GPT-6.1 Sol", "中階", 54.6, 56.1, 1482, 2, 10, 0, ""], ["o", "GPT-6.1 Terra", "中間一級", 51.3, 55.6, null, 1, 5, 0, ""], ["o", "GPT-6 Luna", "小型", 27.9, 12.6, null, 0.1, 0.5, 0, ""], ["g", "Gemini 4 Argon", "頂級", 50.4, 57.1, 1522, 2, 10, 0, "優惠價到 11/30，之後 $4／$20"], ["g", "Gemini 4 Carbon", "最強一級", 60.0, 65.2, 1526, null, null, 0, "只開放給部分資安防禦者"], ["g", "Gemini 3.8 Flash", "快又便宜", 30.8, 19.7, 1497, 0.75, 3.75, 0, ""], ["c", "Kimi K3.1 Pro", "旗艦", 46.5, 67.2, 1483, 2, 10, 1, ""], ["c", "Qwen3.8 Max", "旗艦", 33.7, 38.9, 1484, 2, 6, 0, ""], ["c", "DeepSeek V4.1 Flash", "快又便宜", 32.6, 33.8, 1475, 0.3, 1.2, 1, "AA 測 10/17 更新版"], ["c", "GLM-5.3", "旗艦", 31.7, 41.9, 1483, 1.4, 4.4, 1, ""]];
   var CC = {a:"var(--l-skills)",o:"var(--text)",g:"var(--l-hist)",c:"var(--l-mem)"};
   var mxBody = document.querySelector("#mx tbody"), sortK = 3;
   var best = {}; [3,4,5].forEach(function (k) { best[k] = Math.max.apply(null, MX.map(function (r) { return r[k] || 0; })); });
