@@ -38,7 +38,7 @@
 .st-you span { flex: none; }
 .st-you b { color: #fff; font-weight: 600; overflow: hidden; text-overflow: ellipsis; }
 @media (prefers-reduced-motion: reduce) { .st-you.wait i { animation: none; } }
-@media (max-width: 720px) { .st-you { font-size: .76rem; gap: .4rem; margin-inline: .75rem; padding-inline: .55rem; } }
+@media (max-width: 720px) { .st-you { font-size: .82rem; gap: .4rem; margin-inline: .75rem; padding-inline: .55rem; } }
 .st-term { position: relative; z-index: 5; margin: 0 1rem; justify-self: start; min-height: 2.4rem; background: rgba(10,12,16,.82); border: 1px solid color-mix(in srgb, var(--st-gold) 70%, transparent); border-radius: 10px; padding: .3rem .7rem; font-size: .82rem; line-height: 1.45; display: flex; flex-wrap: wrap; align-items: baseline; column-gap: .6rem; opacity: 0; transition: opacity .35s; }
 .st-term.on { opacity: 1; }
 .st-term:not(.on) { visibility: hidden; }
@@ -206,7 +206,9 @@
 /* 摘要：只放第一段，最多三行；其餘收進「完整說明」 */
 .st-narr { z-index: 4; height: 3.4rem; background: var(--code-bg); padding: 0 .8rem .55rem 1.1rem; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .6rem; }
 .st-narr .txt { font-size: .84rem; line-height: 1.35; color: #a7b0bd; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
-@media (max-width: 720px) { .st-narr .txt { font-size: .8rem; } }
+@media (max-width: 720px) { .st-narr .txt { font-size: .82rem; } }
+/* phones: lay the map out narrower than the stage so the camera enlarges it; map labels land at about 13px or more */
+@media (max-width: 720px) { .scene { width: 84%; } }
 .st-narr .txt.swap, .sheet-txt.swap { animation: narrIn .35s both; }
 @keyframes narrIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 .st-narr code, .sheet code { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.16); color: #fff; }
@@ -286,6 +288,7 @@
 .end-act a, .end-act button { font: inherit; font-size: .95rem; font-weight: 600; min-height: 2.75rem; padding: 0 1.15rem; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; gap: .4rem; cursor: pointer; text-decoration: none; }
 .end-act .go { background: var(--st-gold); color: #0e1116; border: 0; }
 .end-act .again { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.3); }
+.end-act .nextpart { flex: 1 1 100%; }
 .end-act .again:hover { border-color: var(--st-gold); color: var(--st-gold); }
 @media (min-width: 1100px) { .endwrap { bottom: 4.4rem; } }
 @media (prefers-reduced-motion: reduce) { .endwrap { transition: none; } }
@@ -297,8 +300,9 @@
   <div class="frame">
     <a class="brand" href="index.html"><i></i><span>AI 長出手了</span></a>
     <ul>
+      <li><a class="l site-on" href="journey.html"><span class="lg">序章</span><span class="sh">序章</span></a></li>
       <li><a class="l" href="history.html"><span class="lg">時間線</span><span class="sh">時間線</span></a></li>
-      <li><a class="l site-on" href="tech.html"><span class="lg">它怎麼運作</span><span class="sh">原理</span></a></li>
+      <li><a class="l" href="tech.html"><span class="lg">它怎麼運作</span><span class="sh">原理</span></a></li>
       <li><a class="l" href="bench.html"><span class="lg">模型評比</span><span class="sh">評比</span></a></li>
       <li><a class="l" href="china.html"><span class="lg">追趕與蒸餾</span><span class="sh">中國</span></a></li>
       <li><a class="l" href="future.html"><span class="lg">下一個瓶頸</span><span class="sh">瓶頸</span></a></li>
@@ -309,7 +313,7 @@
 <header class="hero gutter" style="padding-block: 3.5rem 1.5rem">
   <div class="frame" style="display:block">
     <div class="hero-copy measure">
-      <span class="pill">PART 2 導覽 · <b>跟著一句話走一趟</b></span>
+      <span class="pill">序章 · <b>跟著一句話走一趟</b></span>
       <h1>按下 Enter 之後，<br><em>你的話去了哪裡？</em></h1>
       <p class="sub">從你坐在電腦前、在 Claude Code 問一句「AI 究竟是什麼？」開始。這句話會先在你的電腦上打包，跨海送到遠端機房的模型；模型讀完整包、一層一層算、一個字一個字猜出答案，還會判斷要不要上網查。答案傳回來之後，你的手機也看得到同一段對話。四章、十七步，往下捲，一次只看一個地方。用手機 App 問 ChatGPT、Gemini 或 Claude 也是同一套流程，差別只在紀錄和記憶存在服務商的伺服器上，不在你的電腦裡。</p>
     </div>
@@ -463,7 +467,7 @@
           <li>你拿起手機繼續<span>電腦和手機都連到中繼，檔案一直留在電腦</span></li>
           <li class="zero">從頭到尾，模型被改的次數：<b>0</b></li>
         </ol>
-          <div class="end-act"><a class="go" id="exit2" href="tech.html" data-back="&#8592; 回到剛剛的頁面">&#8592; 回到「它怎麼運作」</a><button type="button" class="again" id="again">&#8593; 從頭再看一次</button></div>
+          <div class="end-act"><a class="go nextpart" href="history.html">接著讀 PART 1：時間線 &#8594;</a><a class="again" id="exit2" href="tech.html" data-back="&#8592; 回到剛剛的頁面">&#8592; 回到「它怎麼運作」</a><button type="button" class="again" id="again">&#8593; 從頭再看一次</button></div>
         </div>
         <div class="st-cap"><button type="button" id="prev" aria-label="上一步">&#8249;</button><p class="st-sub" id="sub" aria-hidden="true"></p><button type="button" id="next" aria-label="下一步">&#8250;</button></div>
         <div class="st-narr"><div class="txt" id="narr" aria-hidden="true"></div><button type="button" class="more" id="more" aria-hidden="true" tabindex="-1">詳細 ↑</button></div>
@@ -694,12 +698,12 @@
     {"ch": 2, "name": "跨海到機房", "sub": "整包<em>跨海</em>到遠端機房", "note": "單程約 1 萬公里，來回約 0.1–0.2 秒", "you": "還在「思考中…」", "wait": true, "hot": ["#pipe"], "cam": ["#pipe", "#srv-ico"], "tour": ["#wp1", "#wp2", "#wp3", "#wp4", "#srv-ico"], "beam": ["pipe"], "lit": "z-srv", "kind": "lock", "st": F, "term": ["資料中心", "放滿伺服器和 GPU 的遠端機房"]},
     {"ch": 2, "name": "前台驗證", "sub": "前台先<em>驗明正身</em>", "note": "確認帳號和額度，再分一台 GPU 機器", "you": "還在「思考中…」", "wait": true, "hot": ["#front"], "pk": "#front", "cam": ["#front", "#tok"], "kind": "ctx", "st": F, "term": ["API", "程式之間講好的收件窗口"]},
     {"ch": 2, "name": "切成 token", "sub": "文字切成 <em>token</em>", "note": "切法與編號為示意", "you": "還在「思考中…」", "wait": true, "hot": ["#tok"], "pk": "#tok", "kind": "ctx", "st": F + " tokens", "term": ["token", "模型處理文字的最小單位"]},
-    {"ch": 2, "name": "比對快取", "sub": "一樣的部分<em>直接用快取</em>", "note": "快取存 5 分鐘到 1 小時，太久要整包重算", "you": "還在「思考中…」", "wait": true, "hot": ["#cache", "#pack"], "pk": "#cache", "kind": "ctx", "st": F + " tokens hit", "term": ["prompt cache", "伺服器暫存讀過的前綴，5 分鐘到 1 小時"]},
+    {"ch": 2, "name": "比對快取", "sub": "一樣的部分<em>直接用快取</em>", "note": "快取存 5 分鐘到 1 小時，太久要整包重算", "you": "還在「思考中…」", "wait": true, "hot": ["#cache", "#pack"], "camS": ["#cache"], "pk": "#cache", "kind": "ctx", "st": F + " tokens hit", "term": ["prompt cache", "伺服器暫存讀過的前綴，5 分鐘到 1 小時"]},
     {"ch": 2, "name": "讀整包", "sub": "模型先把<em>整包讀一遍</em>", "note": "每個 token 留下的中間結果，就是 KV cache", "you": "還在「思考中…」", "wait": true, "hot": ["#kv"], "pk": "#kv", "kind": "ctx", "st": F + " tokens kv-on", "term": ["KV cache", "讀過每個 token 留下的筆記，生成時一直回頭查"]},
     {"ch": 2, "name": "一層一層算", "sub": "同一個模型，<em>一層一層</em>往上算", "note": "數十到上百層疊在一起，不是好幾個模型拼起來", "you": "還在「思考中…」", "wait": true, "hot": ["#layers"], "st": F + " tokens kv-on layers", "term": ["attention", "每一層回頭看前文，挑出最相關的部分"]},
     {"ch": 2, "name": "猜下一個字", "sub": "最後<em>猜下一個字</em>，再接著猜", "note": "機率為示意；模型的權重全程不會改變", "you": "還在「思考中…」，快好了", "wait": true, "hot": ["#cand"], "kind": "ctx", "st": F + " tokens kv-on cand gen-on", "term": ["推論", "用固定的權重，一次算出一個 token"]},
     {"ch": 3, "name": "要不要上網查", "sub": "要不要<em>上網查</em>？模型自己判斷", "note": "這題學過的就夠；問今天的新聞才需要查", "you": "還在「思考中…」，快好了", "wait": true, "hot": ["#web"], "cam": ["#cand", "#web"], "st": F + " tokens kv-on cand gen-on", "term": ["工具呼叫", "模型輸出「我要用某個工具」的請求"]},
-    {"ch": 3, "name": "如果要查", "sub": "要查的話，<em>搜尋結果加進整包</em>", "note": "這題用不到；這是問新聞時多走的一圈", "you": "問新聞時，會顯示「正在搜尋…」", "wait": true, "hot": ["#web", "#kv"], "pk": "#kv", "kind": "search", "st": F + " tokens kv-on cand gen-on search", "term": ["網路搜尋工具", "伺服器代為搜尋，網頁摘要放回 context"]},
+    {"ch": 3, "name": "如果要查", "sub": "要查的話，<em>搜尋結果加進整包</em>", "note": "這題用不到；這是問新聞時多走的一圈", "you": "問新聞時，會顯示「正在搜尋…」", "wait": true, "hot": ["#web", "#kv"], "camS": ["#web"], "pk": "#kv", "kind": "search", "st": F + " tokens kv-on cand gen-on search", "term": ["網路搜尋工具", "伺服器代為搜尋，網頁摘要放回 context"]},
     {"ch": 3, "name": "串流回傳", "sub": "答案<em>邊算邊傳</em>回來", "note": "沿同一條加密連線回到你的電腦", "you": "字開始一段段跳出來", "hot": ["#cand", "#pipe", "#screen"], "cam": ["#screen", "#pipe"], "tour": ["#wp4", "#wp3", "#wp2", "#wp1", "#screen"], "beam": ["pipe up"], "kind": "reply", "st": F + " tokens kv-on cand gen-on typed", "term": ["串流", "算出一小段就先傳一小段"]},
     {"ch": 3, "name": "存回本地", "sub": "整段對話<em>存回你的電腦</em>", "note": "存在 ~/.claude/projects/ 的 .jsonl 檔", "you": "回答完成，你可以接著問", "hot": ["#files", "#screen"], "pk": "#files", "kind": "save", "st": F + " cand gen-on typed saved-on", "term": [".jsonl 對話紀錄", "存在 ~/.claude/projects/ 裡"]},
     {"ch": 4, "name": "連到中繼", "sub": "電腦和手機都連到<em>中繼站</em>", "note": "中繼只轉送訊息，碰不到你的檔案", "you": "打開 Claude App，看到同一段對話", "dev": "你的手機", "hot": ["#relay", "#pipe", "#pipe2", "#phone"], "cam": ["#relay", "#phone"], "beam": ["pipe2"], "lit": "phone", "st": F + " cand gen-on typed saved-on", "term": ["Remote Control", "用手機遙控電腦上的 Claude Code"]},
@@ -779,7 +783,9 @@
       } else place(s.pk || s.tour[s.tour.length - 1]);
     } else packet.classList.remove("on");
 
-    camera(s.fit ? [] : s.cam ? s.cam.map(function (q) { return scene.querySelector(q); }) : hot);
+    /* camS: on a phone, frame only the main box when the lit boxes sit far apart, so the labels stay readable */
+    var cam = s.camS && innerWidth <= 720 ? s.camS : s.cam;
+    camera(s.fit ? [] : cam ? cam.map(function (q) { return scene.querySelector(q); }) : hot);
   }
 
   /* 鏡頭：亮起來的地方放大到畫面中間；沒有指定就看全貌 */

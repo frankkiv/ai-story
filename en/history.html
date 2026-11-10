@@ -89,6 +89,7 @@
   <div class="frame">
     <a class="brand" href="index.html"><i></i><span>AI Grew Hands</span></a>
     <ul>
+      <li><a class="l" href="journey.html"><span class="lg">Prologue</span><span class="sh">Start</span></a></li>
       <li><a class="l site-on" href="history.html"><span class="lg">Timeline</span><span class="sh">Timeline</span></a></li>
       <li><a class="l" href="tech.html"><span class="lg">How it works</span><span class="sh">How</span></a></li>
       <li><a class="l" href="bench.html"><span class="lg">Model benchmarks</span><span class="sh">Bench</span></a></li>
@@ -104,6 +105,21 @@
       <span class="pill">PART 1 · <b>Timeline</b></span>
       <h1>From talking,<br><em>to doing</em></h1>
       <p class="sub">From late 2022 to now, AI took four big steps: first a consultant that only answers questions, then a tradesperson that does the work itself, then a butler you can send a text to, and now a general contractor running a crew of AIs. Scroll down to watch each event appear along the timeline. What changed under the hood at each step is explained on the <a href="tech.html">How it works</a> page.</p>
+      <nav class="eras" aria-label="Four steps. Tap one to jump to it">
+        <a href="#era-1"><span class="k">1 · Consultant</span><b>You ask, it answers</b></a>
+        <a href="#era-2"><span class="k">2 · Tradesperson</span><b>It starts doing the work</b></a>
+        <a href="#era-3"><span class="k">3 · Butler</span><b>Send a message, get it done</b></a>
+        <a href="#era-4"><span class="k">4 · General contractor</span><b>A crew of AIs working together</b></a>
+      </nav>
+      <aside class="tldr" aria-label="Key points of this page">
+        <b class="tldr-h">Three things on this page</b>
+        <ol>
+          <li>Four steps in four years: a consultant that answers, a tradesperson that does the work itself, a butler you message, and now a general contractor running a crew of AIs.</li>
+          <li>The big turn came in late 2024: AI was handed tools and went from only talking to actually doing.</li>
+          <li>This page covers what happened. The technology behind each step is on the next page, "How it works".</li>
+        </ol>
+        <p class="tldr-meta"><span data-readtime></span><button type="button" class="tldr-btn" data-plain-toggle></button></p>
+      </aside>
       <p class="caveat">Every major lab's key releases are included, but agent tool examples mostly use Claude Code, which the author uses daily, so Anthropic events are slightly overrepresented.</p>
     </div>
   </div>
@@ -124,13 +140,13 @@
     <span class="tl-now" aria-live="polite"><span id="tlNow">2022</span></span>
     <ol class="tl" id="tl">
       <li class="tl-line" aria-hidden="true"><i id="tlFill"></i></li>
-      <li class="tl-era"><span class="en">Consultant</span><b>You ask, it answers</b><span class="es">From late 2022, AI got very good at answering questions, but you still did the work yourself.</span></li>
+      <li class="tl-era" id="era-1"><span class="en">Consultant</span><b>You ask, it answers</b><span class="es">From late 2022, AI got very good at answering questions, but you still did the work yourself.</span></li>
       <li class="ev big" data-cat="model" data-year="2022" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2022.11</span><span class="cat">Model</span></span><h3>ChatGPT launches</h3><p>Many people chat with an AI for the first time. It can only "talk": it gives you text or code, and you copy, paste and run it yourself.</p><p class="tl-elder"><b>In plain words</b>Like phoning a very knowledgeable consultant who won't come over to fix your plumbing.</p></div></li>
       <li class="ev small" data-cat="model" data-year="2023" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2023.03</span><span class="cat">Model</span></span><b>GPT-4 and the first Claude</b><span class="sm">The large-model race officially begins.</span></div></li>
       <li class="ev small" data-cat="model" data-year="2023" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2023.12</span><span class="cat">Model</span></span><b>Google launches Gemini</b><span class="sm">The big three take shape.</span></div></li>
       <li class="ev small" data-cat="model" data-year="2024" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2024.05</span><span class="cat">Model</span></span><b>GPT-4o: real-time voice and vision</b><span class="sm">AI starts to look at photos and hold spoken conversations.</span></div></li>
       <li class="ev big" data-cat="model" data-year="2024" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2024.09</span><span class="cat">Model</span></span><h3>Reasoning models arrive (OpenAI o1)</h3><p>The model writes out a long chain of thinking before answering. That's a prerequisite for letting AI carry out multi-step work on its own.</p><p class="tl-elder"><b>In plain words</b>From the student who blurts out answers to the one who drafts on scrap paper first.</p></div></li>
-      <li class="tl-era"><span class="en">Tradesperson</span><b>It starts doing the work</b><span class="es">From late 2024, AI gets tools and works directly on your computer.</span></li>
+      <li class="tl-era" id="era-2"><span class="en">Tradesperson</span><b>It starts doing the work</b><span class="es">From late 2024, AI gets tools and works directly on your computer.</span></li>
       <li class="ev big" data-cat="agent" data-year="2024" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2024.10</span><span class="cat">Agent</span></span><h3>Claude learns to use a computer (computer use)</h3><p>It looks at the screen, moves the mouse and types. Still slow and often clicks the wrong thing, but for the first time AI has hands inside a computer.</p></div></li>
       <li class="ev big" data-cat="agent" data-year="2024" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2024.11</span><span class="cat">Agent</span></span><h3>Anthropic introduces MCP</h3><p>One common format for plugging any tool into AI. OpenAI and Google later adopt it too.</p><p class="tl-elder"><b>In plain words</b>USB-C for AI: any tool plugs in.</p></div></li>
       <li class="ev small" data-cat="china" data-year="2024" style="--c:var(--l-mem)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2024.12</span><span class="cat">China</span></span><b>DeepSeek V3</b><span class="sm">A 671B-parameter MoE model that gets close to the frontier at a very low training cost. That cost covers only the final training run, not the research and experiments before it.</span></div></li>
@@ -145,14 +161,14 @@
       <li class="ev small" data-cat="model" data-year="2025" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.08</span><span class="cat">Model</span></span><b>GPT-5</b><span class="sm">OpenAI combines a fast model and a reasoning model into one system, with a router that decides when to think harder.</span></div></li>
       <li class="ev small" data-cat="china" data-year="2025" style="--c:var(--l-mem)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.09</span><span class="cat">China</span></span><b>Anthropic stops serving Chinese-controlled companies</b><span class="sm">Preventing distillation is one of the stated reasons.</span></div></li>
       <li class="ev small" data-cat="agent" data-year="2025" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.10</span><span class="cat">Agent</span></span><b>Agent Skills</b><span class="sm">Workflows written as folders and loaded on demand. "Training your AI" becomes managing text files.</span></div></li>
-      <li class="tl-era"><span class="en">Butler</span><b>Send a message, get it done</b><span class="es">From late 2025, you can get AI to do things from a chat app.</span></li>
+      <li class="tl-era" id="era-3"><span class="en">Butler</span><b>Send a message, get it done</b><span class="es">From late 2025, you can get AI to do things from a chat app.</span></li>
       <li class="ev small" data-cat="model" data-year="2025" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.11</span><span class="cat">Model</span></span><b>Gemini 3 and Claude Opus 4.5</b><span class="sm">Both labs ship new flagships in the same month. Opus 4.5 scores 80.9% on the SWE-bench Verified coding exam, the first model past 80%; Gemini 3 Pro scores 76.2%.</span></div></li>
       <li class="ev small" data-cat="agent" data-year="2025" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.11</span><span class="cat">Agent</span></span><b>The "lobster" is born</b><span class="sm">A personal project by engineer Peter Steinberger, with a lobster mascot: send a WhatsApp message and the AI on your home computer does the job. Later renamed OpenClaw.</span></div></li>
       <li class="ev small" data-cat="agent" data-year="2026" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.01</span><span class="cat">Agent</span></span><b>Claude Cowork: an agent for people who don't code</b><span class="sm">Point the Claude desktop app at a folder and it sorts files, builds spreadsheets and writes reports on its own, using the same agent design as Claude Code.</span></div></li>
       <li class="ev big" data-cat="agent" data-year="2026" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.01</span><span class="cat">Agent</span></span><h3>OpenClaw goes viral</h3><p>First called Clawdbot, then Moltbot, it settled on the name OpenClaw on 1/30 and hit 100,000 stars in days. Fake extensions, scam coins and prompt injection follow.</p><p class="tl-elder"><b>In plain words</b>Texting your butler, but a butler who's too trusting can also be conned.</p></div></li>
       <li class="ev big" data-cat="agent" data-year="2026" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.02</span><span class="cat">Agent</span></span><h3>Remote Control: steer the AI on your computer from your phone</h3><p>Code and files stay on the computer; the phone is just a remote, with messages relayed through Anthropic.</p></div></li>
       <li class="ev big" data-cat="china" data-year="2026" style="--c:var(--l-mem)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.02</span><span class="cat">China</span></span><h3>Distillation accusations go public</h3><p>OpenAI sends a memo to the US House; Anthropic names DeepSeek, Moonshot and MiniMax, with about 24,000 accounts and 16 million conversations.</p></div></li>
-      <li class="tl-era"><span class="en">General contractor</span><b>A crew of AIs working together</b><span class="es">From 2026, one person leads a team of AIs.</span></li>
+      <li class="tl-era" id="era-4"><span class="en">General contractor</span><b>A crew of AIs working together</b><span class="es">From 2026, one person leads a team of AIs.</span></li>
       <li class="ev small" data-cat="agent" data-year="2026" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.02</span><span class="cat">Agent</span></span><b>Agent Teams</b><span class="sm">Launched with Opus 4.6: Claude Code can start a group of agents that split the work and message each other directly, instead of routing everything through the main agent.</span></div></li>
       <li class="ev small" data-cat="agent" data-year="2026" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.03</span><span class="cat">Agent</span></span><b>Sending work from your phone becomes a built-in feature</b><span class="sm">Anthropic features like Dispatch and Channels let you hand work to the AI on your computer from your phone or a chat app, without setting anything up yourself.</span></div></li>
       <li class="ev small" data-cat="model" data-year="2026" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.04</span><span class="cat">Model</span></span><b>Claude Mythos Preview and Project Glasswing</b><span class="sm">Announced 4/7: Anthropic said its skill at finding security holes was too strong to release openly, so it went first to security partners to fix vulnerabilities. It was the forerunner of Fable.</span></div></li>
@@ -190,8 +206,6 @@
   <div class="frame">
     <div class="next">
       <a href="tech.html"><article class="card"><span class="tag">PART 2 · How it works →</span><h3>AI isn't learning you. It rereads everything, every time</h3><p>Context, prompt cache, the agent loop, skills and device sync, with an interactive simulator.</p></article></a>
-      <a href="bench.html"><article class="card"><span class="tag">PART 3 · Model benchmarks →</span><h3>How to read the scores, and who is good at what</h3><p>The capability curve, a model comparison table, and a roster of models over the years.</p></article></a>
-      <a href="china.html"><article class="card"><span class="tag">PART 4 · Catching up and distillation →</span><h3>How Chinese AI caught up, and how US labs push back</h3><p>How did Chinese models catch up? What is "distillation", and how do labs defend against it?</p></article></a>
     </div>
   </div>
 </section>

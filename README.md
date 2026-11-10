@@ -4,11 +4,12 @@
 
 一個靜態網站，用繁體中文講 AI 這幾年的變化：
 
-- `index.html`：首頁，含給家人的五個提醒與常見問題
+- `index.html`：首頁，兩條入口（序章或從 PART 1 讀起）
+- `family.html`：給家人的五個提醒與常見問題，可以單獨轉傳
 - `history.html`：時間線
 - `bench.html`：模型評比（分數怎麼看、各模型對照、誰擅長什麼、模型名冊）
 - `tech.html`：它怎麼運作（context、prompt cache、agent 迴圈、Auto 模式、同步、多 agent 協作、skills）
-- `journey.html`：按下 Enter 之後（捲動敘事導覽，從本地組合、送到遠端、傳回來到手機同步）
+- `journey.html`：序章，按下 Enter 之後（捲動敘事導覽，從本地組合、送到遠端、傳回來到手機同步）
 - `china.html`：追趕與蒸餾
 - `future.html`：下一個瓶頸（電力、資料中心、記憶體、儲存）
 

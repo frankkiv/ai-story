@@ -12,6 +12,10 @@
   var theme = get(K_THEME) || "dark";
   if (theme === "light" || theme === "dark") html.setAttribute("data-theme", theme);
 
+  // Plain-words reading mode: section bodies collapse to their heading plus the "白話說" boxes.
+  var K_PLAIN = "ai-story-plain";
+  if (get(K_PLAIN) === "1") html.setAttribute("data-plain", "1");
+
   var page = location.pathname.split("/").pop() || "index.html";
   if (!/\.html$/.test(page)) page = "index.html";
   function hrefFor(target) {
@@ -25,8 +29,18 @@
   }
 
   var T = {
-    zh: { btn: "設定", lang: "語言", theme: "外觀", auto: "跟隨系統", light: "淺色", dark: "深色" },
-    en: { btn: "Settings", lang: "Language", theme: "Appearance", auto: "System", light: "Light", dark: "Dark" }
+    zh: { btn: "設定", lang: "語言", theme: "外觀", auto: "跟隨系統", light: "淺色", dark: "深色",
+          mode: "閱讀方式", full: "完整", plain: "白話",
+          more: "看這一段的完整說明", less: "收起完整說明",
+          rtFull: "完整讀約 {n} 分鐘", rtPlain: "白話模式約 {n} 分鐘",
+          toPlain: "切換成白話模式", toFull: "回到完整內容",
+          steps: "你在整個故事的哪裡", home: "首頁" },
+    en: { btn: "Settings", lang: "Language", theme: "Appearance", auto: "System", light: "Light", dark: "Dark",
+          mode: "Reading mode", full: "Full", plain: "Plain words",
+          more: "Show the full explanation", less: "Hide the full explanation",
+          rtFull: "Full read: about {n} min", rtPlain: "Plain-words mode: about {n} min",
+          toPlain: "Switch to plain-words mode", toFull: "Back to the full version",
+          steps: "Where you are in the story", home: "Home" }
   }[lang];
 
   function build() {
@@ -47,6 +61,11 @@
         '<div class="set-row">' +
           ["auto", "light", "dark"].map(function (t) { return '<button type="button" data-theme-set="' + t + '"' + (cur === t ? ' aria-pressed="true"' : ' aria-pressed="false"') + ">" + T[t] + "</button>"; }).join("") +
         "</div>" +
+        '<p class="set-h">' + T.mode + "</p>" +
+        '<div class="set-row">' +
+          '<button type="button" data-plain-set="0">' + T.full + "</button>" +
+          '<button type="button" data-plain-set="1">' + T.plain + "</button>" +
+        "</div>" +
       "</div>";
     frame.appendChild(d);
     d.querySelectorAll("[data-lang]").forEach(function (a) {
@@ -64,6 +83,10 @@
         d.querySelectorAll("[data-theme-set]").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
       });
     });
+    d.querySelectorAll("[data-plain-set]").forEach(function (b) {
+      b.addEventListener("click", function () { setPlain(b.getAttribute("data-plain-set") === "1"); });
+    });
+    syncPlain();
     document.addEventListener("click", function (e) { if (d.open && !d.contains(e.target)) d.open = false; });
     document.addEventListener("keydown", function (e) { if (e.key === "Escape" && d.open) { d.open = false; d.querySelector("summary").focus(); } });
   }
@@ -109,4 +132,110 @@
     });
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", toTop); else toTop();
+  // ---------- Plain-words mode, reading time, story progress ----------
+  function isPlain() { return html.getAttribute("data-plain") === "1"; }
+  function syncPlain() {
+    var on = isPlain();
+    document.querySelectorAll("[data-plain-set]").forEach(function (b) {
+      b.setAttribute("aria-pressed", (b.getAttribute("data-plain-set") === "1") === on ? "true" : "false");
+    });
+    document.querySelectorAll("[data-plain-toggle]").forEach(function (b) {
+      b.textContent = on ? T.toFull : T.toPlain;
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+  }
+  function setPlain(on) {
+    // Keep the reader's place: anchor on the section nearest the top of the viewport.
+    var anchor = null, best = Infinity;
+    document.querySelectorAll("main section.s").forEach(function (sec) {
+      var t = Math.abs(sec.getBoundingClientRect().top);
+      if (t < best) { best = t; anchor = sec; }
+    });
+    var before = anchor && scrollY > 200 ? anchor.getBoundingClientRect().top : null;
+    if (on) { html.setAttribute("data-plain", "1"); set(K_PLAIN, "1"); }
+    else { html.removeAttribute("data-plain"); set(K_PLAIN, null); }
+    syncPlain();
+    if (before != null) scrollBy({ top: anchor.getBoundingClientRect().top - before, behavior: "instant" });
+    dispatchEvent(new Event("resize"));
+  }
+  function minutes(text) {
+    var cjk = (text.match(/[㐀-鿿]/g) || []).length;
+    var words = (text.replace(/[㐀-鿿]/g, " ").match(/[A-Za-z0-9][A-Za-z0-9'.-]*/g) || []).length;
+    return Math.max(1, Math.round(cjk / 420 + words / 230));
+  }
+  function setupPlain() {
+    var main = document.querySelector("main");
+    if (!main || page === "journey.html") return;
+    var plainText = "";
+    main.querySelectorAll("section.s[id]").forEach(function (sec) {
+      var frame = sec.querySelector(".frame"), head = frame && frame.querySelector(".s-head");
+      if (!head || head.parentNode !== frame || sec.id === "faq" || sec.hasAttribute("data-plain-skip")) return;
+      var rest = [].filter.call(frame.children, function (c) { return c !== head; });
+      if (!rest.length) return;
+      sec.classList.add("pl");
+      var keep = document.createElement("div");
+      keep.className = "pl-keep";
+      sec.querySelectorAll(".elder").forEach(function (e) { if (!head.contains(e)) keep.appendChild(e.cloneNode(true)); });
+      var btn = document.createElement("button");
+      btn.type = "button"; btn.className = "pl-more";
+      btn.setAttribute("aria-expanded", "false");
+      btn.textContent = T.more;
+      btn.addEventListener("click", function () {
+        var open = sec.classList.toggle("pl-open");
+        btn.setAttribute("aria-expanded", open ? "true" : "false");
+        btn.textContent = open ? T.less : T.more;
+        dispatchEvent(new Event("resize"));
+      });
+      head.parentNode.insertBefore(btn, head.nextSibling);
+      head.parentNode.insertBefore(keep, btn);
+      plainText += head.textContent + keep.textContent;
+    });
+    // A link into the middle of a collapsed section opens that section first.
+    function reveal() {
+      if (!isPlain() || location.hash.length < 2) return;
+      var el; try { el = document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch (e) {}
+      var sec = el && el.closest ? el.closest("section.pl") : null;
+      if (!sec || sec === el || sec.classList.contains("pl-open")) return;
+      var head = sec.querySelector(".s-head");
+      if (head && head.contains(el)) return;
+      sec.querySelector(".pl-more").click();
+      el.scrollIntoView();
+    }
+    addEventListener("hashchange", reveal); reveal();
+
+    var hero = document.querySelector("header.hero");
+    var heroText = hero ? hero.textContent : "";
+    document.querySelectorAll("[data-readtime]").forEach(function (el) {
+      var clone = main.cloneNode(true);
+      clone.querySelectorAll("script, style, .pl-keep, .pl-more").forEach(function (n) { n.remove(); });
+      var full = T.rtFull.replace("{n}", minutes(heroText + clone.textContent));
+      el.textContent = plainText ? full + " · " + T.rtPlain.replace("{n}", minutes(heroText + plainText)) : full;
+    });
+    document.querySelectorAll("[data-plain-toggle]").forEach(function (b) {
+      b.addEventListener("click", function () { setPlain(!isPlain()); });
+    });
+    syncPlain();
+  }
+  // Story progress above the "next part" card: built from the nav so the order lives in one place.
+  function setupSteps() {
+    var next = document.querySelector("main .next, .next");
+    var links = document.querySelectorAll(".nav ul a.l");
+    if (!next || !links.length || document.querySelector(".story-steps")) return;
+    var ol = document.createElement("ol");
+    ol.className = "story-steps"; ol.setAttribute("aria-label", T.steps);
+    var seen = false;
+    [].forEach.call(links, function (a) {
+      var li = document.createElement("li"), here = a.classList.contains("site-on");
+      var x = document.createElement("a");
+      x.href = a.getAttribute("href");
+      x.textContent = (a.querySelector(".sh") || a).textContent;
+      if (here) { x.setAttribute("aria-current", "page"); seen = true; }
+      else if (!seen) li.className = "done";
+      li.appendChild(x); ol.appendChild(li);
+    });
+    if (!seen) [].forEach.call(ol.children, function (li) { li.className = "done"; });
+    next.parentNode.insertBefore(ol, next);
+  }
+  function late() { setupPlain(); setupSteps(); }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", late); else late();
 })();

@@ -89,6 +89,7 @@
   <div class="frame">
     <a class="brand" href="index.html"><i></i><span>AI 長出手了</span></a>
     <ul>
+      <li><a class="l" href="journey.html"><span class="lg">序章</span><span class="sh">序章</span></a></li>
       <li><a class="l site-on" href="history.html"><span class="lg">時間線</span><span class="sh">時間線</span></a></li>
       <li><a class="l" href="tech.html"><span class="lg">它怎麼運作</span><span class="sh">原理</span></a></li>
       <li><a class="l" href="bench.html"><span class="lg">模型評比</span><span class="sh">評比</span></a></li>
@@ -104,6 +105,21 @@
       <span class="pill">PART 1 · <b>時間線</b></span>
       <h1>從會聊天，<br><em>到會做事</em></h1>
       <p class="sub">2022 年底到現在，AI 走了四大步：先是只會回答問題的顧問，接著變成自己動手的師傅，再來是傳個訊息就辦事的管家，現在是帶著一群 AI 的包工頭。往下滑，沿著時間線看每個大小事件出現。每一步背後換了什麼技術，在<a href="tech.html">它怎麼運作</a>那頁細講。</p>
+      <nav class="eras" aria-label="四大步，點一下跳到那一段">
+        <a href="#era-1"><span class="k">1 · 顧問</span><b>你問，它答</b></a>
+        <a href="#era-2"><span class="k">2 · 師傅</span><b>開始自己動手</b></a>
+        <a href="#era-3"><span class="k">3 · 管家</span><b>傳個訊息就辦事</b></a>
+        <a href="#era-4"><span class="k">4 · 包工頭</span><b>一群 AI 一起做</b></a>
+      </nav>
+      <aside class="tldr" aria-label="這頁的重點">
+        <b class="tldr-h">這頁三個重點</b>
+        <ol>
+          <li>四年走了四步：先是你問它答的顧問，接著是自己動手的師傅，再來是傳個訊息就辦事的管家，現在是帶著一群 AI 的包工頭。</li>
+          <li>最大的轉折在 2024 年底：AI 拿到工具，從「只會講」變成「會動手做」。</li>
+          <li>這頁只講發生了什麼事。每一步背後換了什麼技術，下一頁「它怎麼運作」會講。</li>
+        </ol>
+        <p class="tldr-meta"><span data-readtime></span><button type="button" class="tldr-btn" data-plain-toggle></button></p>
+      </aside>
       <p class="caveat">各家的重要發表都有收，但 agent 工具的例子多半以作者每天在用的 Claude Code 說明，所以 Anthropic 的事件會稍微多一點。</p>
     </div>
   </div>
@@ -124,13 +140,13 @@
     <span class="tl-now" aria-live="polite"><span id="tlNow">2022</span></span>
     <ol class="tl" id="tl">
       <li class="tl-line" aria-hidden="true"><i id="tlFill"></i></li>
-      <li class="tl-era"><span class="en">顧問</span><b>你問，它答</b><span class="es">2022 年底起，AI 很會回答問題，但事情還是你自己做。</span></li>
+      <li class="tl-era" id="era-1"><span class="en">顧問</span><b>你問，它答</b><span class="es">2022 年底起，AI 很會回答問題，但事情還是你自己做。</span></li>
       <li class="ev big" data-cat="model" data-year="2022" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2022.11</span><span class="cat">模型</span></span><h3>ChatGPT 推出</h3><p>很多人第一次跟 AI 聊天。它只會「講」：給你一段文字或程式碼，你自己複製、貼上、執行。</p><p class="tl-elder"><b>白話說</b>像打電話問一位博學的顧問，但他不會到你家修水管。</p></div></li>
       <li class="ev small" data-cat="model" data-year="2023" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2023.03</span><span class="cat">模型</span></span><b>GPT-4 與第一代 Claude 推出</b><span class="sm">大型模型競賽正式開始。</span></div></li>
       <li class="ev small" data-cat="model" data-year="2023" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2023.12</span><span class="cat">模型</span></span><b>Google 推出 Gemini</b><span class="sm">三強格局成形。</span></div></li>
       <li class="ev small" data-cat="model" data-year="2024" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2024.05</span><span class="cat">模型</span></span><b>GPT-4o：即時語音與看圖</b><span class="sm">AI 開始能看照片、用講的對話。</span></div></li>
       <li class="ev big" data-cat="model" data-year="2024" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2024.09</span><span class="cat">模型</span></span><h3>推理模型出現（OpenAI o1）</h3><p>回答前先產生一長串思考再作答。要讓 AI 自己做多步驟的事，這是前提。</p><p class="tl-elder"><b>白話說</b>從搶答的學生，變成先打草稿再寫答案的學生。</p></div></li>
-      <li class="tl-era"><span class="en">師傅</span><b>開始自己動手</b><span class="es">2024 年底起，AI 拿到工具，直接在你電腦裡做事。</span></li>
+      <li class="tl-era" id="era-2"><span class="en">師傅</span><b>開始自己動手</b><span class="es">2024 年底起，AI 拿到工具，直接在你電腦裡做事。</span></li>
       <li class="ev big" data-cat="agent" data-year="2024" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2024.10</span><span class="cat">Agent</span></span><h3>Claude 學會操作電腦（computer use）</h3><p>看螢幕、移動滑鼠、打字。還很慢、常按錯，但 AI 的手第一次伸進了電腦裡。</p></div></li>
       <li class="ev big" data-cat="agent" data-year="2024" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2024.11</span><span class="cat">Agent</span></span><h3>Anthropic 推出 MCP</h3><p>讓任何工具都能用同一種格式接上 AI，後來 OpenAI、Google 也採用。</p><p class="tl-elder"><b>白話說</b>AI 的 USB-C，什麼工具都插得上。</p></div></li>
       <li class="ev small" data-cat="china" data-year="2024" style="--c:var(--l-mem)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2024.12</span><span class="cat">中國</span></span><b>DeepSeek V3</b><span class="sm">671B 參數的 MoE 模型，以很低的訓練成本做出接近頂尖的表現。這個成本只算正式訓練那一次，不含前期研究和實驗。</span></div></li>
@@ -145,14 +161,14 @@
       <li class="ev small" data-cat="model" data-year="2025" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.08</span><span class="cat">模型</span></span><b>GPT-5</b><span class="sm">OpenAI 把快速回答的模型和推理模型合成一個系統，由路由器自動決定要不要深想。</span></div></li>
       <li class="ev small" data-cat="china" data-year="2025" style="--c:var(--l-mem)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.09</span><span class="cat">中國</span></span><b>Anthropic 停止服務中國控股公司</b><span class="sm">理由之一是防止蒸餾。</span></div></li>
       <li class="ev small" data-cat="agent" data-year="2025" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.10</span><span class="cat">Agent</span></span><b>Agent Skills</b><span class="sm">把工作流程寫成資料夾、按需載入。「調教 AI」變成管理文字檔。</span></div></li>
-      <li class="tl-era"><span class="en">管家</span><b>傳個訊息就辦事</b><span class="es">2025 年底起，從聊天軟體就能叫 AI 做事。</span></li>
+      <li class="tl-era" id="era-3"><span class="en">管家</span><b>傳個訊息就辦事</b><span class="es">2025 年底起，從聊天軟體就能叫 AI 做事。</span></li>
       <li class="ev small" data-cat="model" data-year="2025" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.11</span><span class="cat">模型</span></span><b>Gemini 3 與 Claude Opus 4.5</b><span class="sm">同一個月兩家換代。Opus 4.5 在寫程式考試 SWE-bench Verified 拿到 80.9%，是第一個過八成的模型；Gemini 3 Pro 是 76.2%。</span></div></li>
       <li class="ev small" data-cat="agent" data-year="2025" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2025.11</span><span class="cat">Agent</span></span><b>「小龍蝦」誕生</b><span class="sm">工程師 Peter Steinberger 的個人專案，吉祥物是一隻龍蝦：在 WhatsApp 傳訊息，就能叫家裡電腦上的 AI 做事。後來改名 OpenClaw。</span></div></li>
       <li class="ev small" data-cat="agent" data-year="2026" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.01</span><span class="cat">Agent</span></span><b>Claude Cowork：給不寫程式的人用的 agent</b><span class="sm">在桌面版 Claude 裡指定一個資料夾，它就能自己整理檔案、做表格、寫報告，背後是和 Claude Code 同一套 agent 架構。</span></div></li>
       <li class="ev big" data-cat="agent" data-year="2026" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.01</span><span class="cat">Agent</span></span><h3>OpenClaw 爆紅</h3><p>它原本叫 Clawdbot，先改名 Moltbot，1/30 定名 OpenClaw，短短幾天拿到十萬顆星。也冒出假擴充套件、詐騙幣和 prompt injection。</p><p class="tl-elder"><b>白話說</b>用 LINE 傳訊息給管家，但太老實的管家也可能被騙。</p></div></li>
       <li class="ev big" data-cat="agent" data-year="2026" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.02</span><span class="cat">Agent</span></span><h3>Remote Control：手機遙控電腦上的 AI</h3><p>程式和檔案留在電腦上，手機只是遙控器，訊息經 Anthropic 中繼。</p></div></li>
       <li class="ev big" data-cat="china" data-year="2026" style="--c:var(--l-mem)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.02</span><span class="cat">中國</span></span><h3>蒸餾指控公開化</h3><p>OpenAI 向美國眾議院提交備忘錄；Anthropic 點名 DeepSeek、Moonshot、MiniMax，約 2.4 萬個帳號、1,600 萬次對話。</p></div></li>
-      <li class="tl-era"><span class="en">包工頭</span><b>一群 AI 一起做</b><span class="es">2026 年起，一個人帶一支 AI 團隊。</span></li>
+      <li class="tl-era" id="era-4"><span class="en">包工頭</span><b>一群 AI 一起做</b><span class="es">2026 年起，一個人帶一支 AI 團隊。</span></li>
       <li class="ev small" data-cat="agent" data-year="2026" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.02</span><span class="cat">Agent</span></span><b>Agent Teams</b><span class="sm">隨 Opus 4.6 推出：Claude Code 可以開一組 agent 分工，彼此直接傳訊息協調，不必每件事都經過主 agent。</span></div></li>
       <li class="ev small" data-cat="agent" data-year="2026" style="--c:var(--l-new)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.03</span><span class="cat">Agent</span></span><b>從手機傳訊息派工作，變成正式功能</b><span class="sm">Anthropic 的 Dispatch、Channels 等功能，讓你不用自己架設，就能從手機或聊天軟體把工作交給電腦上的 AI。</span></div></li>
       <li class="ev small" data-cat="model" data-year="2026" style="--c:var(--l-hist)"><span class="dot"></span><div class="evc"><span class="evm"><span class="d">2026.04</span><span class="cat">模型</span></span><b>Claude Mythos Preview 與 Project Glasswing</b><span class="sm">4/7 公布：Anthropic 說它找資安漏洞的能力強到不適合直接公開，先只給資安合作夥伴用來修補漏洞。它是後來 Fable 的前身。</span></div></li>
@@ -190,8 +206,6 @@
   <div class="frame">
     <div class="next">
       <a href="tech.html"><article class="card"><span class="tag">PART 2 · 它怎麼運作 →</span><h3>AI 沒有在學你，它每次都重讀一遍</h3><p>context、prompt cache、agent 迴圈、skills、裝置同步，附互動模擬器。</p></article></a>
-      <a href="bench.html"><article class="card"><span class="tag">PART 3 · 模型評比 →</span><h3>分數怎麼看，誰又擅長什麼</h3><p>能力曲線、各模型對照表、歷年模型的名冊。</p></article></a>
-      <a href="china.html"><article class="card"><span class="tag">PART 4 · 追趕與蒸餾 →</span><h3>中國 AI 怎麼追上來，美國廠商怎麼防</h3><p>中國模型怎麼追上來？「蒸餾」是什麼，各家又怎麼防？</p></article></a>
     </div>
   </div>
 </section>

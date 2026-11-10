@@ -20,6 +20,7 @@
   <div class="frame">
     <a class="brand" href="index.html"><i></i><span>AI Grew Hands</span></a>
     <ul>
+      <li><a class="l" href="journey.html"><span class="lg">Prologue</span><span class="sh">Start</span></a></li>
       <li><a class="l" href="history.html"><span class="lg">Timeline</span><span class="sh">Timeline</span></a></li>
       <li><a class="l site-on" href="tech.html"><span class="lg">How it works</span><span class="sh">How</span></a></li>
       <li><a class="l" href="bench.html"><span class="lg">Model benchmarks</span><span class="sh">Bench</span></a></li>
@@ -32,11 +33,13 @@
 <nav class="toc gutter" aria-label="On this page">
   <div class="frame">
     <ul>
+      <li class="grp" aria-hidden="true">Basics</li>
       <li><a class="l" href="#myth">Myth</a></li>
       <li><a class="l" href="#fresh">New facts</a></li>
       <li><a class="l" href="#request">A request</a></li>
       <li><a class="l" href="#sim">Simulator</a></li>
       <li><a class="l" href="#cache">Cache</a></li>
+      <li class="grp" aria-hidden="true">Advanced</li>
       <li><a class="l" href="#agent">Agent</a></li>
       <li><a class="l" href="#auto">Auto</a></li>
       <li><a class="l" href="#sync">Sync</a></li>
@@ -53,6 +56,15 @@
       <span class="pill">PART 2 · <b>How it works</b></span>
       <h1>AI isn't learning you.<br><em>It rereads everything, every time.</em></h1>
       <p class="sub">The longer you chat with AI, the better it seems to know you. But not a single bit of the model has changed. What changes is the context sent in each time: the system prompt, tools, skills, memory, and the whole conversation so far.</p>
+      <aside class="tldr" aria-label="Key points of this page">
+        <b class="tldr-h">Three things on this page</b>
+        <ol>
+          <li>A model is fixed once training ends. However long you chat with it, the model itself does not change.</li>
+          <li>It seems to remember you and know recent news because the app resends the whole bundle every time: rules, memory, chat history and anything it looked up.</li>
+          <li>"AI doing things by itself" works like this: the model says which tool it wants, a program on your computer runs it, the result goes back in, and the loop repeats.</li>
+        </ol>
+        <p class="tldr-meta"><span data-readtime></span><button type="button" class="tldr-btn" data-plain-toggle></button></p>
+      </aside>
       <div class="cta">
         <a class="btn primary" href="#sim">Try the context simulator →</a>
         <a class="btn" href="#myth">Start with the most common myth</a>
@@ -341,6 +353,14 @@
   </div>
 </section>
 
+<div class="group-mark gutter" id="advanced">
+  <div class="frame">
+    <span class="eyebrow">Advanced · 06 to 10</span>
+    <b>That's the basics. Next: what happens once AI starts doing things itself</b>
+    <p>The first five sections are ideas every AI user can use. The next five cover the agent loop, Auto mode, device sync, multi-agent teams, and memory and skills, and lean more toward engineering. If you only want the big picture, you can skip ahead to <a href="bench.html">Model benchmarks</a>.</p>
+  </div>
+</div>
+
 <section class="s gutter" id="agent">
   <div class="frame">
     <div class="s-head measure">
@@ -589,7 +609,7 @@
 
 <section class="s gutter" id="faq">
   <div class="frame measure">
-    <a class="card linkcard" href="index.html#faq"><span class="tag">11 · What parents ask →</span><h3>"Does it remember me?" "Will my chats be used for training?"</h3><p>These common questions, along with five tips for using AI, are collected at the bottom of the home page, ready to send to your family.</p></a>
+    <a class="card linkcard" href="family.html"><span class="tag">11 · What parents ask →</span><h3>"Does it remember me?" "Will my chats be used for training?"</h3><p>These common questions, along with five tips for using AI, are collected on the "For family" page, ready to send to your family.</p></a>
   </div>
 </section>
 

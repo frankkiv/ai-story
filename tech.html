@@ -20,6 +20,7 @@
   <div class="frame">
     <a class="brand" href="index.html"><i></i><span>AI 長出手了</span></a>
     <ul>
+      <li><a class="l" href="journey.html"><span class="lg">序章</span><span class="sh">序章</span></a></li>
       <li><a class="l" href="history.html"><span class="lg">時間線</span><span class="sh">時間線</span></a></li>
       <li><a class="l site-on" href="tech.html"><span class="lg">它怎麼運作</span><span class="sh">原理</span></a></li>
       <li><a class="l" href="bench.html"><span class="lg">模型評比</span><span class="sh">評比</span></a></li>
@@ -31,11 +32,13 @@
 <nav class="toc gutter" aria-label="本頁章節">
   <div class="frame">
     <ul>
+      <li class="grp" aria-hidden="true">基礎</li>
       <li><a class="l" href="#myth">誤會</a></li>
       <li><a class="l" href="#fresh">最新資料</a></li>
       <li><a class="l" href="#request">一次請求</a></li>
       <li><a class="l" href="#sim">模擬器</a></li>
       <li><a class="l" href="#cache">Cache</a></li>
+      <li class="grp" aria-hidden="true">進階</li>
       <li><a class="l" href="#agent">Agent</a></li>
       <li><a class="l" href="#auto">Auto</a></li>
       <li><a class="l" href="#sync">同步</a></li>
@@ -52,6 +55,15 @@
       <span class="pill">PART 2 · <b>它怎麼運作</b></span>
       <h1>AI 沒有在學你。<br><em>它每次都重讀一遍。</em></h1>
       <p class="sub">跟 AI 聊得愈久，它好像愈懂你。但模型本身一個位元都沒變。變的是每次送進去的那份 context：系統提示、工具、skills、記憶，還有整段對話紀錄。</p>
+      <aside class="tldr" aria-label="這頁的重點">
+        <b class="tldr-h">這頁三個重點</b>
+        <ol>
+          <li>模型訓練完就固定了。你跟它聊再久，它本身也不會變。</li>
+          <li>它看起來記得你、知道最新的事，是因為 App 每次都把規則、記憶、對話紀錄和查到的資料整包重送一遍。</li>
+          <li>「AI 自己動手」的做法是：模型說想用哪個工具，你電腦上的程式去執行，再把結果送回去，這樣一圈一圈重複。</li>
+        </ol>
+        <p class="tldr-meta"><span data-readtime></span><button type="button" class="tldr-btn" data-plain-toggle></button></p>
+      </aside>
       <div class="cta">
         <a class="btn primary" href="#sim">玩玩看 context 模擬器 →</a>
         <a class="btn" href="#myth">先看最常見的誤會</a>
@@ -340,6 +352,14 @@
   </div>
 </section>
 
+<div class="group-mark gutter" id="advanced">
+  <div class="frame">
+    <span class="eyebrow">進階 · 06 到 10</span>
+    <b>基礎講完了，接下來是 AI 開始自己動手之後的事</b>
+    <p>前面五段是每個用 AI 的人都用得到的觀念。後面五段講 agent 迴圈、Auto 模式、裝置同步、多 agent 協作、記憶與 skills，比較偏工程。只想懂大方向的話，可以直接跳到<a href="bench.html">模型評比</a>。</p>
+  </div>
+</div>
+
 <section class="s gutter" id="agent">
   <div class="frame">
     <div class="s-head measure">
@@ -588,7 +608,7 @@
 
 <section class="s gutter" id="faq">
   <div class="frame measure">
-    <a class="card linkcard" href="index.html#faq"><span class="tag">11 · 爸媽常問 →</span><h3>「它會記得我嗎？」「會被拿去訓練嗎？」</h3><p>這些常見問題，連同五個用 AI 的提醒，整理在首頁最下面，方便直接傳給家人看。</p></a>
+    <a class="card linkcard" href="family.html"><span class="tag">11 · 爸媽常問 →</span><h3>「它會記得我嗎？」「會被拿去訓練嗎？」</h3><p>這些常見問題，連同五個用 AI 的提醒，整理在「給家人」那一頁，方便直接傳給家人看。</p></a>
   </div>
 </section>
 

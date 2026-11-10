@@ -105,6 +105,7 @@
   <div class="frame">
     <a class="brand" href="index.html"><i></i><span>AI 長出手了</span></a>
     <ul>
+      <li><a class="l" href="journey.html"><span class="lg">序章</span><span class="sh">序章</span></a></li>
       <li><a class="l" href="history.html"><span class="lg">時間線</span><span class="sh">時間線</span></a></li>
       <li><a class="l" href="tech.html"><span class="lg">它怎麼運作</span><span class="sh">原理</span></a></li>
       <li><a class="l site-on" href="bench.html"><span class="lg">模型評比</span><span class="sh">評比</span></a></li>
@@ -119,16 +120,45 @@
     <div class="hero-copy measure">
       <span class="pill">PART 3 · <b>模型評比</b></span>
       <h1>分數怎麼看，<br><em>誰又擅長什麼</em></h1>
-      <p class="sub">每次新模型發表，都會附一張「我們又第一名」的成績表。這頁先講這些分數為什麼不能全信，再把各家模型放在同一張表上比，最後整理每個模型適合拿來做什麼。</p>
+      <p class="sub">每次新模型發表，都會附一張「我們又第一名」的成績表。這頁先給結論：每個模型適合拿來做什麼。接著講這些分數為什麼不能全信，再把各家模型放在同一張表上比。</p>
+      <aside class="tldr" aria-label="這頁的重點">
+        <b class="tldr-h">這頁三個重點</b>
+        <ol>
+          <li>沒有哪個模型樣樣第一，挑模型要看你拿來做什麼，所以這頁先給結論。</li>
+          <li>廠商自己報的分數通常偏高，第三方重測常會低幾分，看趨勢就好。</li>
+          <li>寫程式的能力兩年內從修好五成題目進步到九成，舊考卷快被考滿，新的比較要看更難的考試。</li>
+        </ol>
+        <p class="tldr-meta"><span data-readtime></span><button type="button" class="tldr-btn" data-plain-toggle></button></p>
+      </aside>
     </div>
   </div>
 </header>
 
 <main>
+<section class="s gutter" id="strengths">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">01 · 誰擅長什麼</span>
+      <h2>如果只能挑一個，看你要拿來做什麼</h2>
+      <p class="lead">綜合後面幾段的第三方數字、廠商自己的表，以及多個評測網站的評語（2026 年 11 月）。這是大方向，不是定論。</p>
+    </div>
+    <div class="good">
+      <article class="card" style="--c:var(--l-skills)"><span class="tag">寫程式、長時間的 agent 工作</span><h3>Claude Opus 5.5</h3><p>多個評測網站評為寫程式最好的公開模型之一；第三方綜合指數只輸給 11 月剛推出的 Fable 5.2 和還沒公開的 Gemini 4 Carbon，價格是 Fable 5.2 的一半。<b>想省錢</b>可以先試 Sonnet 5.5，終端機任務分數甚至更高，價格只要一半。</p></article>
+      <article class="card" style="--c:var(--text)"><span class="tag">最難的推理、數學、科學</span><h3>GPT-6 Astra</h3><p>ARC-AGI-2（抽象推理謎題）第三方測到 95%，OpenAI 自報的高難度數學測驗也領先；多個網站評它是「最難的推理題」首選。價格比 Fable 5.2 還貴一點。日常寫程式可改用 GPT-6.1 Sol，價格五分之一。</p></article>
+      <article class="card" style="--c:var(--l-hist)"><span class="tag">長文件、影片、一般使用者喜好</span><h3>Gemini 4 Argon</h3><p>LMArena 使用者投票在公開模型裡排第一，代表一般人最常覺得它的回答比較好；長文件、長影片、財務法律類文件是它被推薦的強項。優惠價（每百萬 token 輸入 $2／輸出 $10）只到 11/30，12/1 起是 $4／$20，跟 Opus 5.5 一樣。</p></article>
+      <article class="card" style="--c:var(--l-skills)"><span class="tag">最難的任務、寫作</span><h3>Claude Fable 5.2</h3><p>11/9 剛推出，第三方綜合指數目前第一（64.6），終端機任務和 Opus 5.5 同分。前一版 Fable 5.1 被多個網站評為寫作最好的模型。價格降到每百萬 token $8／$40，仍是 Opus 5.5 的兩倍，日常寫程式通常不必用到它。</p></article>
+      <article class="card" style="--c:var(--l-new)"><span class="tag">大量、便宜的日常任務</span><h3>GPT-6 Luna、Claude Haiku 5.5、DeepSeek V4.1 Flash、Gemini 3.8 Flash</h3><p>GPT-6 Luna、Claude Haiku 5.5（兩者都是每百萬 token $0.10／$0.50）和 DeepSeek V4.1 Flash 的價格只有旗艦的十幾分之一到幾十分之一；Gemini 3.8 Flash 貴一些，大約是 Opus 5.5 的五分之一、Gemini 4 Argon 優惠價的三分之一。適合分類、摘要、翻譯這種量大但不難的工作。Cursor 的 Auto 模式就是把簡單請求派給這一級。</p></article>
+      <article class="card" style="--c:var(--l-mem)"><span class="tag">想自己架、要開放權重</span><h3>Kimi K3.1 Pro、GLM-5.3、DeepSeek V4</h3><p>可以下載權重放在自己的伺服器上。Kimi K3.1 Pro 的終端機任務分數（67.2）是整張對照表第一。要注意資料存放和內容審查的問題，見<a href="china.html#faq">追趕與蒸餾</a>那頁。</p></article>
+    </div>
+    <p class="elder mt"><b>白話說</b><span>就像找醫生：沒有一位什麼都最強，先想清楚要看哪一科。一般家用，免費版的 Claude、ChatGPT、Gemini 差距不大，挑一個用得順手的就好。</span></p>
+    <p class="caveat mt">還有兩個一般人用不到的模型。Google 的 Gemini 4 Carbon（10/28 發表）目前只開放給部分資安防禦者，Google 說會盡快全面開放。Anthropic 的 Mythos 不是比 Fable 更強的另一個模型：依 Anthropic 的說明，兩者是同一個底層模型，Fable 在生物、資安和疑似開發前沿 AI 的請求上多加了一層防護；沒有這層防護的 Mythos 只開放給資安合作夥伴。</p>
+  </div>
+</section>
+
 <section class="s gutter" id="why">
   <div class="frame">
     <div class="s-head measure">
-      <span class="eyebrow">01 · 先打預防針</span>
+      <span class="eyebrow">02 · 先打預防針</span>
       <h2>為什麼這些分數不能全信</h2>
       <p class="lead">分數有參考價值，但它比看起來更「軟」。下面五個原因，看懂了就知道新聞標題的「第一名」該打幾折。</p>
     </div>
@@ -146,7 +176,7 @@
 <section class="s gutter" id="bench">
   <div class="frame">
     <div class="s-head measure">
-      <span class="eyebrow">02 · 能力曲線</span>
+      <span class="eyebrow">03 · 能力曲線</span>
       <h2>寫程式的能力，兩年從五成到九成</h2>
       <p class="lead">SWE-bench Verified 是一份 500 題的考卷：每題是真實開源專案的 GitHub issue，AI 要自己改程式，再用專案原本的測試判定有沒有修好。2024 年底公開可用的最好模型修得好大約一半（OpenAI 的 o3 在 2024 年 12 月就公布了 71.7%，但隔年 4 月才開放使用），2026 年中最高已到 95%。</p>
       <p class="elder"><b>白話說</b>像讓學徒去修 500 件客人真的送來的故障品，修好幾件就算幾分。</p>
@@ -170,7 +200,7 @@
 <section class="s gutter" id="matrix">
   <div class="frame">
     <div class="s-head measure">
-      <span class="eyebrow">03 · 同一張表上比</span>
+      <span class="eyebrow">04 · 同一張表上比</span>
       <h2>2026 年 11 月，各家主力模型對照</h2>
       <p class="lead">這張表盡量只用第三方的數字：Artificial Analysis 用同一套設定重測的綜合指數和 Terminal-Bench，加上 LMArena 由使用者匿名投票的排名。點欄位名稱可以排序。</p>
     </div>
@@ -211,26 +241,6 @@
       </tbody>
     </table></div>
     <p class="caveat">來源：Anthropic〈Claude Opus 5.5〉（2026/9/22）。GPT 欄位是 Anthropic 引用 OpenAI 公布的數字。11/9 的 Fable 5.2 發表文自報 AutomationBench 51.4%、Terminal-Bench-Science 74.6%，這兩項都超過表上的 GPT-6 Astra。</p>
-  </div>
-</section>
-
-<section class="s gutter" id="strengths">
-  <div class="frame">
-    <div class="s-head measure">
-      <span class="eyebrow">04 · 誰擅長什麼</span>
-      <h2>如果只能挑一個，看你要拿來做什麼</h2>
-      <p class="lead">綜合上面的第三方數字、廠商自己的表，以及多個評測網站的評語（2026 年 11 月）。這是大方向，不是定論。</p>
-    </div>
-    <div class="good">
-      <article class="card" style="--c:var(--l-skills)"><span class="tag">寫程式、長時間的 agent 工作</span><h3>Claude Opus 5.5</h3><p>多個評測網站評為寫程式最好的公開模型之一；第三方綜合指數只輸給 11 月剛推出的 Fable 5.2 和還沒公開的 Gemini 4 Carbon，價格是 Fable 5.2 的一半。<b>想省錢</b>可以先試 Sonnet 5.5，終端機任務分數甚至更高，價格只要一半。</p></article>
-      <article class="card" style="--c:var(--text)"><span class="tag">最難的推理、數學、科學</span><h3>GPT-6 Astra</h3><p>ARC-AGI-2（抽象推理謎題）第三方測到 95%，OpenAI 自報的高難度數學測驗也領先；多個網站評它是「最難的推理題」首選。價格比 Fable 5.2 還貴一點。日常寫程式可改用 GPT-6.1 Sol，價格五分之一。</p></article>
-      <article class="card" style="--c:var(--l-hist)"><span class="tag">長文件、影片、一般使用者喜好</span><h3>Gemini 4 Argon</h3><p>LMArena 使用者投票在公開模型裡排第一，代表一般人最常覺得它的回答比較好；長文件、長影片、財務法律類文件是它被推薦的強項。優惠價（每百萬 token 輸入 $2／輸出 $10）只到 11/30，12/1 起是 $4／$20，跟 Opus 5.5 一樣。</p></article>
-      <article class="card" style="--c:var(--l-skills)"><span class="tag">最難的任務、寫作</span><h3>Claude Fable 5.2</h3><p>11/9 剛推出，第三方綜合指數目前第一（64.6），終端機任務和 Opus 5.5 同分。前一版 Fable 5.1 被多個網站評為寫作最好的模型。價格降到每百萬 token $8／$40，仍是 Opus 5.5 的兩倍，日常寫程式通常不必用到它。</p></article>
-      <article class="card" style="--c:var(--l-new)"><span class="tag">大量、便宜的日常任務</span><h3>GPT-6 Luna、Claude Haiku 5.5、DeepSeek V4.1 Flash、Gemini 3.8 Flash</h3><p>GPT-6 Luna、Claude Haiku 5.5（兩者都是每百萬 token $0.10／$0.50）和 DeepSeek V4.1 Flash 的價格只有旗艦的十幾分之一到幾十分之一；Gemini 3.8 Flash 貴一些，大約是 Opus 5.5 的五分之一、Gemini 4 Argon 優惠價的三分之一。適合分類、摘要、翻譯這種量大但不難的工作。Cursor 的 Auto 模式就是把簡單請求派給這一級。</p></article>
-      <article class="card" style="--c:var(--l-mem)"><span class="tag">想自己架、要開放權重</span><h3>Kimi K3.1 Pro、GLM-5.3、DeepSeek V4</h3><p>可以下載權重放在自己的伺服器上。Kimi K3.1 Pro 的終端機任務分數（67.2）是整張對照表第一。要注意資料存放和內容審查的問題，見<a href="china.html#faq">追趕與蒸餾</a>那頁。</p></article>
-    </div>
-    <p class="elder mt"><b>白話說</b><span>就像找醫生：沒有一位什麼都最強，先想清楚要看哪一科。一般家用，免費版的 Claude、ChatGPT、Gemini 差距不大，挑一個用得順手的就好。</span></p>
-    <p class="caveat mt">還有兩個一般人用不到的模型。Google 的 Gemini 4 Carbon（10/28 發表）目前只開放給部分資安防禦者，Google 說會盡快全面開放。Anthropic 的 Mythos 不是比 Fable 更強的另一個模型：依 Anthropic 的說明，兩者是同一個底層模型，Fable 在生物、資安和疑似開發前沿 AI 的請求上多加了一層防護；沒有這層防護的 Mythos 只開放給資安合作夥伴。</p>
   </div>
 </section>
 

@@ -38,7 +38,7 @@
 .st-you span { flex: none; }
 .st-you b { color: #fff; font-weight: 600; overflow: hidden; text-overflow: ellipsis; }
 @media (prefers-reduced-motion: reduce) { .st-you.wait i { animation: none; } }
-@media (max-width: 720px) { .st-you { font-size: .76rem; gap: .4rem; margin-inline: .75rem; padding-inline: .55rem; } }
+@media (max-width: 720px) { .st-you { font-size: .82rem; gap: .4rem; margin-inline: .75rem; padding-inline: .55rem; } }
 .st-term { position: relative; z-index: 5; margin: 0 1rem; justify-self: start; min-height: 2.4rem; background: rgba(10,12,16,.82); border: 1px solid color-mix(in srgb, var(--st-gold) 70%, transparent); border-radius: 10px; padding: .3rem .7rem; font-size: .82rem; line-height: 1.45; display: flex; flex-wrap: wrap; align-items: baseline; column-gap: .6rem; opacity: 0; transition: opacity .35s; }
 .st-term.on { opacity: 1; }
 .st-term:not(.on) { visibility: hidden; }
@@ -208,7 +208,9 @@
 
 .st-narr { z-index: 4; height: 3.4rem; background: var(--code-bg); padding: 0 .8rem .55rem 1.1rem; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .6rem; }
 .st-narr .txt { font-size: .84rem; line-height: 1.35; color: #a7b0bd; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
-@media (max-width: 720px) { .st-narr .txt { font-size: .8rem; } }
+@media (max-width: 720px) { .st-narr .txt { font-size: .82rem; } }
+/* phones: lay the map out narrower than the stage so the camera enlarges it; map labels land at about 13px or more */
+@media (max-width: 720px) { .scene { width: 84%; } }
 .st-narr .txt.swap, .sheet-txt.swap { animation: narrIn .35s both; }
 @keyframes narrIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 .st-narr code, .sheet code { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.16); color: #fff; }
@@ -288,6 +290,7 @@
 .end-act a, .end-act button { font: inherit; font-size: .95rem; font-weight: 600; min-height: 2.75rem; padding: 0 1.15rem; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; gap: .4rem; cursor: pointer; text-decoration: none; }
 .end-act .go { background: var(--st-gold); color: #0e1116; border: 0; }
 .end-act .again { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.3); }
+.end-act .nextpart { flex: 1 1 100%; }
 .end-act .again:hover { border-color: var(--st-gold); color: var(--st-gold); }
 @media (min-width: 1100px) { .endwrap { bottom: 4.4rem; } }
 @media (prefers-reduced-motion: reduce) { .endwrap { transition: none; } }
@@ -299,8 +302,9 @@
   <div class="frame">
     <a class="brand" href="index.html"><i></i><span>AI Grew Hands</span></a>
     <ul>
+      <li><a class="l site-on" href="journey.html"><span class="lg">Prologue</span><span class="sh">Start</span></a></li>
       <li><a class="l" href="history.html"><span class="lg">Timeline</span><span class="sh">Timeline</span></a></li>
-      <li><a class="l site-on" href="tech.html"><span class="lg">How it works</span><span class="sh">How</span></a></li>
+      <li><a class="l" href="tech.html"><span class="lg">How it works</span><span class="sh">How</span></a></li>
       <li><a class="l" href="bench.html"><span class="lg">Model benchmarks</span><span class="sh">Bench</span></a></li>
       <li><a class="l" href="china.html"><span class="lg">Catching up</span><span class="sh">China</span></a></li>
       <li><a class="l" href="future.html"><span class="lg">Next bottleneck</span><span class="sh">Limits</span></a></li>
@@ -311,7 +315,7 @@
 <header class="hero gutter" style="padding-block: 3.5rem 1.5rem">
   <div class="frame" style="display:block">
     <div class="hero-copy measure">
-      <span class="pill">PART 2 walkthrough · <b>Follow one message</b></span>
+      <span class="pill">Prologue · <b>Follow one message</b></span>
       <h1>After you press Enter,<br><em>where do your words go?</em></h1>
       <p class="sub">It starts with you at your computer, asking Claude Code "What is AI, really?". That question is packed up on your computer and sent across the ocean to a model in a remote data center. The model reads the whole package, works through it layer by layer, guesses the answer one word at a time, and decides whether it needs to search the web. Then the answer comes back, and your phone can see the same conversation. Four chapters, seventeen steps. Scroll down and look at one place at a time. Asking ChatGPT, Gemini or Claude in a phone app follows the same flow; the only difference is that the history and memory live on the provider's servers instead of your computer.</p>
     </div>
@@ -465,7 +469,7 @@
           <li>You pick up your phone<span>Computer and phone both connect to a relay; your files stay on your computer</span></li>
           <li class="zero">Times the model was changed, start to finish: <b>0</b></li>
         </ol>
-          <div class="end-act"><a class="go" id="exit2" href="tech.html" data-back="&#8592; Back to where you were">&#8592; Back to How it works</a><button type="button" class="again" id="again">&#8593; Watch again from the start</button></div>
+          <div class="end-act"><a class="go nextpart" href="history.html">Next, PART 1: Timeline &#8594;</a><a class="again" id="exit2" href="tech.html" data-back="&#8592; Back to where you were">&#8592; Back to How it works</a><button type="button" class="again" id="again">&#8593; Watch again from the start</button></div>
         </div>
         <div class="st-cap"><button type="button" id="prev" aria-label="Previous step">&#8249;</button><p class="st-sub" id="sub" aria-hidden="true"></p><button type="button" id="next" aria-label="Next step">&#8250;</button></div>
         <div class="st-narr"><div class="txt" id="narr" aria-hidden="true"></div><button type="button" class="more" id="more" aria-hidden="true" tabindex="-1">More ↑</button></div>
@@ -696,12 +700,12 @@
     {"ch": 2, "name": "Across the ocean", "sub": "The package <em>crosses the ocean</em>", "note": "About 10,000 km one way, 0.1–0.2 s round trip", "you": "Still “Thinking…”", "wait": true, "hot": ["#pipe"], "cam": ["#pipe", "#srv-ico"], "tour": ["#wp1", "#wp2", "#wp3", "#wp4", "#srv-ico"], "beam": ["pipe"], "lit": "z-srv", "kind": "lock", "st": F, "term": ["Data center", "a remote building full of servers and GPUs"]},
     {"ch": 2, "name": "Front desk", "sub": "The front desk <em>checks who you are</em>", "note": "Account and quota, then a free GPU machine", "you": "Still “Thinking…”", "wait": true, "hot": ["#front"], "pk": "#front", "cam": ["#front", "#tok"], "kind": "ctx", "st": F, "term": ["API", "the agreed intake window between programs"]},
     {"ch": 2, "name": "Tokenize", "sub": "Text becomes <em>tokens</em>", "note": "The split and IDs are illustrative", "you": "Still “Thinking…”", "wait": true, "hot": ["#tok"], "pk": "#tok", "kind": "ctx", "st": F + " tokens", "term": ["token", "the smallest unit of text a model handles"]},
-    {"ch": 2, "name": "Match the cache", "sub": "Matching parts <em>come from the cache</em>", "note": "The cache lasts 5 minutes to 1 hour", "you": "Still “Thinking…”", "wait": true, "hot": ["#cache", "#pack"], "pk": "#cache", "kind": "ctx", "st": F + " tokens hit", "term": ["prompt cache", "the server keeps a read prefix for 5 minutes to 1 hour"]},
+    {"ch": 2, "name": "Match the cache", "sub": "Matching parts <em>come from the cache</em>", "note": "The cache lasts 5 minutes to 1 hour", "you": "Still “Thinking…”", "wait": true, "hot": ["#cache", "#pack"], "camS": ["#cache"], "pk": "#cache", "kind": "ctx", "st": F + " tokens hit", "term": ["prompt cache", "the server keeps a read prefix for 5 minutes to 1 hour"]},
     {"ch": 2, "name": "Read it all", "sub": "The model <em>reads the whole package</em>", "note": "What each token leaves behind is the KV cache", "you": "Still “Thinking…”", "wait": true, "hot": ["#kv"], "pk": "#kv", "kind": "ctx", "st": F + " tokens kv-on", "term": ["KV cache", "notes left by every token, checked again while writing"]},
     {"ch": 2, "name": "Layer by layer", "sub": "One model, <em>layer by layer</em>", "note": "Dozens to 100+ layers in one model, not several models", "you": "Still “Thinking…”", "wait": true, "hot": ["#layers"], "st": F + " tokens kv-on layers", "term": ["attention", "each layer looks back and picks what matters most"]},
     {"ch": 2, "name": "Next word", "sub": "It <em>guesses the next word</em>, again and again", "note": "Odds are illustrative; the weights never change", "you": "Still “Thinking…”, almost there", "wait": true, "hot": ["#cand"], "st": F + " tokens kv-on cand gen-on", "term": ["Inference", "fixed weights work out one token at a time"]},
     {"ch": 3, "name": "Search or not", "sub": "Search the web? <em>The model decides</em>", "note": "Training covers this; today's news would need a search", "you": "Still “Thinking…”, almost there", "wait": true, "hot": ["#web"], "cam": ["#cand", "#web"], "st": F + " tokens kv-on cand gen-on", "term": ["Tool call", "the model asks to use a tool"]},
-    {"ch": 3, "name": "If it searches", "sub": "If it searches, <em>results join the package</em>", "note": "Not needed here; this is the extra loop for news", "you": "For news you'd see “Searching…”", "wait": true, "hot": ["#web", "#kv"], "pk": "#kv", "kind": "search", "st": F + " tokens kv-on cand gen-on search", "term": ["Web search tool", "the server searches and adds excerpts to context"]},
+    {"ch": 3, "name": "If it searches", "sub": "If it searches, <em>results join the package</em>", "note": "Not needed here; this is the extra loop for news", "you": "For news you'd see “Searching…”", "wait": true, "hot": ["#web", "#kv"], "camS": ["#web"], "pk": "#kv", "kind": "search", "st": F + " tokens kv-on cand gen-on search", "term": ["Web search tool", "the server searches and adds excerpts to context"]},
     {"ch": 3, "name": "Stream back", "sub": "The answer <em>streams back</em>", "note": "Over the same encrypted connection", "you": "Words appear a bit at a time", "hot": ["#cand", "#pipe", "#screen"], "cam": ["#screen", "#pipe"], "tour": ["#wp4", "#wp3", "#wp2", "#wp1", "#screen"], "beam": ["pipe up"], "kind": "reply", "st": F + " tokens kv-on cand gen-on typed", "term": ["Streaming", "each small piece is sent as soon as it is ready"]},
     {"ch": 3, "name": "Save locally", "sub": "The exchange is <em>saved on your computer</em>", "note": "A .jsonl file in ~/.claude/projects/", "you": "Done. Ask the next thing", "hot": ["#files", "#screen"], "pk": "#files", "kind": "save", "st": F + " cand gen-on typed saved-on", "term": [".jsonl history", "stored in ~/.claude/projects/"]},
     {"ch": 4, "name": "Connect to relay", "sub": "Computer and phone meet at a <em>relay</em>", "note": "The relay passes messages, never your files", "you": "The same chat, in the Claude app", "dev": "Your phone", "hot": ["#relay", "#pipe", "#pipe2", "#phone"], "cam": ["#relay", "#phone"], "beam": ["pipe2"], "lit": "phone", "st": F + " cand gen-on typed saved-on", "term": ["Remote Control", "steer Claude Code on your computer from your phone"]},
@@ -781,7 +785,9 @@
       } else place(s.pk || s.tour[s.tour.length - 1]);
     } else packet.classList.remove("on");
 
-    camera(s.fit ? [] : s.cam ? s.cam.map(function (q) { return scene.querySelector(q); }) : hot);
+    /* camS: on a phone, frame only the main box when the lit boxes sit far apart, so the labels stay readable */
+    var cam = s.camS && innerWidth <= 720 ? s.camS : s.cam;
+    camera(s.fit ? [] : cam ? cam.map(function (q) { return scene.querySelector(q); }) : hot);
   }
 
   

@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>給家人的五個 AI 使用提醒 · AI 長出手了</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="平常用 AI 要注意的五件事，以及爸媽最常問的幾個問題。可以直接轉傳給家人。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700;900&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="alternate" hreflang="zh-Hant" href="family.html">
+<link rel="alternate" hreflang="en" href="en/family.html">
+<script src="assets/i18n.js"></script>
+<style>
+.share-row { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; margin-top: 1.25rem; }
+.share-row .btn { min-height: 44px; cursor: pointer; font: inherit; }
+.share-msg { color: var(--muted); font-size: .92rem; }
+</style>
+</head>
+<body class="family">
+
+<nav class="nav gutter" aria-label="網站">
+  <div class="frame">
+    <a class="brand" href="index.html"><i></i><span>AI 長出手了</span></a>
+    <ul>
+      <li><a class="l" href="journey.html"><span class="lg">序章</span><span class="sh">序章</span></a></li>
+      <li><a class="l" href="history.html"><span class="lg">時間線</span><span class="sh">時間線</span></a></li>
+      <li><a class="l" href="tech.html"><span class="lg">它怎麼運作</span><span class="sh">原理</span></a></li>
+      <li><a class="l" href="bench.html"><span class="lg">模型評比</span><span class="sh">評比</span></a></li>
+      <li><a class="l" href="china.html"><span class="lg">追趕與蒸餾</span><span class="sh">中國</span></a></li>
+      <li><a class="l" href="future.html"><span class="lg">下一個瓶頸</span><span class="sh">瓶頸</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero gutter">
+  <div class="frame" style="display:block">
+    <div class="hero-copy measure">
+      <span class="pill">給家人 · <b>可以直接轉傳</b></span>
+      <h1>平常用 AI，<br><em>記得這五件事</em></h1>
+      <p class="sub">這一頁不講原理，只講怎麼用才安全。字放大了一點，方便直接拿給爸媽看，或用下面的按鈕傳到 LINE。</p>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="s gutter" id="tips">
+  <div class="frame">
+    <div class="s-head measure" style="margin-bottom:1rem">
+      <span class="eyebrow">五個提醒</span>
+    </div>
+    <ol class="tips">
+      <li><b>跟錢和密碼有關的事，一定自己確認</b><span>AI 可以幫你查、幫你整理，但轉帳、付款、輸入密碼這一步，永遠自己來。AI 讀到的網頁或訊息裡可能藏著壞人的指令。</span></li>
+      <li><b>別把身分證、帳戶、病歷貼進去</b><span>你打的每一句都會送到服務商的伺服器。真的需要時，先把姓名、號碼遮掉。</span></li>
+      <li><b>看一下隱私設定</b><span>多數 App 可以選「不要拿我的對話去訓練模型」，也可以關掉記憶功能。花一分鐘設定一次就好。</span></li>
+      <li><b>數字、藥名、法律問題要再查證</b><span>AI 講得很有自信不代表是對的。重要的事問兩個來源，或直接問專業的人。</span></li>
+      <li><b>看到「AI 投資」「AI 代操」先懷疑</b><span>用 AI 名義保證獲利的，幾乎都是詐騙。AI 也能假造名人影片和聲音，接到熟人要錢的電話，先掛掉再打回去確認。在台灣，有疑問可以直接打 165 反詐騙專線。</span></li>
+    </ol>
+    <div class="share-row">
+      <button type="button" class="btn primary" id="copyTips">複製這五個提醒</button>
+      <a class="btn" id="lineTips" href="https://line.me/R/share" target="_blank" rel="noopener">分享到 LINE</a>
+      <span class="share-msg" id="copyMsg" aria-live="polite"></span>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="faq">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">爸媽常問</span>
+      <h2>可以直接拿去回答家人的問題</h2>
+    </div>
+    <div class="faq measure">
+      <details>
+        <summary>它會記得我嗎？</summary>
+        <div class="a"><p>模型本身不會。會「記得」是因為 App 把對話存起來、下次再送一次，或是記憶功能把重點寫成筆記，開新對話時帶進去。關掉記憶、開新對話，模型就不會知道你們之前聊過什麼。但這不代表紀錄不存在：服務商的伺服器可能還留著你的對話，你設定的自訂指示也會每次帶進去。想讓紀錄消失，要到設定裡刪除。</p></div>
+      </details>
+      <details>
+        <summary>我教它的事，它會學起來嗎？</summary>
+        <div class="a"><p>同一段對話裡會照做，因為你說的話就在 context 裡。要以後都照做，得寫進記憶、專案說明或 skill 這類檔案，每次重新帶進去。模型不會因為你教它而改變。</p></div>
+      </details>
+      <details>
+        <summary>我的對話會被拿去訓練下一代模型嗎？</summary>
+        <div class="a"><p>這取決於服務的隱私設定，可以自己選。就算有，也是幾個月後才出現的新模型，不是眼前這個在即時學習。內容機密的話，先看清楚設定再用。</p></div>
+      </details>
+      <details>
+        <summary>聊太久它會變笨嗎？</summary>
+        <div class="a"><p>有可能。context 有上限，塞太多無關的東西，重要資訊反而容易被忽略。很長的對話會被自動摘要壓縮，細節可能遺失。開個新對話、只帶需要的資料，常常反而更準。</p></div>
+      </details>
+      <details>
+        <summary>為什麼覺得它最近變了？</summary>
+        <div class="a"><p>多半不是因為你。模型不會因為跟你聊天而改變，但廠商會改：推出新版本、把預設模型換掉，或改寫每次都帶進去的系統提示（規則）。記憶功能整理出新的筆記，也會讓回答不一樣。所以「模型一個位元都沒變」說的是你跟它聊天的這段時間，廠商隨時可以換掉它或調整它。</p></div>
+      </details>
+      <details>
+        <summary>為什麼 AI 管家會被騙？</summary>
+        <div class="a"><p>網頁、信件、檔案的內容也會被放進 context，模型不一定分得清「主人說的話」和「讀到的文字」。壞人在網頁裡藏一句指令，就可能被當成要求去執行，這叫 prompt injection。跟錢、密碼有關的動作，一定要人來確認。</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+<section class="s gutter">
+  <div class="frame">
+    <div class="next">
+      <a href="journey.html"><article class="card"><span class="tag">想知道為什麼 →</span><h3>跟著一句話走一趟</h3><p>用動畫看你問 AI 一句話之後，背後發生了什麼事。大約 6 分鐘。</p></article></a>
+      <a href="index.html"><article class="card"><span class="tag">回到首頁 →</span><h3>看全部內容</h3><p>時間線、原理、模型評比、中國的追趕、下一個瓶頸。</p></article></a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="gutter"><div class="frame">寫於 2026 年 11 月。</div></footer>
+
+<script>
+(function () {
+  var list = document.querySelector("#tips .tips"), btn = document.getElementById("copyTips"), line = document.getElementById("lineTips"), msg = document.getElementById("copyMsg");
+  if (!list || !btn) return;
+  var HEAD = "給家人的五個 AI 使用提醒", DONE = "已複製，可以貼到 LINE 或簡訊。", FAIL = "沒辦法自動複製，請手動選取上面的文字。";
+  function text() {
+    var out = [HEAD];
+    [].forEach.call(list.children, function (li, i) {
+      var b = li.querySelector("b"), s = li.querySelector("span");
+      out.push((i + 1) + ". " + b.textContent + "\n" + s.textContent);
+    });
+    out.push(location.href.split("#")[0] );
+    return out.join("\n\n");
+  }
+  line.addEventListener("click", function () { line.href = "https://line.me/R/share?text=" + encodeURIComponent(text()); });
+  btn.addEventListener("click", function () {
+    var t = text();
+    function ok() { msg.textContent = DONE; }
+    function fallback() {
+      var ta = document.createElement("textarea");
+      ta.value = t; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy") ? ok() : (msg.textContent = FAIL); } catch (e) { msg.textContent = FAIL; }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(t).then(ok, fallback); else fallback();
+  });
+})();
+</script>
+</body>
+</html>

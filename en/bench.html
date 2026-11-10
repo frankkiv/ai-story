@@ -105,6 +105,7 @@
   <div class="frame">
     <a class="brand" href="index.html"><i></i><span>AI Grew Hands</span></a>
     <ul>
+      <li><a class="l" href="journey.html"><span class="lg">Prologue</span><span class="sh">Start</span></a></li>
       <li><a class="l" href="history.html"><span class="lg">Timeline</span><span class="sh">Timeline</span></a></li>
       <li><a class="l" href="tech.html"><span class="lg">How it works</span><span class="sh">How</span></a></li>
       <li><a class="l site-on" href="bench.html"><span class="lg">Model benchmarks</span><span class="sh">Bench</span></a></li>
@@ -119,16 +120,45 @@
     <div class="hero-copy measure">
       <span class="pill">PART 3 · <b>Model benchmarks</b></span>
       <h1>How to read the scores,<br><em>and who is good at what</em></h1>
-      <p class="sub">Every new model launch comes with a "we're number one again" scorecard. This page first explains why those scores can't be taken at face value, then puts the models side by side in one table, and finally sums up what each model is good for.</p>
+      <p class="sub">Every new model launch comes with a "we're number one again" scorecard. This page starts with the conclusion: what each model is good for. Then it explains why those scores can't be taken at face value, and puts the models side by side in one table.</p>
+      <aside class="tldr" aria-label="Key points of this page">
+        <b class="tldr-h">Three things on this page</b>
+        <ol>
+          <li>No model is best at everything, so the right pick depends on the job. That is why this page starts with the conclusion.</li>
+          <li>Vendor-reported scores tend to run high, and third-party retests often land a few points lower. Watch the trend, not the decimals.</li>
+          <li>Coding ability went from fixing about half the problems to about ninety percent in two years. The old exam is nearly maxed out, so newer comparisons use harder ones.</li>
+        </ol>
+        <p class="tldr-meta"><span data-readtime></span><button type="button" class="tldr-btn" data-plain-toggle></button></p>
+      </aside>
     </div>
   </div>
 </header>
 
 <main>
+<section class="s gutter" id="strengths">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">01 · Who is good at what</span>
+      <h2>If you can only pick one, it depends on the job</h2>
+      <p class="lead">Based on the third-party numbers in the sections below, the vendors' own tables, and reviews from several evaluation sites (November 2026). This is general direction, not a verdict.</p>
+    </div>
+    <div class="good">
+      <article class="card" style="--c:var(--l-skills)"><span class="tag">Coding and long-running agent work</span><h3>Claude Opus 5.5</h3><p>Several review sites rate it among the best coding models publicly available; on the third-party composite index it trails only Fable 5.2, released in November, and Gemini 4 Carbon, which isn't public yet, at half Fable 5.2's price. <b>To save money</b>, try Sonnet 5.5 first: it scores even higher on terminal tasks at half the price.</p></article>
+      <article class="card" style="--c:var(--text)"><span class="tag">The hardest reasoning, math and science</span><h3>GPT-6 Astra</h3><p>Third parties measured 95% on ARC-AGI-2 (abstract reasoning puzzles), and it leads on OpenAI's self-reported hard math tests; several sites call it the first choice for "the hardest reasoning problems". Priced a little above Fable 5.2. For everyday coding, GPT-6.1 Sol costs a fifth as much.</p></article>
+      <article class="card" style="--c:var(--l-hist)"><span class="tag">Long documents, video, general preference</span><h3>Gemini 4 Argon</h3><p>Ranked first among public models in LMArena user votes, meaning ordinary people most often prefer its answers. Long documents, long videos, and financial or legal documents are its recommended strengths. The promotional price ($2 input / $10 output per million tokens) only runs until 11/30. From 12/1 it is $4 / $20, the same as Opus 5.5.</p></article>
+      <article class="card" style="--c:var(--l-skills)"><span class="tag">The hardest tasks, writing</span><h3>Claude Fable 5.2</h3><p>Released 11/9, it is now first on the third-party composite index (64.6) and ties Opus 5.5 on terminal tasks. The previous version, Fable 5.1, was rated the best writer by several sites. Its price dropped to $8 / $40 per million tokens, still twice Opus 5.5, so you usually don't need it for everyday coding.</p></article>
+      <article class="card" style="--c:var(--l-new)"><span class="tag">High-volume, low-cost everyday tasks</span><h3>GPT-6 Luna, Claude Haiku 5.5, DeepSeek V4.1 Flash, Gemini 3.8 Flash</h3><p>GPT-6 Luna, Claude Haiku 5.5 (both $0.10 / $0.50 per million tokens) and DeepSeek V4.1 Flash cost roughly a tenth to a hundredth of a flagship. Gemini 3.8 Flash costs more: about a fifth of Opus 5.5, or a third of Gemini 4 Argon's promo price. All are suited to classification, summarization and translation: lots of volume, not much difficulty. Cursor's Auto mode routes simple requests to this tier.</p></article>
+      <article class="card" style="--c:var(--l-mem)"><span class="tag">Self-hosting, open weights</span><h3>Kimi K3.1 Pro, GLM-5.3, DeepSeek V4</h3><p>You can download the weights and run them on your own servers. Kimi K3.1 Pro has the highest terminal-task score (67.2) in the whole comparison table. Watch out for data storage and censorship issues; see the <a href="china.html#faq">Catching up and distillation</a> page.</p></article>
+    </div>
+    <p class="elder mt"><b>In plain words</b><span>It's like choosing a doctor: no one is best at everything, so first decide which specialty you need. For home use, the free versions of Claude, ChatGPT and Gemini are close; pick whichever feels comfortable.</span></p>
+    <p class="caveat mt">There are two models most people can't use. Google's Gemini 4 Carbon (released 10/28) is so far available only to selected cyber defenders; Google says it will open it up as soon as possible. Anthropic's Mythos is not a separate, stronger model than Fable: according to Anthropic, they are the same underlying model, and Fable adds an extra layer of safeguards for biology, cybersecurity and requests that look like frontier AI development. Mythos, without that layer, is only for security partners.</p>
+  </div>
+</section>
+
 <section class="s gutter" id="why">
   <div class="frame">
     <div class="s-head measure">
-      <span class="eyebrow">01 · A word of caution</span>
+      <span class="eyebrow">02 · A word of caution</span>
       <h2>Why you can't fully trust these scores</h2>
       <p class="lead">Scores are useful, but they're "softer" than they look. Once you understand the five reasons below, you'll know how much to discount a "number one" headline.</p>
     </div>
@@ -146,7 +176,7 @@
 <section class="s gutter" id="bench">
   <div class="frame">
     <div class="s-head measure">
-      <span class="eyebrow">02 · The capability curve</span>
+      <span class="eyebrow">03 · The capability curve</span>
       <h2>Coding ability went from 50% to 90% in two years</h2>
       <p class="lead">SWE-bench Verified is a 500-question exam. Each question is a GitHub issue from a real open-source project; the AI has to change the code itself, and the project's own tests decide whether it's fixed. At the end of 2024 the best publicly available model fixed about half (OpenAI announced 71.7% for o3 in December 2024, but it only shipped the following April); by mid-2026 the top score reached 95%.</p>
       <p class="elder"><b>In plain words</b>Like sending an apprentice to repair 500 items customers actually brought in, scoring one point per repair.</p>
@@ -170,7 +200,7 @@
 <section class="s gutter" id="matrix">
   <div class="frame">
     <div class="s-head measure">
-      <span class="eyebrow">03 · Side by side</span>
+      <span class="eyebrow">04 · Side by side</span>
       <h2>Leading models compared, November 2026</h2>
       <p class="lead">This table sticks to third-party numbers as much as possible: Artificial Analysis's composite index and Terminal-Bench, both rerun with one set of settings, plus LMArena rankings from anonymous user votes. Click a column header to sort.</p>
     </div>
@@ -211,26 +241,6 @@
       </tbody>
     </table></div>
     <p class="caveat">Source: Anthropic, "Claude Opus 5.5" (2026/9/22). The GPT columns are numbers OpenAI published, as cited by Anthropic. The 11/9 Fable 5.2 announcement self-reports 51.4% on AutomationBench and 74.6% on Terminal-Bench-Science, both above GPT-6 Astra in this table.</p>
-  </div>
-</section>
-
-<section class="s gutter" id="strengths">
-  <div class="frame">
-    <div class="s-head measure">
-      <span class="eyebrow">04 · Who is good at what</span>
-      <h2>If you can only pick one, it depends on the job</h2>
-      <p class="lead">Based on the third-party numbers above, the vendors' own tables, and reviews from several evaluation sites (November 2026). This is general direction, not a verdict.</p>
-    </div>
-    <div class="good">
-      <article class="card" style="--c:var(--l-skills)"><span class="tag">Coding and long-running agent work</span><h3>Claude Opus 5.5</h3><p>Several review sites rate it among the best coding models publicly available; on the third-party composite index it trails only Fable 5.2, released in November, and Gemini 4 Carbon, which isn't public yet, at half Fable 5.2's price. <b>To save money</b>, try Sonnet 5.5 first: it scores even higher on terminal tasks at half the price.</p></article>
-      <article class="card" style="--c:var(--text)"><span class="tag">The hardest reasoning, math and science</span><h3>GPT-6 Astra</h3><p>Third parties measured 95% on ARC-AGI-2 (abstract reasoning puzzles), and it leads on OpenAI's self-reported hard math tests; several sites call it the first choice for "the hardest reasoning problems". Priced a little above Fable 5.2. For everyday coding, GPT-6.1 Sol costs a fifth as much.</p></article>
-      <article class="card" style="--c:var(--l-hist)"><span class="tag">Long documents, video, general preference</span><h3>Gemini 4 Argon</h3><p>Ranked first among public models in LMArena user votes, meaning ordinary people most often prefer its answers. Long documents, long videos, and financial or legal documents are its recommended strengths. The promotional price ($2 input / $10 output per million tokens) only runs until 11/30. From 12/1 it is $4 / $20, the same as Opus 5.5.</p></article>
-      <article class="card" style="--c:var(--l-skills)"><span class="tag">The hardest tasks, writing</span><h3>Claude Fable 5.2</h3><p>Released 11/9, it is now first on the third-party composite index (64.6) and ties Opus 5.5 on terminal tasks. The previous version, Fable 5.1, was rated the best writer by several sites. Its price dropped to $8 / $40 per million tokens, still twice Opus 5.5, so you usually don't need it for everyday coding.</p></article>
-      <article class="card" style="--c:var(--l-new)"><span class="tag">High-volume, low-cost everyday tasks</span><h3>GPT-6 Luna, Claude Haiku 5.5, DeepSeek V4.1 Flash, Gemini 3.8 Flash</h3><p>GPT-6 Luna, Claude Haiku 5.5 (both $0.10 / $0.50 per million tokens) and DeepSeek V4.1 Flash cost roughly a tenth to a hundredth of a flagship. Gemini 3.8 Flash costs more: about a fifth of Opus 5.5, or a third of Gemini 4 Argon's promo price. All are suited to classification, summarization and translation: lots of volume, not much difficulty. Cursor's Auto mode routes simple requests to this tier.</p></article>
-      <article class="card" style="--c:var(--l-mem)"><span class="tag">Self-hosting, open weights</span><h3>Kimi K3.1 Pro, GLM-5.3, DeepSeek V4</h3><p>You can download the weights and run them on your own servers. Kimi K3.1 Pro has the highest terminal-task score (67.2) in the whole comparison table. Watch out for data storage and censorship issues; see the <a href="china.html#faq">Catching up and distillation</a> page.</p></article>
-    </div>
-    <p class="elder mt"><b>In plain words</b><span>It's like choosing a doctor: no one is best at everything, so first decide which specialty you need. For home use, the free versions of Claude, ChatGPT and Gemini are close; pick whichever feels comfortable.</span></p>
-    <p class="caveat mt">There are two models most people can't use. Google's Gemini 4 Carbon (released 10/28) is so far available only to selected cyber defenders; Google says it will open it up as soon as possible. Anthropic's Mythos is not a separate, stronger model than Fable: according to Anthropic, they are the same underlying model, and Fable adds an extra layer of safeguards for biology, cybersecurity and requests that look like frontier AI development. Mythos, without that layer, is only for security partners.</p>
   </div>
 </section>
 
