@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>After you press Enter · AI Grew Hands</title>
 <meta name="description" content="You ask an AI "What is AI, really?" and press Enter. How the data is assembled on your computer, sent to a remote server, worked through layer by layer, whether the model searches the web, and how your phone syncs: four chapters, seventeen steps, one place at a time.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Grew Hands">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="After you press Enter · AI Grew Hands">
+<meta property="og:description" content="You ask an AI "What is AI, really?" and press Enter. How the data is assembled on your computer, sent to a remote server, worked through layer by layer, whether the model searches the web, and how your phone syncs: four chapters, seventeen steps, one place at a time.">
+<meta property="og:url" content="https://frankkiv.github.io/ai-story/en/journey.html">
+<meta property="og:image" content="https://frankkiv.github.io/ai-story/assets/og-en.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
@@ -12,6 +22,7 @@
 <link rel="alternate" hreflang="zh-Hant" href="../journey.html">
 <link rel="alternate" hreflang="en" href="journey.html">
 <script src="../assets/i18n.js"></script>
+<script defer src="../assets/extras.js"></script>
 <style>
 
 .story { display: block; padding-block: .5rem 3rem; }
@@ -294,6 +305,16 @@
 .end-act .again:hover { border-color: var(--st-gold); color: var(--st-gold); }
 @media (min-width: 1100px) { .endwrap { bottom: 4.4rem; } }
 @media (prefers-reduced-motion: reduce) { .endwrap { transition: none; } }
+.jv { display: grid; gap: .5rem; }
+.jv-l { font-family: var(--mono); font-size: .82rem; color: var(--accent); }
+.jv-row { display: flex; flex-wrap: wrap; gap: .4rem; }
+.jv-row button { font: inherit; font-size: .95rem; font-weight: 600; min-height: 44px; padding: .45rem .9rem; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--text); cursor: pointer; }
+.jv-row button[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+.jv-note, .appnote { display: none; }
+html[data-jv="app"] .jv-note { display: block; margin: 0; color: var(--muted); font-size: .95rem; }
+html[data-jv="app"] .appnote { display: grid; gap: .3rem; align-items: start; border: 1px solid color-mix(in srgb, var(--l-new) 55%, var(--line)); border-radius: 12px; padding: .8rem 1rem; margin: 0; }
+.appnote b { font-size: .82rem; font-family: var(--mono); color: var(--l-new); }
+.sheet .appnote b { color: #8fd6b6; }
 </style>
 </head>
 <body>
@@ -318,6 +339,11 @@
       <span class="pill">Prologue · <b>Follow one message</b></span>
       <h1>After you press Enter,<br><em>where do your words go?</em></h1>
       <p class="sub">It starts with you at your computer, asking Claude Code "What is AI, really?". That question is packed up on your computer and sent across the ocean to a model in a remote data center. The model reads the whole package, works through it layer by layer, guesses the answer one word at a time, and decides whether it needs to search the web. Then the answer comes back, and your phone can see the same conversation. Four chapters, seventeen steps. Scroll down and look at one place at a time. Asking ChatGPT, Gemini or Claude in a phone app follows the same flow; the only difference is that the history and memory live on the provider's servers instead of your computer.</p>
+      <div class="jv" role="group" aria-label="How do you usually use AI?">
+      <span class="jv-l">How do you usually use AI?</span>
+      <div class="jv-row"><button type="button" data-jv="cc" aria-pressed="true">Claude Code on a computer</button><button type="button" data-jv="app" aria-pressed="false">A phone app (ChatGPT, Gemini, Claude)</button></div>
+      <p class="jv-note">The map shows Claude Code on a computer. If you choose the phone app, steps that differ get an extra "On a phone app" note, and "Your screen" above the stage changes to what you would see on a phone.</p>
+      </div>
     </div>
   </div>
 </header>
@@ -483,6 +509,7 @@
           <span class="eyebrow">Opening</span>
           <h3>You sit at your computer and open Claude Code</h3>
           <p>Everyone keeps talking about AI, and you wonder what it actually is. So in Claude Code you type "What is AI, really?". At every step, "Your screen" at the top of the stage tells you what you see at that moment, and the map below shows what is really happening behind it.</p>
+          <p class="appnote"><b>On a phone app</b><span>You open the app on your phone and type in its input box. The rest of the flow is largely the same. The biggest difference is that memory and chat history live on the provider's servers, not on your phone.</span></p>
         </div>
       </section>
 
@@ -492,6 +519,7 @@
           <span class="eyebrow">Step 1</span>
           <h3>You press Enter, and a program on your computer takes over</h3>
           <p>Where you type is Claude Code, a program installed on your computer. It is called the client: the side that talks to the server. At this point nothing has left your computer yet.</p>
+          <p class="appnote"><b>On a phone app</b><span>The app on your phone takes over. It is a client too.</span></p>
         </div>
       </section>
       <section class="step" data-step="2">
@@ -500,6 +528,7 @@
           <h3>First it reads files on your computer</h3>
           <p>The client reads the memory file CLAUDE.md (your project rules and preferences), the list of skills, the descriptions of MCP tools, and the full history of this conversation so far. All of these files live on your disk.</p>
           <p class="elder"><b>In plain words</b><span>Before you go see a consultant, you put your notebook, the company rules and all your past letters into your bag.</span></p>
+          <p class="appnote"><b>On a phone app</b><span>The app has no local files to read. Your memory, custom instructions and earlier chats are mostly stored on the provider's servers, and the app only tells the server which conversation this is.</span></p>
         </div>
       </section>
       <section class="step" data-step="3" id="j-pack">
@@ -507,6 +536,7 @@
           <span class="eyebrow">Step 3</span>
           <h3>Packed into one package, in a fixed order</h3>
           <p>The order is tool descriptions (web search is one of them), system rules and today's date, the skills list (exactly where it goes varies by version), memory, conversation history, and only then the line you just typed. The whole package is written as one JSON document, ready for the API's <code>/v1/messages</code>. Things that rarely change go first; the cache in the next chapter relies on that order.</p>
+          <p class="appnote"><b>On a phone app</b><span>The packing mostly happens on the server side instead: the server lines up the rules, memory, chat history and what you just typed into one bundle. The order and the reasoning are the same.</span></p>
         </div>
       </section>
 
@@ -609,6 +639,7 @@
           <h3>Done, and the whole exchange is saved on your computer</h3>
           <p>This round's question and answer (plus any search results) are written to the conversation history on your computer (a .jsonl file in <code>~/.claude/projects/</code>). Next time you ask, the client reads all of it again and resends it.</p>
           <p class="elder"><b>In plain words</b><span>AI "remembers" what you talked about because your computer kept the record and attaches it again next time.</span></p>
+          <p class="appnote"><b>On a phone app</b><span>The conversation is stored on the provider's servers, not on your phone. That is why signing in to the same account on another device shows the same chat, and why deleting it means going into settings.</span></p>
         </div>
       </section>
 
@@ -619,6 +650,7 @@
           <h3>You leave your computer and see the same chat on your phone</h3>
           <p>You head out, open the Claude app on your phone, and see the same conversation. That is because Remote Control is on: your computer connects out to Anthropic's relay service, and the Claude app on your phone connects to it too. The relay only passes messages between the two, and keeps a copy of the conversation during the session so your phone can show it. It doesn't run your programs and can't touch your files.</p>
           <p class="elder"><b>In plain words</b><span>The phone is the remote, the computer is the TV, and a relay station in between passes the signal along.</span></p>
+          <p class="appnote"><b>On a phone app</b><span>With an app there is no need for this relay. The conversation already lives on the server, so a phone, tablet or computer signed in to the same account all see the same copy.</span></p>
         </div>
       </section>
       <section class="step" data-step="17">
@@ -626,6 +658,7 @@
           <span class="eyebrow">Step 17</span>
           <h3>What you type on the phone reaches the computer through the relay</h3>
           <p>On your phone you ask a follow-up, "And today's AI news?". The message goes to the relay first, then on to your computer, which adds it to the end of the package and starts again from Chapter 1. This time the model chooses to search. If Claude Code asks for your OK first, the Allow button on your phone sends your decision back to the computer the same way. So the computer has to stay on, and your files never leave home.</p>
+          <p class="appnote"><b>On a phone app</b><span>It makes no difference which device you follow up from: the new message goes to the server and is added to the same conversation. No computer has to stay switched on.</span></p>
         </div>
       </section>
       <section class="step" data-step="18">
@@ -649,6 +682,27 @@
   </div>
 </footer>
 
+<script>
+/* Reader's choice: Claude Code on a computer (what the map draws) or a phone app. The phone-app choice shows the .appnote paragraphs and swaps the "your screen" line. */
+var APPYOU = {"0": "The phone app's input box, cursor blinking", "1": "You type \"What is AI, really?\" in the app and press send", "16": "You open the app on another device and see the same conversation", "17": "You follow up from another device, and it joins the same conversation"}, APPDEV = "Your phone";
+(function () {
+  var K = "ai-story-jv", html = document.documentElement, v = "cc";
+  try { v = localStorage.getItem(K) || "cc"; } catch (e) {}
+  if (/[?&]v=app/.test(location.search)) v = "app";
+  function apply(x) {
+    v = x === "app" ? "app" : "cc";
+    if (v === "app") html.setAttribute("data-jv", "app"); else html.removeAttribute("data-jv");
+    [].forEach.call(document.querySelectorAll("[data-jv]"), function (b) { if (b !== html) b.setAttribute("aria-pressed", b.getAttribute("data-jv") === v ? "true" : "false"); });
+  }
+  apply(v);
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest ? e.target.closest("button[data-jv]") : null; if (!b) return;
+    apply(b.getAttribute("data-jv"));
+    try { localStorage.setItem(K, v); } catch (e2) {}
+    dispatchEvent(new Event("scroll")); dispatchEvent(new Event("resize"));
+  });
+})();
+</script>
 <script>
 (function () {
   "use strict";
@@ -737,7 +791,8 @@
     cur = n;
     var s = S[n];
     stage.className = "stage " + (s.st || "") + (reduce ? " reduce" : "");
-    youK.textContent = s.dev || DEVPC; you.textContent = s.you || ""; youBar.classList.toggle("wait", !!s.wait);
+    var app = document.documentElement.getAttribute("data-jv") === "app";
+    youK.textContent = app ? APPDEV : (s.dev || DEVPC); you.textContent = (app && APPYOU[n]) || s.you || ""; youBar.classList.toggle("wait", !!s.wait);
     
     document.getElementById("z-pc").classList.toggle("open", n >= 1);
     document.getElementById("z-srv").classList.toggle("open", n >= 6);

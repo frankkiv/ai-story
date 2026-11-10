@@ -4,6 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Model benchmarks · AI Grew Hands</title>
+<meta name="description" content="Every new model launch comes with a &quot;we&#x27;re number one again&quot; scorecard. This page starts with the conclusion: what each model is good for.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Grew Hands">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Model benchmarks · AI Grew Hands">
+<meta property="og:description" content="Every new model launch comes with a &quot;we&#x27;re number one again&quot; scorecard. This page starts with the conclusion: what each model is good for.">
+<meta property="og:url" content="https://frankkiv.github.io/ai-story/en/bench.html">
+<meta property="og:image" content="https://frankkiv.github.io/ai-story/assets/og-en.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,6 +23,7 @@
 <link rel="alternate" hreflang="zh-Hant" href="../bench.html">
 <link rel="alternate" hreflang="en" href="bench.html">
 <script src="../assets/i18n.js"></script>
+<script defer src="../assets/extras.js"></script>
 <style>
 .mx-box { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); padding: 1.1rem; display: grid; gap: .8rem; }
 .mx-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -141,6 +153,20 @@
       <span class="eyebrow">01 · Who is good at what</span>
       <h2>If you can only pick one, it depends on the job</h2>
       <p class="lead">Based on the third-party numbers in the sections below, the vendors' own tables, and reviews from several evaluation sites (November 2026). This is general direction, not a verdict.</p>
+    </div>
+    <div class="qz measure" id="picker" style="margin-bottom:2rem" aria-live="polite">
+      <div><h3 style="margin:0 0 .3rem">Three questions to help you pick one</h3><p class="caveat" style="margin:0">Built from the six cards below. General direction, not a verdict.</p></div>
+      <div class="qz-q"><b>1. What will you mainly use it for?</b><div class="qz-opts"><button type="button" data-q="use" data-v="home" aria-pressed="false">Chatting, questions, writing</button><button type="button" data-q="use" data-v="code" aria-pressed="false">Coding, or long tasks it runs by itself</button><button type="button" data-q="use" data-v="reason" aria-pressed="false">Very hard math, science or reasoning</button><button type="button" data-q="use" data-v="long" aria-pressed="false">Reading very long documents or video</button><button type="button" data-q="use" data-v="bulk" aria-pressed="false">Lots of simple work: sorting, summaries, translation</button></div></div>
+      <div class="qz-q"><b>2. Budget?</b><div class="qz-opts"><button type="button" data-q="budget" data-v="save" aria-pressed="false">Free tier, or as cheap as possible</button><button type="button" data-q="budget" data-v="best" aria-pressed="false">Happy to pay more for the best</button></div></div>
+      <div class="qz-q"><b>3. Do you need the data on your own servers?</b><div class="qz-opts"><button type="button" data-q="host" data-v="no" aria-pressed="false">No</button><button type="button" data-q="host" data-v="own" aria-pressed="false">Yes, I want to self-host</button></div></div>
+      <div class="pick-out" data-r="own" data-card="5" hidden><span class="k">Try this first</span><b>Kimi K3.1 Pro, GLM-5.3, DeepSeek V4</b><span>These are open-weight models you can download and run on your own servers. Keep an eye on data storage and content filtering.</span><a href="#strengths">See the full card ↓</a></div>
+      <div class="pick-out" data-r="home-save" data-card="-1" hidden><span class="k">Try this first</span><b>The free tier of Claude, ChatGPT or Gemini</b><span>For everyday home use the free versions of these three are close. Pick whichever feels comfortable.</span></div>
+      <div class="pick-out" data-r="home-best" data-card="2" hidden><span class="k">Try this first</span><b>Gemini 4 Argon</b><span>It ranks first among public models in LMArena user voting, which means ordinary users most often prefer its answers. If writing matters most, see the Claude Fable 5.2 card.</span><a href="#strengths">See the full card ↓</a></div>
+      <div class="pick-out" data-r="code-save" data-card="0" hidden><span class="k">Try this first</span><b>Claude Sonnet 5.5</b><span>Half the price of Opus 5.5, with an even higher terminal-task score.</span><a href="#strengths">See the full card ↓</a></div>
+      <div class="pick-out" data-r="code-best" data-card="0" hidden><span class="k">Try this first</span><b>Claude Opus 5.5</b><span>Rated by several review sites as one of the best public models for coding, at half the price of Fable 5.2.</span><a href="#strengths">See the full card ↓</a></div>
+      <div class="pick-out" data-r="reason" data-card="1" hidden><span class="k">Try this first</span><b>GPT-6 Astra</b><span>Several sites call it the first choice for the hardest reasoning problems. It is expensive, a little more than Fable 5.2.</span><a href="#strengths">See the full card ↓</a></div>
+      <div class="pick-out" data-r="long" data-card="2" hidden><span class="k">Try this first</span><b>Gemini 4 Argon</b><span>Long documents, long video, and financial or legal documents are where it is most often recommended.</span><a href="#strengths">See the full card ↓</a></div>
+      <div class="pick-out" data-r="bulk" data-card="4" hidden><span class="k">Try this first</span><b>GPT-6 Luna, Claude Haiku 5.5, DeepSeek V4.1 Flash, Gemini 3.8 Flash</b><span>This tier is far cheaper than the flagships and suits high-volume, easy work such as sorting, summaries and translation.</span><a href="#strengths">See the full card ↓</a></div>
     </div>
     <div class="good">
       <article class="card" style="--c:var(--l-skills)"><span class="tag">Coding and long-running agent work</span><h3>Claude Opus 5.5</h3><p>Several review sites rate it among the best coding models publicly available; on the third-party composite index it trails only Fable 5.2, released in November, and Gemini 4 Carbon, which isn't public yet, at half Fable 5.2's price. <b>To save money</b>, try Sonnet 5.5 first: it scores even higher on terminal tasks at half the price.</p></article>
@@ -475,6 +501,27 @@
   /* phones: open the chart scrolled to the newest data */
   var sc = document.getElementById("chartScroll");
   requestAnimationFrame(function () { sc.scrollLeft = sc.scrollWidth; });
+})();
+</script>
+<script>
+(function () {
+  var box = document.getElementById("picker"); if (!box) return;
+  var pick = {}, outs = box.querySelectorAll(".pick-out"), cards = document.querySelectorAll("#strengths .good .card");
+  function show() {
+    if (!pick.use || !pick.budget || !pick.host) return;
+    var code = pick.host === "own" ? "own" : (pick.use === "home" || pick.use === "code") ? pick.use + "-" + pick.budget : pick.use;
+    [].forEach.call(cards, function (c) { c.classList.remove("picked"); });
+    [].forEach.call(outs, function (o) {
+      var on = o.getAttribute("data-r") === code; o.hidden = !on;
+      if (on) { var i = +o.getAttribute("data-card"); if (i >= 0 && cards[i]) { cards[i].classList.add("picked"); cards[i].id = cards[i].id || "pick-card"; var a = o.querySelector("a"); if (a) a.href = "#" + cards[i].id; } }
+    });
+  }
+  box.addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-q]"); if (!b) return;
+    pick[b.getAttribute("data-q")] = b.getAttribute("data-v");
+    [].forEach.call(b.parentNode.children, function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+    show();
+  });
 })();
 </script>
 </body>

@@ -6,6 +6,16 @@
 <title>Five AI tips for your family · AI Grew Hands</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Five things to watch out for when using AI, and the questions parents ask most. Ready to forward to your family.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Grew Hands">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Five AI tips for your family · AI Grew Hands">
+<meta property="og:description" content="Five things to watch out for when using AI, and the questions parents ask most. Ready to forward to your family.">
+<meta property="og:url" content="https://frankkiv.github.io/ai-story/en/family.html">
+<meta property="og:image" content="https://frankkiv.github.io/ai-story/assets/og-en.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
@@ -13,6 +23,7 @@
 <link rel="alternate" hreflang="zh-Hant" href="../family.html">
 <link rel="alternate" hreflang="en" href="family.html">
 <script src="../assets/i18n.js"></script>
+<script defer src="../assets/extras.js"></script>
 <style>
 .share-row { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; margin-top: 1.25rem; }
 .share-row .btn { min-height: 44px; cursor: pointer; font: inherit; }
@@ -61,7 +72,44 @@
     <div class="share-row">
       <button type="button" class="btn primary" id="copyTips">Copy these five tips</button>
       <a class="btn" id="lineTips" href="https://line.me/R/share" target="_blank" rel="noopener">Share on LINE</a>
+      <button type="button" class="btn" data-print>Print this page</button>
       <span class="share-msg" id="copyMsg" aria-live="polite"></span>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="drill">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">Practice</span>
+      <h2>If it happened to you, what would you do?</h2>
+      <p class="lead">Three common situations. Pick what you would do, then see why.</p>
+    </div>
+    <div class="qz measure" id="drills" data-good="That is the safer choice." data-bad="That one is risky.">
+      <article class="qz-q"><span class="k">Scenario 1</span><h3>In a chat group, a "teacher" says AI stock picking guarantees returns, and asks you to join as a member and wire money first.</h3>
+        <div class="qz-opts col">
+          <button type="button" data-r="bad" data-fb="A small amount is still a loss, and they usually let you win a little first, then ask for more. Anything that promises guaranteed returns in the name of AI is almost always a scam." aria-pressed="false">Send a small amount to try it</button>
+          <button type="button" data-r="good" data-fb="Right. Anything that promises guaranteed returns in the name of AI is almost always a scam. In Taiwan you can call the 165 anti-fraud hotline." aria-pressed="false">Send nothing, and call the anti-fraud hotline if unsure</button>
+          <button type="button" data-r="bad" data-fb="Screenshots and the &quot;other members&quot; can all be fake. The guaranteed return is itself the warning sign." aria-pressed="false">Watch other members' profit screenshots for a few more days</button>
+        </div>
+        <p class="qz-a" hidden aria-live="polite"></p>
+      </article>
+      <article class="qz-q"><span class="k">Scenario 2</span><h3>The phone rings. The voice sounds exactly like your son, who says he is in trouble and needs you to transfer money right now.</h3>
+        <div class="qz-opts col">
+          <button type="button" data-r="bad" data-fb="AI can now fake a familiar voice, and even video. Sounding like someone does not make it them." aria-pressed="false">The voice is right, so transfer quickly</button>
+          <button type="button" data-r="good" data-fb="Right. When someone you know calls asking for money, hanging up and calling back is the most reliable check." aria-pressed="false">Hang up and call back on the number you already have</button>
+          <button type="button" data-r="bad" data-fb="Better than transferring straight away, but they will rush you and voices can be faked. Hanging up and calling the number you already have is safest." aria-pressed="false">Ask a few questions on the call to confirm who it is</button>
+        </div>
+        <p class="qz-a" hidden aria-live="polite"></p>
+      </article>
+      <article class="qz-q"><span class="k">Scenario 3</span><h3>You ask an AI assistant to tidy your inbox. It says: "One email from your bank asks you to enter your password at this address right away. Shall I handle it?"</h3>
+        <div class="qz-opts col">
+          <button type="button" data-r="bad" data-fb="The AI reads the content of emails too, and an attacker can hide instructions in one. Anything involving money or passwords, always check yourself." aria-pressed="false">Let it handle it and save the trouble</button>
+          <button type="button" data-r="bad" data-fb="The address may be fake. Do not go in through a link in the email, and do not type your password there." aria-pressed="false">Click the address yourself and have a look</button>
+          <button type="button" data-r="good" data-fb="Right. Steps involving money and passwords are always yours, and always through an official channel you already know." aria-pressed="false">Neither. Check through the bank's official app or phone number</button>
+        </div>
+        <p class="qz-a" hidden aria-live="polite"></p>
+      </article>
     </div>
   </div>
 </section>
@@ -138,6 +186,25 @@
       document.body.removeChild(ta);
     }
     if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(t).then(ok, fallback); else fallback();
+  });
+})();
+</script>
+<script>
+(function () {
+  var box = document.getElementById("drills");
+  [].forEach.call(box.querySelectorAll(".qz-q"), function (q) {
+    var out = q.querySelector(".qz-a");
+    [].forEach.call(q.querySelectorAll(".qz-opts button"), function (b) {
+      b.addEventListener("click", function () {
+        [].forEach.call(q.querySelectorAll(".qz-opts button"), function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+        var good = b.getAttribute("data-r") === "good";
+        out.className = "qz-a " + (good ? "good" : "bad");
+        out.innerHTML = "";
+        var h = document.createElement("b"); h.textContent = box.getAttribute(good ? "data-good" : "data-bad");
+        var t = document.createElement("span"); t.textContent = b.getAttribute("data-fb");
+        out.appendChild(h); out.appendChild(t); out.hidden = false;
+      });
+    });
   });
 })();
 </script>

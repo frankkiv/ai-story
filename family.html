@@ -6,6 +6,16 @@
 <title>給家人的五個 AI 使用提醒 · AI 長出手了</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="平常用 AI 要注意的五件事，以及爸媽最常問的幾個問題。可以直接轉傳給家人。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AI 長出手了">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="給家人的五個 AI 使用提醒 · AI 長出手了">
+<meta property="og:description" content="平常用 AI 要注意的五件事，以及爸媽最常問的幾個問題。可以直接轉傳給家人。">
+<meta property="og:url" content="https://frankkiv.github.io/ai-story/family.html">
+<meta property="og:image" content="https://frankkiv.github.io/ai-story/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700;900&display=swap">
@@ -13,6 +23,7 @@
 <link rel="alternate" hreflang="zh-Hant" href="family.html">
 <link rel="alternate" hreflang="en" href="en/family.html">
 <script src="assets/i18n.js"></script>
+<script defer src="assets/extras.js"></script>
 <style>
 .share-row { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; margin-top: 1.25rem; }
 .share-row .btn { min-height: 44px; cursor: pointer; font: inherit; }
@@ -61,7 +72,44 @@
     <div class="share-row">
       <button type="button" class="btn primary" id="copyTips">複製這五個提醒</button>
       <a class="btn" id="lineTips" href="https://line.me/R/share" target="_blank" rel="noopener">分享到 LINE</a>
+      <button type="button" class="btn" data-print>列印這一頁</button>
       <span class="share-msg" id="copyMsg" aria-live="polite"></span>
+    </div>
+  </div>
+</section>
+
+<section class="s gutter" id="drill">
+  <div class="frame">
+    <div class="s-head measure">
+      <span class="eyebrow">情境演練</span>
+      <h2>遇到了，你會怎麼做？</h2>
+      <p class="lead">三個常見的情境。先選一個做法，再看為什麼。</p>
+    </div>
+    <div class="qz measure" id="drills" data-good="這樣做比較安全。" data-bad="這樣做有風險。">
+      <article class="qz-q"><span class="k">情境 1</span><h3>LINE 群組裡有位「老師」說，他用 AI 選股保證獲利，要你加入會員並先匯一筆錢。</h3>
+        <div class="qz-opts col">
+          <button type="button" data-r="bad" data-fb="金額小也一樣是損失，而且對方通常會先讓你小賺，再要你加碼。用 AI 名義保證獲利的，幾乎都是詐騙。" aria-pressed="false">先匯一小筆試試看</button>
+          <button type="button" data-r="good" data-fb="沒錯。用 AI 名義保證獲利的，幾乎都是詐騙。在台灣，有疑問可以直接打 165 反詐騙專線。" aria-pressed="false">不匯錢，有疑問就打 165</button>
+          <button type="button" data-r="bad" data-fb="截圖和群組裡的「其他會員」都可以造假。保證獲利這件事本身就是警訊。" aria-pressed="false">再多看幾天群組裡其他人的獲利截圖</button>
+        </div>
+        <p class="qz-a" hidden aria-live="polite"></p>
+      </article>
+      <article class="qz-q"><span class="k">情境 2</span><h3>接到電話，聲音聽起來就是你兒子，說出了事急需用錢，要你馬上轉帳。</h3>
+        <div class="qz-opts col">
+          <button type="button" data-r="bad" data-fb="AI 已經能假造熟人的聲音，甚至影片。聲音像，不代表真的是本人。" aria-pressed="false">聲音沒錯，趕快轉</button>
+          <button type="button" data-r="good" data-fb="沒錯。接到熟人要錢的電話，先掛掉再打回去確認，是最可靠的做法。" aria-pressed="false">先掛掉，用原本存的號碼打回去確認</button>
+          <button type="button" data-r="bad" data-fb="比直接轉帳好，但對方會催你、讓你緊張，聲音又能假造。掛掉再用你原本存的號碼打回去，才最保險。" aria-pressed="false">在電話裡多問幾句，確認是不是本人</button>
+        </div>
+        <p class="qz-a" hidden aria-live="polite"></p>
+      </article>
+      <article class="qz-q"><span class="k">情境 3</span><h3>你請 AI 助理整理信箱。它說：「有一封銀行來信要你立刻到這個網址輸入密碼，要我幫你處理嗎？」</h3>
+        <div class="qz-opts col">
+          <button type="button" data-r="bad" data-fb="信件的內容也會被 AI 讀進去，壞人可以在信裡藏指令。跟錢和密碼有關的事，永遠自己確認。" aria-pressed="false">讓它處理，省得麻煩</button>
+          <button type="button" data-r="bad" data-fb="網址可能是假的。不要從信裡的連結進去，也不要在那裡輸入密碼。" aria-pressed="false">自己點進那個網址看看</button>
+          <button type="button" data-r="good" data-fb="沒錯。跟錢和密碼有關的這一步永遠自己來，而且要從你自己知道的官方管道進去。" aria-pressed="false">都不要，自己用銀行的官方 App 或電話確認</button>
+        </div>
+        <p class="qz-a" hidden aria-live="polite"></p>
+      </article>
     </div>
   </div>
 </section>
@@ -138,6 +186,25 @@
       document.body.removeChild(ta);
     }
     if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(t).then(ok, fallback); else fallback();
+  });
+})();
+</script>
+<script>
+(function () {
+  var box = document.getElementById("drills");
+  [].forEach.call(box.querySelectorAll(".qz-q"), function (q) {
+    var out = q.querySelector(".qz-a");
+    [].forEach.call(q.querySelectorAll(".qz-opts button"), function (b) {
+      b.addEventListener("click", function () {
+        [].forEach.call(q.querySelectorAll(".qz-opts button"), function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+        var good = b.getAttribute("data-r") === "good";
+        out.className = "qz-a " + (good ? "good" : "bad");
+        out.innerHTML = "";
+        var h = document.createElement("b"); h.textContent = box.getAttribute(good ? "data-good" : "data-bad");
+        var t = document.createElement("span"); t.textContent = b.getAttribute("data-fb");
+        out.appendChild(h); out.appendChild(t); out.hidden = false;
+      });
+    });
   });
 })();
 </script>

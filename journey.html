@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>按下 Enter 之後 · AI 長出手了</title>
 <meta name="description" content="你問 AI「AI 究竟是什麼？」、按下 Enter 之後：資料在你的電腦怎麼組合、怎麼送到遠端伺服器、模型怎麼一層層算出答案、要不要上網查，手機又怎麼同步。四章十七步，一次只看一個地方。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AI 長出手了">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="按下 Enter 之後 · AI 長出手了">
+<meta property="og:description" content="你問 AI「AI 究竟是什麼？」、按下 Enter 之後：資料在你的電腦怎麼組合、怎麼送到遠端伺服器、模型怎麼一層層算出答案、要不要上網查，手機又怎麼同步。四章十七步，一次只看一個地方。">
+<meta property="og:url" content="https://frankkiv.github.io/ai-story/journey.html">
+<meta property="og:image" content="https://frankkiv.github.io/ai-story/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700;900&display=swap">
@@ -12,6 +22,7 @@
 <link rel="alternate" hreflang="zh-Hant" href="journey.html">
 <link rel="alternate" hreflang="en" href="en/journey.html">
 <script src="assets/i18n.js"></script>
+<script defer src="assets/extras.js"></script>
 <style>
 /* 捲動敘事：一張「資料走過的地圖」固定在舞台裡，捲一段，鏡頭就移到下一個地方 */
 .story { display: block; padding-block: .5rem 3rem; }
@@ -292,6 +303,16 @@
 .end-act .again:hover { border-color: var(--st-gold); color: var(--st-gold); }
 @media (min-width: 1100px) { .endwrap { bottom: 4.4rem; } }
 @media (prefers-reduced-motion: reduce) { .endwrap { transition: none; } }
+.jv { display: grid; gap: .5rem; }
+.jv-l { font-family: var(--mono); font-size: .82rem; color: var(--accent); }
+.jv-row { display: flex; flex-wrap: wrap; gap: .4rem; }
+.jv-row button { font: inherit; font-size: .95rem; font-weight: 600; min-height: 44px; padding: .45rem .9rem; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--text); cursor: pointer; }
+.jv-row button[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+.jv-note, .appnote { display: none; }
+html[data-jv="app"] .jv-note { display: block; margin: 0; color: var(--muted); font-size: .95rem; }
+html[data-jv="app"] .appnote { display: grid; gap: .3rem; align-items: start; border: 1px solid color-mix(in srgb, var(--l-new) 55%, var(--line)); border-radius: 12px; padding: .8rem 1rem; margin: 0; }
+.appnote b { font-size: .82rem; font-family: var(--mono); color: var(--l-new); }
+.sheet .appnote b { color: #8fd6b6; }
 </style>
 </head>
 <body>
@@ -316,6 +337,11 @@
       <span class="pill">序章 · <b>跟著一句話走一趟</b></span>
       <h1>按下 Enter 之後，<br><em>你的話去了哪裡？</em></h1>
       <p class="sub">從你坐在電腦前、在 Claude Code 問一句「AI 究竟是什麼？」開始。這句話會先在你的電腦上打包，跨海送到遠端機房的模型；模型讀完整包、一層一層算、一個字一個字猜出答案，還會判斷要不要上網查。答案傳回來之後，你的手機也看得到同一段對話。四章、十七步，往下捲，一次只看一個地方。用手機 App 問 ChatGPT、Gemini 或 Claude 也是同一套流程，差別只在紀錄和記憶存在服務商的伺服器上，不在你的電腦裡。</p>
+      <div class="jv" role="group" aria-label="你平常怎麼用 AI？">
+      <span class="jv-l">你平常怎麼用 AI？</span>
+      <div class="jv-row"><button type="button" data-jv="cc" aria-pressed="true">電腦上的 Claude Code</button><button type="button" data-jv="app" aria-pressed="false">手機 App（ChatGPT、Gemini、Claude）</button></div>
+      <p class="jv-note">地圖畫的是電腦上的 Claude Code。選了手機 App 之後，有差別的步驟會多一段「手機 App 的話」，舞台上方「你的畫面」也會換成手機上看到的樣子。</p>
+      </div>
     </div>
   </div>
 </header>
@@ -481,6 +507,7 @@
           <span class="eyebrow">開場</span>
           <h3>你坐在電腦前，打開 Claude Code</h3>
           <p>你突然好奇：大家天天在講的 AI，究竟是什麼？於是在 Claude Code 裡打下「AI 究竟是什麼？」。接下來每一步，舞台上方的「你的畫面」會告訴你這時候螢幕上看到什麼，下面的地圖則是同一時間背後真正發生的事。</p>
+          <p class="appnote"><b>手機 App 的話</b><span>你是在手機上打開 App、在輸入框打字。後面的流程大致相同，最大的差別是記憶和對話紀錄放在服務商的伺服器上，不在你的手機裡。</span></p>
         </div>
       </section>
 
@@ -490,6 +517,7 @@
           <span class="eyebrow">第 1 步</span>
           <h3>Enter 按下去，先接手的是你電腦上的程式</h3>
           <p>你打字的地方是 Claude Code，一個裝在你電腦上的程式，叫做客戶端（client，負責跟伺服器講話的那一端）。這時候還沒有任何東西離開你的電腦。</p>
+          <p class="appnote"><b>手機 App 的話</b><span>接手的是手機上的 App，它一樣是客戶端。</span></p>
         </div>
       </section>
       <section class="step" data-step="2">
@@ -498,6 +526,7 @@
           <h3>它先翻你電腦上的檔案</h3>
           <p>客戶端會讀進記憶檔 CLAUDE.md（你的專案規範和偏好）、skills 清單、MCP 工具的說明，以及這段對話之前的完整紀錄。這些檔案都放在你的硬碟上。</p>
           <p class="elder"><b>白話說</b><span>出門找顧問之前，先把筆記本、公司規定和以前的往來信件都收進包包。</span></p>
+          <p class="appnote"><b>手機 App 的話</b><span>App 不用翻本地檔案。你的記憶、自訂指示和之前的對話多半存在服務商的伺服器上，App 只要告訴伺服器這是哪一段對話。</span></p>
         </div>
       </section>
       <section class="step" data-step="3" id="j-pack">
@@ -505,6 +534,7 @@
           <span class="eyebrow">第 3 步</span>
           <h3>照固定順序，打包成一整包</h3>
           <p>順序是工具說明（其中一項是網路搜尋）、系統規則和今天的日期、skills 清單（實際放在哪一段隨版本不同）、記憶、對話紀錄，最後才是你剛打的那句。整包寫成一份 JSON，準備送到 API 的 <code>/v1/messages</code>。不常變的放前面，下一章的快取會用到這個順序。</p>
+          <p class="appnote"><b>手機 App 的話</b><span>打包這件事多半改在伺服器那一端做：伺服器把規則、記憶、對話紀錄和你剛打的這一句排成一整包，順序和道理一樣。</span></p>
         </div>
       </section>
 
@@ -607,6 +637,7 @@
           <h3>做完了，整段存回你的電腦</h3>
           <p>這一輪的問題和回答（有查的話，連同搜尋結果）都寫進你電腦上的對話紀錄（<code>~/.claude/projects/</code> 裡的 .jsonl 檔）。下次你接著問，客戶端會再把它整份讀出來重送。</p>
           <p class="elder"><b>白話說</b><span>AI「記得」上次聊什麼，是因為你的電腦把紀錄留著，下次再附上去。</span></p>
+          <p class="appnote"><b>手機 App 的話</b><span>對話存在服務商的伺服器上，不是你的手機裡。所以換一台裝置登入同一個帳號，就看得到同一段對話；想讓紀錄消失，要到設定裡刪除。</span></p>
         </div>
       </section>
 
@@ -617,6 +648,7 @@
           <h3>你離開電腦，手機上看到同一段對話</h3>
           <p>你出門了，打開手機的 Claude App，看到的是剛剛那一段對話。這是因為開了 Remote Control：你的電腦會主動連到 Anthropic 的中繼服務，手機的 Claude App 也連過去。中繼只負責把兩邊的訊息互相轉送，連線期間也會存一份對話紀錄給手機看。它不跑你的程式，也碰不到你的檔案。</p>
           <p class="elder"><b>白話說</b><span>手機像遙控器，電腦像電視，中間有個轉接站幫忙傳訊號。</span></p>
+          <p class="appnote"><b>手機 App 的話</b><span>用 App 的話不需要這個中繼。對話本來就在伺服器上，手機、平板、電腦登入同一個帳號，看到的是同一份。</span></p>
         </div>
       </section>
       <section class="step" data-step="17">
@@ -624,6 +656,7 @@
           <span class="eyebrow">第 17 步</span>
           <h3>手機打的字，經過中繼交給電腦</h3>
           <p>你在手機上追問「那今天有什麼 AI 新聞？」，訊息先到中繼，再轉給你的電腦。電腦把它加到整包最後面，從第一章重新走一遍；這一次，模型會選擇上網查。如果 Claude Code 要先問你允不允許，手機上的「允許」按鈕也是用同一條路把你的決定送回電腦。所以電腦要保持開機，檔案一直留在家裡。</p>
+          <p class="appnote"><b>手機 App 的話</b><span>你在哪一台裝置上追問都一樣：新的一句送到伺服器，接在同一段對話後面。沒有哪一台電腦需要一直開著。</span></p>
         </div>
       </section>
       <section class="step" data-step="18">
@@ -647,6 +680,27 @@
   </div>
 </footer>
 
+<script>
+/* Reader's choice: Claude Code on a computer (what the map draws) or a phone app. The phone-app choice shows the .appnote paragraphs and swaps the "your screen" line. */
+var APPYOU = {"0": "手機 App 的輸入框，游標在閃", "1": "你在 App 打完「AI 究竟是什麼？」，按下送出", "16": "打開另一台裝置的 App，看到同一段對話", "17": "你在另一台裝置追問，接在同一段對話後面"}, APPDEV = "你的手機";
+(function () {
+  var K = "ai-story-jv", html = document.documentElement, v = "cc";
+  try { v = localStorage.getItem(K) || "cc"; } catch (e) {}
+  if (/[?&]v=app/.test(location.search)) v = "app";
+  function apply(x) {
+    v = x === "app" ? "app" : "cc";
+    if (v === "app") html.setAttribute("data-jv", "app"); else html.removeAttribute("data-jv");
+    [].forEach.call(document.querySelectorAll("[data-jv]"), function (b) { if (b !== html) b.setAttribute("aria-pressed", b.getAttribute("data-jv") === v ? "true" : "false"); });
+  }
+  apply(v);
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest ? e.target.closest("button[data-jv]") : null; if (!b) return;
+    apply(b.getAttribute("data-jv"));
+    try { localStorage.setItem(K, v); } catch (e2) {}
+    dispatchEvent(new Event("scroll")); dispatchEvent(new Event("resize"));
+  });
+})();
+</script>
 <script>
 (function () {
   "use strict";
@@ -735,7 +789,8 @@
     cur = n;
     var s = S[n];
     stage.className = "stage " + (s.st || "") + (reduce ? " reduce" : "");
-    youK.textContent = s.dev || DEVPC; you.textContent = s.you || ""; youBar.classList.toggle("wait", !!s.wait);
+    var app = document.documentElement.getAttribute("data-jv") === "app";
+    youK.textContent = app ? APPDEV : (s.dev || DEVPC); you.textContent = (app && APPYOU[n]) || s.you || ""; youBar.classList.toggle("wait", !!s.wait);
     /* 哪些地方已經「進去」了 */
     document.getElementById("z-pc").classList.toggle("open", n >= 1);
     document.getElementById("z-srv").classList.toggle("open", n >= 6);

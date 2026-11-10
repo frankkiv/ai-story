@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>真的還是假的？八個關於 AI 的常見說法 · AI 長出手了</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="「它在學我講話」「聊越久越聰明」是真的嗎？八題小測驗，每題附一段解釋。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AI 長出手了">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="真的還是假的？八個關於 AI 的常見說法 · AI 長出手了">
+<meta property="og:description" content="「它在學我講話」「聊越久越聰明」是真的嗎？八題小測驗，每題附一段解釋。">
+<meta property="og:url" content="https://frankkiv.github.io/ai-story/myths.html">
+<meta property="og:image" content="https://frankkiv.github.io/ai-story/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700;900&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="alternate" hreflang="zh-Hant" href="myths.html">
+<link rel="alternate" hreflang="en" href="en/myths.html">
+<script src="assets/i18n.js"></script>
+<script defer src="assets/extras.js"></script>
+<style>
+.share-row { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; margin-top: 1.25rem; }
+.share-row .btn { min-height: 44px; cursor: pointer; font: inherit; }
+.share-msg { color: var(--muted); font-size: .92rem; }
+</style>
+</head>
+<body>
+
+<nav class="nav gutter" aria-label="網站">
+  <div class="frame">
+    <a class="brand" href="index.html"><i></i><span>AI 長出手了</span></a>
+    <ul>
+      <li><a class="l" href="journey.html"><span class="lg">序章</span><span class="sh">序章</span></a></li>
+      <li><a class="l" href="history.html"><span class="lg">時間線</span><span class="sh">時間線</span></a></li>
+      <li><a class="l" href="tech.html"><span class="lg">它怎麼運作</span><span class="sh">原理</span></a></li>
+      <li><a class="l" href="bench.html"><span class="lg">模型評比</span><span class="sh">評比</span></a></li>
+      <li><a class="l" href="china.html"><span class="lg">追趕與蒸餾</span><span class="sh">中國</span></a></li>
+      <li><a class="l" href="future.html"><span class="lg">下一個瓶頸</span><span class="sh">瓶頸</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero gutter">
+  <div class="frame" style="display:block">
+    <div class="hero-copy measure">
+      <span class="pill">小遊戲 · <b>約 3 分鐘</b></span>
+      <h1>真的還是假的？<br><em>八個常聽到的說法</em></h1>
+      <p class="sub">每一題先猜，再看答案和原因。不計時，答錯也沒關係，重點是後面那段解釋。</p>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="s gutter" id="game" style="border-top:0;padding-top:1rem" data-plain-skip>
+  <div class="frame measure">
+    <div class="qz" id="myths" data-ok="答對了。" data-no-t="其實是真的。" data-no-f="其實是假的。" data-score="答對 {n} 題，共 {t} 題">
+      <article class="qz-q" data-ans="f"><span class="k">1 / 8</span><h3>我跟 AI 聊得愈久，它就愈懂我，因為它一直在學我。</h3>
+        <div class="qz-opts"><button type="button" data-v="t">真的</button><button type="button" data-v="f">假的</button></div>
+        <p class="qz-a" hidden><b></b><span>模型不會因為跟你聊天而改變。它看起來愈來愈懂你，是因為 App 每次都把之前的對話和記憶筆記再送一遍。</span><a href="tech.html#myth">看完整說明 →</a></p>
+      </article>
+      <article class="qz-q" data-ans="t"><span class="k">2 / 8</span><h3>關掉記憶功能、開一段新對話，模型就不知道我們之前聊過什麼。</h3>
+        <div class="qz-opts"><button type="button" data-v="t">真的</button><button type="button" data-v="f">假的</button></div>
+        <p class="qz-a" hidden><b></b><span>對。不過這不代表紀錄不存在：服務商的伺服器可能還留著你的對話，想讓紀錄消失，要到設定裡刪除。</span><a href="family.html#faq">看完整說明 →</a></p>
+      </article>
+      <article class="qz-q" data-ans="f"><span class="k">3 / 8</span><h3>AI 知道最近的新聞，是因為它每天都在更新自己。</h3>
+        <div class="qz-opts"><button type="button" data-v="t">真的</button><button type="button" data-v="f">假的</button></div>
+        <p class="qz-a" hidden><b></b><span>模型訓練完就固定了，之後發生的事它不知道。它答得出來，是因為當下去查了資料，把結果放進這一輪要讀的內容裡。</span><a href="tech.html#fresh">看完整說明 →</a></p>
+      </article>
+      <article class="qz-q" data-ans="f"><span class="k">4 / 8</span><h3>AI 講得很肯定，就代表答案是對的。</h3>
+        <div class="qz-opts"><button type="button" data-v="t">真的</button><button type="button" data-v="f">假的</button></div>
+        <p class="qz-a" hidden><b></b><span>講得有自信不代表正確。數字、藥名、法律問題要再查證，重要的事問兩個來源，或直接問專業的人。</span><a href="family.html#tips">看完整說明 →</a></p>
+      </article>
+      <article class="qz-q" data-ans="t"><span class="k">5 / 8</span><h3>同一段對話聊太久，它反而可能變笨。</h3>
+        <div class="qz-opts"><button type="button" data-v="t">真的</button><button type="button" data-v="f">假的</button></div>
+        <p class="qz-a" hidden><b></b><span>有可能。它一次能讀的內容有上限，塞太多無關的東西，重要資訊容易被忽略；很長的對話還會被自動摘要，細節可能遺失。開個新對話常常更準。</span><a href="family.html#faq">看完整說明 →</a></p>
+      </article>
+      <article class="qz-q" data-ans="f"><span class="k">6 / 8</span><h3>會自己做事的 AI，是模型自己伸手進電腦裡操作。</h3>
+        <div class="qz-opts"><button type="button" data-v="t">真的</button><button type="button" data-v="f">假的</button></div>
+        <p class="qz-a" hidden><b></b><span>模型只會輸出「我想用這個工具」的請求。真正執行的是你電腦上的程式，執行完再把結果交回給模型。所以按「允許」的那一步很重要。</span><a href="tech.html#agent">看完整說明 →</a></p>
+      </article>
+      <article class="qz-q" data-ans="f"><span class="k">7 / 8</span><h3>廠商說自己的新模型第一名，那它就是最強的。</h3>
+        <div class="qz-opts"><button type="button" data-v="t">真的</button><button type="button" data-v="f">假的</button></div>
+        <p class="qz-a" hidden><b></b><span>廠商自己報的分數通常偏高，第三方重測常會低幾分。而且沒有哪個模型樣樣第一，要看你拿來做什麼。</span><a href="bench.html#why">看完整說明 →</a></p>
+      </article>
+      <article class="qz-q" data-ans="f"><span class="k">8 / 8</span><h3>我打的每一句話，一定都會被拿去訓練下一代模型。</h3>
+        <div class="qz-opts"><button type="button" data-v="t">真的</button><button type="button" data-v="f">假的</button></div>
+        <p class="qz-a" hidden><b></b><span>這取決於服務的隱私設定，多數 App 可以自己選擇不要。就算有，也是幾個月後才出現的新模型，不是眼前這個在即時學習。</span><a href="family.html#faq">看完整說明 →</a></p>
+      </article>
+    </div>
+    <p class="qz-score mt" id="mythScore" aria-live="polite" hidden></p>
+  </div>
+</section>
+<section class="s gutter">
+  <div class="frame">
+    <div class="next">
+      <a href="journey.html"><article class="card"><span class="tag">接著看 →</span><h3>跟著一句話走一趟</h3><p>用動畫看你問 AI 一句話之後，背後發生了什麼事。</p></article></a>
+      <a href="family.html"><article class="card"><span class="tag">給家人 →</span><h3>平常用 AI，記得這五件事</h3><p>五個提醒和三個詐騙情境演練，可以直接轉傳。</p></article></a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="gutter"><div class="frame">寫於 2026 年 11 月。</div></footer>
+
+<script>
+(function () {
+  var box = document.getElementById("myths"), score = document.getElementById("mythScore"), done = 0, right = 0;
+  var qs = box.querySelectorAll(".qz-q");
+  [].forEach.call(qs, function (q) {
+    var ans = q.getAttribute("data-ans"), out = q.querySelector(".qz-a"), verdict = out.querySelector("b");
+    [].forEach.call(q.querySelectorAll(".qz-opts button"), function (b) {
+      b.addEventListener("click", function () {
+        if (q.hasAttribute("data-done")) return;
+        q.setAttribute("data-done", "");
+        var ok = b.getAttribute("data-v") === ans;
+        b.setAttribute("aria-pressed", "true");
+        [].forEach.call(q.querySelectorAll(".qz-opts button"), function (x) { x.disabled = true; });
+        verdict.textContent = ok ? box.getAttribute("data-ok") : box.getAttribute(ans === "t" ? "data-no-t" : "data-no-f");
+        out.classList.add(ok ? "good" : "bad"); out.hidden = false;
+        done++; if (ok) right++;
+        score.textContent = box.getAttribute("data-score").replace("{n}", right).replace("{t}", qs.length);
+        score.hidden = done < qs.length;
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>

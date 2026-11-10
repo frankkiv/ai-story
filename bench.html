@@ -4,6 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>模型評比 · AI 長出手了</title>
+<meta name="description" content="每次新模型發表，都會附一張「我們又第一名」的成績表。這頁先給結論：每個模型適合拿來做什麼。接著講這些分數為什麼不能全信，再把各家模型放在同一張表上比。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AI 長出手了">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="模型評比 · AI 長出手了">
+<meta property="og:description" content="每次新模型發表，都會附一張「我們又第一名」的成績表。這頁先給結論：每個模型適合拿來做什麼。接著講這些分數為什麼不能全信，再把各家模型放在同一張表上比。">
+<meta property="og:url" content="https://frankkiv.github.io/ai-story/bench.html">
+<meta property="og:image" content="https://frankkiv.github.io/ai-story/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,6 +23,7 @@
 <link rel="alternate" hreflang="zh-Hant" href="bench.html">
 <link rel="alternate" hreflang="en" href="en/bench.html">
 <script src="assets/i18n.js"></script>
+<script defer src="assets/extras.js"></script>
 <style>
 .mx-box { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); padding: 1.1rem; display: grid; gap: .8rem; }
 .mx-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -141,6 +153,20 @@
       <span class="eyebrow">01 · 誰擅長什麼</span>
       <h2>如果只能挑一個，看你要拿來做什麼</h2>
       <p class="lead">綜合後面幾段的第三方數字、廠商自己的表，以及多個評測網站的評語（2026 年 11 月）。這是大方向，不是定論。</p>
+    </div>
+    <div class="qz measure" id="picker" style="margin-bottom:2rem" aria-live="polite">
+      <div><h3 style="margin:0 0 .3rem">三個問題，幫你挑一個</h3><p class="caveat" style="margin:0">照下面六張卡的內容整理的，是大方向，不是定論。</p></div>
+      <div class="qz-q"><b>1. 你主要拿它做什麼？</b><div class="qz-opts"><button type="button" data-q="use" data-v="home" aria-pressed="false">聊天、問問題、寫東西</button><button type="button" data-q="use" data-v="code" aria-pressed="false">寫程式，或讓它自己長時間做事</button><button type="button" data-q="use" data-v="reason" aria-pressed="false">很難的數學、科學、推理</button><button type="button" data-q="use" data-v="long" aria-pressed="false">讀很長的文件或影片</button><button type="button" data-q="use" data-v="bulk" aria-pressed="false">大量的簡單工作，像分類、摘要、翻譯</button></div></div>
+      <div class="qz-q"><b>2. 預算呢？</b><div class="qz-opts"><button type="button" data-q="budget" data-v="save" aria-pressed="false">用免費版，或愈省愈好</button><button type="button" data-q="budget" data-v="best" aria-pressed="false">願意多付一點換最好的</button></div></div>
+      <div class="qz-q"><b>3. 資料要放在自己的伺服器上嗎？</b><div class="qz-opts"><button type="button" data-q="host" data-v="no" aria-pressed="false">不用</button><button type="button" data-q="host" data-v="own" aria-pressed="false">要，我想自己架</button></div></div>
+      <div class="pick-out" data-r="own" data-card="5" hidden><span class="k">建議你先試</span><b>Kimi K3.1 Pro、GLM-5.3、DeepSeek V4</b><span>這幾個是開放權重，可以下載放在自己的伺服器上。要留意資料存放和內容審查的問題。</span><a href="#strengths">看這張卡的完整說明 ↓</a></div>
+      <div class="pick-out" data-r="home-save" data-card="-1" hidden><span class="k">建議你先試</span><b>免費版的 Claude、ChatGPT 或 Gemini</b><span>一般家用，這三個的免費版差距不大，挑一個用得順手的就好。</span></div>
+      <div class="pick-out" data-r="home-best" data-card="2" hidden><span class="k">建議你先試</span><b>Gemini 4 Argon</b><span>LMArena 的使用者投票在公開模型裡排第一，代表一般人最常覺得它的回答比較好。特別重視寫作的話，可以看 Claude Fable 5.2 那張卡。</span><a href="#strengths">看這張卡的完整說明 ↓</a></div>
+      <div class="pick-out" data-r="code-save" data-card="0" hidden><span class="k">建議你先試</span><b>Claude Sonnet 5.5</b><span>價格是 Opus 5.5 的一半，終端機任務分數甚至更高。</span><a href="#strengths">看這張卡的完整說明 ↓</a></div>
+      <div class="pick-out" data-r="code-best" data-card="0" hidden><span class="k">建議你先試</span><b>Claude Opus 5.5</b><span>多個評測網站評為寫程式最好的公開模型之一，價格是 Fable 5.2 的一半。</span><a href="#strengths">看這張卡的完整說明 ↓</a></div>
+      <div class="pick-out" data-r="reason" data-card="1" hidden><span class="k">建議你先試</span><b>GPT-6 Astra</b><span>多個網站評它是最難的推理題首選。價格偏高，比 Fable 5.2 還貴一點。</span><a href="#strengths">看這張卡的完整說明 ↓</a></div>
+      <div class="pick-out" data-r="long" data-card="2" hidden><span class="k">建議你先試</span><b>Gemini 4 Argon</b><span>長文件、長影片、財務法律類文件是它被推薦的強項。</span><a href="#strengths">看這張卡的完整說明 ↓</a></div>
+      <div class="pick-out" data-r="bulk" data-card="4" hidden><span class="k">建議你先試</span><b>GPT-6 Luna、Claude Haiku 5.5、DeepSeek V4.1 Flash、Gemini 3.8 Flash</b><span>這一級比旗艦便宜很多，適合分類、摘要、翻譯這種量大但不難的工作。</span><a href="#strengths">看這張卡的完整說明 ↓</a></div>
     </div>
     <div class="good">
       <article class="card" style="--c:var(--l-skills)"><span class="tag">寫程式、長時間的 agent 工作</span><h3>Claude Opus 5.5</h3><p>多個評測網站評為寫程式最好的公開模型之一；第三方綜合指數只輸給 11 月剛推出的 Fable 5.2 和還沒公開的 Gemini 4 Carbon，價格是 Fable 5.2 的一半。<b>想省錢</b>可以先試 Sonnet 5.5，終端機任務分數甚至更高，價格只要一半。</p></article>
@@ -475,6 +501,27 @@
   /* phones: open the chart scrolled to the newest data */
   var sc = document.getElementById("chartScroll");
   requestAnimationFrame(function () { sc.scrollLeft = sc.scrollWidth; });
+})();
+</script>
+<script>
+(function () {
+  var box = document.getElementById("picker"); if (!box) return;
+  var pick = {}, outs = box.querySelectorAll(".pick-out"), cards = document.querySelectorAll("#strengths .good .card");
+  function show() {
+    if (!pick.use || !pick.budget || !pick.host) return;
+    var code = pick.host === "own" ? "own" : (pick.use === "home" || pick.use === "code") ? pick.use + "-" + pick.budget : pick.use;
+    [].forEach.call(cards, function (c) { c.classList.remove("picked"); });
+    [].forEach.call(outs, function (o) {
+      var on = o.getAttribute("data-r") === code; o.hidden = !on;
+      if (on) { var i = +o.getAttribute("data-card"); if (i >= 0 && cards[i]) { cards[i].classList.add("picked"); cards[i].id = cards[i].id || "pick-card"; var a = o.querySelector("a"); if (a) a.href = "#" + cards[i].id; } }
+    });
+  }
+  box.addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-q]"); if (!b) return;
+    pick[b.getAttribute("data-q")] = b.getAttribute("data-v");
+    [].forEach.call(b.parentNode.children, function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+    show();
+  });
 })();
 </script>
 </body>

@@ -5,7 +5,9 @@
 一個靜態網站，用繁體中文講 AI 這幾年的變化：
 
 - `index.html`：首頁，兩條入口（序章或從 PART 1 讀起）
-- `family.html`：給家人的五個提醒與常見問題，可以單獨轉傳
+- `family.html`：給家人的五個提醒、詐騙情境演練與常見問題，可以單獨轉傳
+- `glossary.html`：名詞小辭典
+- `myths.html`：「真的還是假的」小遊戲
 - `history.html`：時間線
 - `bench.html`：模型評比（分數怎麼看、各模型對照、誰擅長什麼、模型名冊）
 - `tech.html`：它怎麼運作（context、prompt cache、agent 迴圈、Auto 模式、同步、多 agent 協作、skills）
